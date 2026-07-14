@@ -1,15 +1,5 @@
 # Design Brief — Andamio
 
-**Fuente de verdad del lenguaje visual.** Destilado del mockup elegido `Andamio Hoy v2`
-(linaje de la variante 1b, "mármol pulido"). Este documento —no el HTML— es lo que el
-Sprint 1 consume para construir el sistema de diseño. Los mockups `.dc.html` quedan como
-referencia visual en `docs/mockups/`, no como fuente de tokens.
-
-Regla de oro para Sprint 1: **ningún valor de color, espaciado, radio o fuente vive fuera
-de `lib/src/core/design_system/`.** Todo pasa por `StoicTokens` (`ThemeExtension`) + el
-`ColorScheme`. Las etiquetas de texto (incl. nombres de virtud) viven en `app_es.arb`, no
-hardcodeadas.
-
 ---
 
 ## 1. Tipografía
