@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Sprints 1–7 (design system, full data layer, onboarding, streaks/relapse, journal, crisis mode, dashboard) are not yet built — see `docs/SPRINT_PLAN.md` for what each entails.
 
-The repo name `stoic-growth-app` is a placeholder; the final product name is undecided between "Andamio" and "Virtude" (see README section 12).
+The repo name `stoic-growth-app` is a technical placeholder. **"Andamio" is the working name** used in design/development (see `docs/DESIGN_BRIEF.md`); "Virtude" is the backup alternative if Andamio fails domain/social validation. The final brand name isn't locked yet (see README section 12).
 
 ## Commands
 

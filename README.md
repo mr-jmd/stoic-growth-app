@@ -2,7 +2,7 @@
 
 **Aplicación de crecimiento personal, físico y espiritual basada en principios estoicos.**
 
-> **Nombre por definir.** `stoic-growth-app` es un nombre de trabajo/placeholder para el repositorio, no el nombre final de marca. Las dos opciones en evaluación, verificadas sin colisión de marca ni cultural, son **Andamio** y **Virtude**. Ver [sección 12](#12-naming) para el historial completo de nombres evaluados y descartados.
+> **Nombre de trabajo: Andamio.** `stoic-growth-app` sigue siendo el nombre del repositorio (placeholder técnico), pero el desarrollo (diseño, copy, UI) usa **Andamio** como nombre de trabajo. No es todavía el nombre final de marca — falta validar disponibilidad de dominio y redes antes de fijarlo. **Virtude** queda como alternativa de respaldo si Andamio presenta algún problema. Ver [sección 12](#12-naming) para el historial completo de nombres evaluados y descartados.
 
 Documento técnico de propuesta — julio de 2026
 
@@ -311,12 +311,12 @@ Cuantos más días de diario, hábitos y patrones de recaída acumula un usuario
 
 ## 12. Naming
 
-**Estado: nombre por definir.** El repositorio y el proyecto usan `stoic-growth-app` como nombre de trabajo/placeholder. Las dos opciones que llegaron limpias tras todas las rondas de evaluación —sin colisión de marca, sin choque cultural o político, y con significado coherente con el producto— son:
+**Estado: nombre de trabajo elegido — Andamio.** El repositorio sigue usando `stoic-growth-app` como nombre técnico/placeholder, pero **Andamio** es el nombre de trabajo que ya está en uso en diseño y desarrollo (ver `docs/DESIGN_BRIEF.md`). No es aún el nombre final de marca — eso requiere validar disponibilidad de dominio y redes sociales (ver sección 14). Las dos opciones que llegaron limpias tras todas las rondas de evaluación —sin colisión de marca, sin choque cultural o político, y con significado coherente con el producto— fueron:
 
-- **Andamio** — estructura temporal que sostiene mientras se construye algo permanente. Verificado sin colisión de app ni referencia cultural/política. Metáfora de que la app te sostiene mientras construyes disciplina real, no un fin en sí misma.
-- **Virtude** — forma en portugués de "virtud", conecta directo con el sistema de las cuatro virtudes cardinales (sección 2.2). Verificado sin colisión de app exacta; existe un campo semántico vecino ocupado (apps "Virtues", "Deugden"), pero ninguna es competidor funcional directo.
+- **Andamio** (elegido como nombre de trabajo) — estructura temporal que sostiene mientras se construye algo permanente. Verificado sin colisión de app ni referencia cultural/política. Metáfora de que la app te sostiene mientras construyes disciplina real, no un fin en sí misma.
+- **Virtude** (alternativa de respaldo) — forma en portugués de "virtud", conecta directo con el sistema de las cuatro virtudes cardinales (sección 2.2). Verificado sin colisión de app exacta; existe un campo semántico vecino ocupado (apps "Virtues", "Deugden"), pero ninguna es competidor funcional directo. Queda como plan B si Andamio no pasa la validación de dominio/redes o surge algún conflicto no detectado.
 
-Ambas se pueden usar para arrancar el desarrollo sin bloquear el proyecto; el nombre de marca definitivo se puede fijar más adelante (renombrar el repo de GitHub es trivial, ver sección 14).
+El nombre de marca definitivo (posiblemente distinto de ambos, o uno de estos dos confirmado) se puede fijar más adelante sin bloquear el desarrollo (renombrar el repo de GitHub es trivial, ver sección 14).
 
 ### Historial de nombres evaluados y descartados
 
@@ -343,7 +343,7 @@ Por transparencia y para no repetir evaluaciones, este es el registro completo d
 - **Marco, Séneca, Epicteto** — vía nombre propio histórico, sin la carga cultural de "Aurelio".
 - **Hegemonikón, Erumpo, Rumpo, Vikrama** — vía conceptual griega/latina/sánscrita, distintivas pero no verificadas en tienda.
 
-**Pendiente:** validar Andamio y/o Virtude por disponibilidad de dominio y redes sociales antes de fijar el nombre definitivo de marca.
+**Pendiente:** validar Andamio (y Virtude como respaldo) por disponibilidad de dominio y redes sociales antes de fijar el nombre definitivo de marca.
 
 ---
 
@@ -384,6 +384,7 @@ Esta propuesta no compite función por función contra apps de bienestar ya cons
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| 1.2 | 2026-07-14 | Se fija **Andamio** como nombre de trabajo (sección 12 y encabezado) — ya en uso en `docs/DESIGN_BRIEF.md` para diseño/desarrollo. Virtude pasa a alternativa de respaldo. Sigue pendiente la validación de dominio/redes para el nombre de marca definitivo. |
 | 1.1 | 2026-07-14 | Se agrega referencia a `docs/SPRINT_PLAN.md` en la sección 8 (Roadmap): plan de implementación sprint por sprint de la Fase 1, ya en ejecución (Sprint 0 completo — scaffold Flutter con Riverpod, GoRouter y Drift). El README no cambia como propuesta; solo se enlaza al documento operativo. |
 | 1.0 | 2026-07-11 | Versión inicial. Documento técnico consolidado: visión y arquitectura filosófica (tres disciplinas, cuatro virtudes), propuesta funcional, stack técnico (Flutter + .NET/PostgreSQL), modelo de datos, roadmap, modelo de monetización de dos capas, rediseño de UX de journaling y flujo del Interlocutor, moat competitivo y estrategia go-to-market, e historial de naming con `stoic-growth-app` como nombre de trabajo. |
 
