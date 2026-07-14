@@ -191,6 +191,8 @@ El criterio de selección es exclusivamente técnico: mejor rendimiento, mejor c
 
 ## 8. Roadmap recomendado
 
+> **Implementación en curso.** La ejecución técnica de la Fase 1 (MVP) descrita abajo se está llevando en `docs/SPRINT_PLAN.md`: un plan sprint por sprint (Sprint 0 en adelante) con tareas técnicas, de arquitectura y de diseño/UX, criterios de aceptación y dependencias para cada sprint, además de las líneas rojas de la sección 9.6 como invariantes de proyecto. Ese documento es la referencia operativa de qué se está construyendo ahora mismo; este README sigue siendo la propuesta y visión de producto.
+
 ### Fase 1 — MVP (núcleo estoico)
 
 MVP deliberadamente austero: solo lo esencial para validar retención antes de invertir en IA generativa o backend complejo.
@@ -382,6 +384,7 @@ Esta propuesta no compite función por función contra apps de bienestar ya cons
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| 1.1 | 2026-07-14 | Se agrega referencia a `docs/SPRINT_PLAN.md` en la sección 8 (Roadmap): plan de implementación sprint por sprint de la Fase 1, ya en ejecución (Sprint 0 completo — scaffold Flutter con Riverpod, GoRouter y Drift). El README no cambia como propuesta; solo se enlaza al documento operativo. |
 | 1.0 | 2026-07-11 | Versión inicial. Documento técnico consolidado: visión y arquitectura filosófica (tres disciplinas, cuatro virtudes), propuesta funcional, stack técnico (Flutter + .NET/PostgreSQL), modelo de datos, roadmap, modelo de monetización de dos capas, rediseño de UX de journaling y flujo del Interlocutor, moat competitivo y estrategia go-to-market, e historial de naming con `stoic-growth-app` como nombre de trabajo. |
 
 > Cada actualización futura debe agregar una fila nueva arriba de esta tabla (orden descendente, más reciente primero), con un resumen breve de qué cambió y por qué. No se sobrescriben versiones anteriores — el historial completo queda como registro de decisiones.
