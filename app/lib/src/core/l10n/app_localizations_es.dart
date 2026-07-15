@@ -129,4 +129,109 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get chipEveningKind => 'Fui amable conmigo';
+
+  @override
+  String get onboardingIntroTitle => 'Construye tu carácter, día a día';
+
+  @override
+  String get onboardingIntroBody =>
+      'Sin cuentas y sin presión. Solo tú y lo que decides trabajar, a tu ritmo.';
+
+  @override
+  String get onboardingIntroStart => 'Empezar';
+
+  @override
+  String get onboardingSelectTitle => '¿Qué quieres trabajar?';
+
+  @override
+  String get onboardingSelectSubtitle =>
+      'Elige de uno a tres. Podrás cambiarlos cuando quieras.';
+
+  @override
+  String onboardingSelectionCounter(int count, int max) {
+    return '$count de $max elegidos';
+  }
+
+  @override
+  String get onboardingContinue => 'Continuar';
+
+  @override
+  String get onboardingBack => 'Atrás';
+
+  @override
+  String get onboardingConfirmTitle => 'Esto es lo que vas a trabajar';
+
+  @override
+  String get onboardingConfirmSubtitle =>
+      'Puedes agregar o archivar hábitos más adelante.';
+
+  @override
+  String get onboardingStart => 'Comenzar';
+
+  @override
+  String get suggestionScreenTime => 'Moderar el tiempo en pantallas';
+
+  @override
+  String get suggestionConsumption => 'Cuidar lo que consumo';
+
+  @override
+  String get suggestionMove => 'Mover el cuerpo cada día';
+
+  @override
+  String get suggestionDiscomfort => 'Hacer algo incómodo a propósito';
+
+  @override
+  String get suggestionRead => 'Leer unos minutos';
+
+  @override
+  String get suggestionReflect => 'Reflexionar al final del día';
+
+  @override
+  String get suggestionKindness => 'Un gesto amable al día';
+
+  @override
+  String get suggestionKeepWord => 'Cumplir mi palabra';
+
+  @override
+  String get homeTitle => 'Hoy';
+
+  @override
+  String get homeHabitsSectionTitle => 'Lo que estás trabajando';
+
+  @override
+  String get homeOpenHabits => 'Ver hábitos';
+
+  @override
+  String get homeOpenGallery => 'Galería de diseño (debug)';
+
+  @override
+  String get habitsTitle => 'Tus hábitos';
+
+  @override
+  String get habitsAdd => 'Agregar hábito';
+
+  @override
+  String get habitsArchive => 'Archivar';
+
+  @override
+  String get habitsArchived => 'Hábito archivado';
+
+  @override
+  String get habitFormTitle => 'Nuevo hábito';
+
+  @override
+  String get habitFormLabelHint => '¿Qué quieres trabajar?';
+
+  @override
+  String get habitFormVirtueLabel => '¿A qué virtud pertenece?';
+
+  @override
+  String get habitFormSave => 'Guardar';
+
+  @override
+  String get habitFormEmptyLabel => 'Escribe un nombre para el hábito.';
+
+  @override
+  String get habitsLimitReached =>
+      'Ya tienes tres hábitos activos. Archiva uno para agregar otro.';
 }

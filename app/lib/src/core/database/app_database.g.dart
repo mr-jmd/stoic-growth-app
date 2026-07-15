@@ -2651,6 +2651,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $HabitCheckInsTable habitCheckIns = $HabitCheckInsTable(this);
   late final $RelapseEventsTable relapseEvents = $RelapseEventsTable(this);
+  late final AppMetaDao appMetaDao = AppMetaDao(this as AppDatabase);
   late final HabitsDao habitsDao = HabitsDao(this as AppDatabase);
   late final JournalDao journalDao = JournalDao(this as AppDatabase);
   late final UserProfileDao userProfileDao = UserProfileDao(

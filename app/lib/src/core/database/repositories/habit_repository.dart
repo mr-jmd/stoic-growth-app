@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../shared/check_in_status.dart';
@@ -9,17 +10,29 @@ import '../database_provider.dart';
 
 part 'habit_repository.g.dart';
 
+/// Thrown when creating a habit would exceed [HabitRepository.maxActiveHabits].
+/// Carries the limit so the UI can show a clear, non-punitive message. Archived
+/// habits don't count toward the cap.
+class MaxActiveHabitsException implements Exception {
+  const MaxActiveHabitsException(this.limit);
+  final int limit;
+}
+
 /// Concrete repository over [HabitsDao] — no abstract interface (single impl;
 /// tests override [appDatabaseProvider] with an in-memory DB instead, per
-/// SPRINT_PLAN). Foundational CRUD lives here; Sprint 3 adds the 3-active cap /
-/// onboarding orchestration and Sprint 4 the transactional relapse flow, both
-/// reusing these methods.
+/// SPRINT_PLAN). Foundational CRUD lives here; Sprint 4 adds the transactional
+/// relapse flow, reusing these methods.
 class HabitRepository {
   HabitRepository(this._db);
 
   final AppDatabase _db;
   HabitsDao get _dao => _db.habitsDao;
 
+  /// The MVP cap on simultaneously active habits (README Fase 1: "1-3"). A UI/
+  /// repository constraint, not a schema one.
+  static const int maxActiveHabits = 3;
+
+  /// Raw insert with no cap check — foundation used by [createHabit] and tests.
   Future<int> addHabit({
     required String label,
     required Virtue virtue,
@@ -32,14 +45,32 @@ class HabitRepository {
     ));
   }
 
+  /// Creates a habit, enforcing the active-habit cap. Throws
+  /// [MaxActiveHabitsException] if [maxActiveHabits] active habits already
+  /// exist. The check + insert run in one transaction so concurrent creates
+  /// can't slip past the cap.
+  Future<int> createHabit({
+    required String label,
+    required Virtue virtue,
+    int sortOrder = 0,
+  }) {
+    return _db.transaction(() async {
+      final active = await _dao.countActiveHabits();
+      if (active >= maxActiveHabits) {
+        throw const MaxActiveHabitsException(maxActiveHabits);
+      }
+      return addHabit(label: label, virtue: virtue, sortOrder: sortOrder);
+    });
+  }
+
   Stream<List<Habit>> watchActiveHabits() => _dao.watchActiveHabits();
   Future<List<Habit>> getAllHabits() => _dao.getAllHabits();
   Future<Habit?> getHabit(int id) => _dao.getHabit(id);
   Future<int> countActiveHabits() => _dao.countActiveHabits();
 
   /// Directly overwrites the streak count (the user-editable path). History is
-  /// never touched.
-  Future<void> setStreakCount(int habitId, int count) =>
+  /// never touched. Reused by Sprint 4's tap-to-edit control.
+  Future<void> updateStreakManually(int habitId, int count) =>
       _dao.setStreakCount(habitId, count);
 
   Future<void> archiveHabit(int habitId) =>
@@ -103,3 +134,13 @@ class HabitRepository {
 @riverpod
 HabitRepository habitRepository(Ref ref) =>
     HabitRepository(ref.watch(appDatabaseProvider));
+
+/// Live list of active (non-archived) habits — backs the habits list, the home
+/// shell, and the "0 active habits" empty state.
+///
+/// Declared manually (not `@riverpod`) because riverpod_generator can't emit a
+/// return type that comes from drift's generated `part` file (build-ordering
+/// limitation between the two generators). The behaviour is identical.
+final activeHabitsProvider = StreamProvider<List<Habit>>(
+  (ref) => ref.watch(habitRepositoryProvider).watchActiveHabits(),
+);

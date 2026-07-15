@@ -6,6 +6,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import '../../shared/check_in_status.dart';
 import '../../shared/journal_enums.dart';
 import '../../shared/virtue.dart';
+import 'daos/app_meta_dao.dart';
 import 'daos/habits_dao.dart';
 import 'daos/journal_dao.dart';
 import 'daos/user_profile_dao.dart';
@@ -32,7 +33,7 @@ part 'app_database.g.dart';
     HabitCheckIns,
     RelapseEvents,
   ],
-  daos: [HabitsDao, JournalDao, UserProfileDao],
+  daos: [AppMetaDao, HabitsDao, JournalDao, UserProfileDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(driftDatabase(name: 'app_database'));

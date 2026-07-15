@@ -177,6 +177,19 @@ Decisiones ya confirmadas:
 
 ## Sprint 3 — Onboarding & configuración de hábitos/virtudes
 
+> **Estado: COMPLETO.** Onboarding, configuración de hábitos y el gate de router implementados y verificados (`flutter analyze` limpio, 13 tests en verde incl. flujo onboarding end-to-end, greps de invariantes de diseño vacíos, `flutter build apk --debug` OK, probado en dispositivo físico). Ubicación: `app/lib/src/features/{onboarding,habits,home}/`, estado de onboarding en `app/lib/src/core/database/{daos/app_meta_dao.dart,repositories/onboarding_repository.dart}`, router en `app/lib/src/core/routing/app_router.dart`, tests en `app/test/features/onboarding_flow_test.dart`.
+>
+> **Decisiones cerradas en este sprint:**
+> - **Gate keyed en el flag persistido, no en el conteo de hábitos.** `AppMetaDao` (single-row upsert) + `OnboardingRepository` guardan `onboardingCompleted`; el redirect lee eso. Archivar todos los hábitos después lleva a un empty-state, nunca de vuelta a onboarding.
+> - **Router de fuente única (fix de carrera).** El `redirect` y el `refreshListenable` deben leer el flag del **mismo** provider (`onboardingCompletedProvider`, puenteado a un `ValueNotifier` vía `ref.listen`). La primera implementación usó dos streams de Drift independientes y una carrera dejaba al usuario clavado en la pantalla de confirmación al pulsar "Comenzar" (el redirect leía el valor viejo). Verificado en dispositivo.
+> - **Startup splash en `StoicApp`.** Mientras el flag carga por primera vez, se muestra un splash calmo; así el redirect nunca lee un valor sin resolver (evita flash de pantalla equivocada).
+> - **Onboarding controller resiliente al tope.** Si al crear los hábitos elegidos se alcanza el tope de 3 activos (p. ej. datos residuales de un intento previo), se salta la creación pero **igual** se completa el onboarding — nunca falla el flujo por el cap.
+> - **`createHabit` con tope de 3 en transacción** (lanza `MaxActiveHabitsException` con el límite), `updateStreakManually` (rename de `setStreakCount`), `activeHabitsProvider`. Reutilizados por Sprint 4.
+> - **`activeHabitsProvider` es un provider manual, no `@riverpod`:** riverpod_generator no puede emitir un tipo generado por Drift (`Habit`) como retorno de un provider anotado (orden de generadores). Mezclar codegen + provider manual es válido y se usará igual en sprints siguientes para streams de entidades Drift.
+> - **`InkSparkle` → `InkRipple`** en el tema: la chispa dejaba un `Timer` huérfano al desmontar por navegación (rompía tests con "A Timer is still pending") y, además, una chispa no encaja con la estética sobria del brief. Ripple discreto es mejor en ambos frentes.
+> - **Home shell mínimo** (`features/home/`) como placeholder hasta el dashboard de Sprint 7; incluye acceso a hábitos y —solo en debug— a la galería (`/gallery`, ruta exenta del gate).
+> - **Estabilidad de tests de widget con Drift:** al desmontar, Drift agenda un `Timer(Duration.zero)` (`markAsClosed`) para cerrar sus streams; los tests terminan con `pumpWidget(SizedBox()) + pump(50ms)` para que dispare antes del chequeo de invariantes. Tests con `TextField` usan `pump` en vez de `pumpAndSettle` (timer de parpadeo del cursor). Helper `test/support/test_app.dart`.
+
 **Objetivo:** Permitir que en el primer uso el usuario elija 1-3 hábitos/virtudes a trabajar, sin lenguaje clínico, con el resto de la app bloqueado detrás de este setup mínimo vía redirect del router.
 
 **Tareas técnicas:**

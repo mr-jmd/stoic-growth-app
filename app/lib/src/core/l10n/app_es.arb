@@ -139,5 +139,87 @@
   "chipEveningPresent": "Estuve presente",
   "@chipEveningPresent": {},
   "chipEveningKind": "Fui amable conmigo",
-  "@chipEveningKind": {}
+  "@chipEveningKind": {},
+
+  "onboardingIntroTitle": "Construye tu carácter, día a día",
+  "@onboardingIntroTitle": {
+    "description": "Título de la pantalla de intro de onboarding. Framing breve, sin login."
+  },
+  "onboardingIntroBody": "Sin cuentas y sin presión. Solo tú y lo que decides trabajar, a tu ritmo.",
+  "@onboardingIntroBody": {},
+  "onboardingIntroStart": "Empezar",
+  "@onboardingIntroStart": {},
+
+  "onboardingSelectTitle": "¿Qué quieres trabajar?",
+  "@onboardingSelectTitle": {
+    "description": "Título del selector de hábitos. Framing neutro, sin lenguaje clínico."
+  },
+  "onboardingSelectSubtitle": "Elige de uno a tres. Podrás cambiarlos cuando quieras.",
+  "@onboardingSelectSubtitle": {},
+  "onboardingSelectionCounter": "{count} de {max} elegidos",
+  "@onboardingSelectionCounter": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "onboardingContinue": "Continuar",
+  "@onboardingContinue": {},
+  "onboardingBack": "Atrás",
+  "@onboardingBack": {},
+
+  "onboardingConfirmTitle": "Esto es lo que vas a trabajar",
+  "@onboardingConfirmTitle": {},
+  "onboardingConfirmSubtitle": "Puedes agregar o archivar hábitos más adelante.",
+  "@onboardingConfirmSubtitle": {},
+  "onboardingStart": "Comenzar",
+  "@onboardingStart": {},
+
+  "suggestionScreenTime": "Moderar el tiempo en pantallas",
+  "@suggestionScreenTime": { "description": "Hábito sugerido (Templanza). Copy no clínico." },
+  "suggestionConsumption": "Cuidar lo que consumo",
+  "@suggestionConsumption": {},
+  "suggestionMove": "Mover el cuerpo cada día",
+  "@suggestionMove": { "description": "Hábito sugerido (Coraje)." },
+  "suggestionDiscomfort": "Hacer algo incómodo a propósito",
+  "@suggestionDiscomfort": {},
+  "suggestionRead": "Leer unos minutos",
+  "@suggestionRead": { "description": "Hábito sugerido (Sabiduría)." },
+  "suggestionReflect": "Reflexionar al final del día",
+  "@suggestionReflect": {},
+  "suggestionKindness": "Un gesto amable al día",
+  "@suggestionKindness": { "description": "Hábito sugerido (Justicia)." },
+  "suggestionKeepWord": "Cumplir mi palabra",
+  "@suggestionKeepWord": {},
+
+  "homeTitle": "Hoy",
+  "@homeTitle": {},
+  "homeHabitsSectionTitle": "Lo que estás trabajando",
+  "@homeHabitsSectionTitle": {},
+  "homeOpenHabits": "Ver hábitos",
+  "@homeOpenHabits": {},
+  "homeOpenGallery": "Galería de diseño (debug)",
+  "@homeOpenGallery": {},
+
+  "habitsTitle": "Tus hábitos",
+  "@habitsTitle": {},
+  "habitsAdd": "Agregar hábito",
+  "@habitsAdd": {},
+  "habitsArchive": "Archivar",
+  "@habitsArchive": {},
+  "habitsArchived": "Hábito archivado",
+  "@habitsArchived": { "description": "Confirmación breve tras archivar." },
+
+  "habitFormTitle": "Nuevo hábito",
+  "@habitFormTitle": {},
+  "habitFormLabelHint": "¿Qué quieres trabajar?",
+  "@habitFormLabelHint": {},
+  "habitFormVirtueLabel": "¿A qué virtud pertenece?",
+  "@habitFormVirtueLabel": {},
+  "habitFormSave": "Guardar",
+  "@habitFormSave": {},
+  "habitFormEmptyLabel": "Escribe un nombre para el hábito.",
+  "@habitFormEmptyLabel": { "description": "Validación no punitiva de label vacío." },
+  "habitsLimitReached": "Ya tienes tres hábitos activos. Archiva uno para agregar otro.",
+  "@habitsLimitReached": { "description": "Mensaje al intentar un 4º hábito activo. Claro y no punitivo." }
 }

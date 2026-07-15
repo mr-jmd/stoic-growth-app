@@ -88,7 +88,7 @@ void main() {
       final id = await habits.addHabit(label: 'Leer', virtue: Virtue.sabiduria);
       await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
 
-      await habits.setStreakCount(id, 42);
+      await habits.updateStreakManually(id, 42);
 
       expect((await habits.getHabit(id))!.currentStreakCount, 42);
       // The manual overwrite doesn't remove the check-in history.

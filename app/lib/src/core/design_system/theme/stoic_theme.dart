@@ -65,7 +65,8 @@ ThemeData _build(Brightness brightness) {
     fontFamily: fontBody,
     textTheme: textTheme,
     scaffoldBackgroundColor: surface,
-    splashFactory: InkSparkle.splashFactory,
+    // Quiet ripple, not the flashy sparkle — fits the sober aesthetic.
+    splashFactory: InkRipple.splashFactory,
     extensions: [tokens],
   );
 }

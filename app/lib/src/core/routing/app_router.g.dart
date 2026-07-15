@@ -8,13 +8,50 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Single top-level GoRouter, consumed once in StoicApp.
+///
+/// Onboarding gate: the redirect keys off the **persisted onboarding flag**
+/// ([onboardingCompletedProvider]), never the habit count — so a user who
+/// archives every habit lands on an empty state, not back in onboarding.
+///
+/// Both the `refreshListenable` and the redirect read that **same provider**
+/// (bridged through a [ValueNotifier] via `ref.listen`), so completing
+/// onboarding re-runs the redirect against an already-updated value. Using two
+/// independent DB streams here caused a race where the redirect could still see
+/// the old value and strand the user on the confirmation screen. StoicApp holds
+/// a splash until the flag first loads, so the redirect never reads a null.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
 
+/// Single top-level GoRouter, consumed once in StoicApp.
+///
+/// Onboarding gate: the redirect keys off the **persisted onboarding flag**
+/// ([onboardingCompletedProvider]), never the habit count — so a user who
+/// archives every habit lands on an empty state, not back in onboarding.
+///
+/// Both the `refreshListenable` and the redirect read that **same provider**
+/// (bridged through a [ValueNotifier] via `ref.listen`), so completing
+/// onboarding re-runs the redirect against an already-updated value. Using two
+/// independent DB streams here caused a race where the redirect could still see
+/// the old value and strand the user on the confirmation screen. StoicApp holds
+/// a splash until the flag first loads, so the redirect never reads a null.
+
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
+  /// Single top-level GoRouter, consumed once in StoicApp.
+  ///
+  /// Onboarding gate: the redirect keys off the **persisted onboarding flag**
+  /// ([onboardingCompletedProvider]), never the habit count — so a user who
+  /// archives every habit lands on an empty state, not back in onboarding.
+  ///
+  /// Both the `refreshListenable` and the redirect read that **same provider**
+  /// (bridged through a [ValueNotifier] via `ref.listen`), so completing
+  /// onboarding re-runs the redirect against an already-updated value. Using two
+  /// independent DB streams here caused a race where the redirect could still see
+  /// the old value and strand the user on the confirmation screen. StoicApp holds
+  /// a splash until the flag first loads, so the redirect never reads a null.
   AppRouterProvider._()
     : super(
         from: null,
@@ -48,4 +85,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'22d2e51111f61ac7d6af709b11f9fe65cbb1aa25';
+String _$appRouterHash() => r'839e1b0d32aad95ba54e672080e78afe97b8ac5b';

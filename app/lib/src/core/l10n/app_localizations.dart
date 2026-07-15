@@ -333,6 +333,204 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Fui amable conmigo'**
   String get chipEveningKind;
+
+  /// Título de la pantalla de intro de onboarding. Framing breve, sin login.
+  ///
+  /// In es, this message translates to:
+  /// **'Construye tu carácter, día a día'**
+  String get onboardingIntroTitle;
+
+  /// No description provided for @onboardingIntroBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin cuentas y sin presión. Solo tú y lo que decides trabajar, a tu ritmo.'**
+  String get onboardingIntroBody;
+
+  /// No description provided for @onboardingIntroStart.
+  ///
+  /// In es, this message translates to:
+  /// **'Empezar'**
+  String get onboardingIntroStart;
+
+  /// Título del selector de hábitos. Framing neutro, sin lenguaje clínico.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué quieres trabajar?'**
+  String get onboardingSelectTitle;
+
+  /// No description provided for @onboardingSelectSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige de uno a tres. Podrás cambiarlos cuando quieras.'**
+  String get onboardingSelectSubtitle;
+
+  /// No description provided for @onboardingSelectionCounter.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} de {max} elegidos'**
+  String onboardingSelectionCounter(int count, int max);
+
+  /// No description provided for @onboardingContinue.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get onboardingContinue;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In es, this message translates to:
+  /// **'Atrás'**
+  String get onboardingBack;
+
+  /// No description provided for @onboardingConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto es lo que vas a trabajar'**
+  String get onboardingConfirmTitle;
+
+  /// No description provided for @onboardingConfirmSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes agregar o archivar hábitos más adelante.'**
+  String get onboardingConfirmSubtitle;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In es, this message translates to:
+  /// **'Comenzar'**
+  String get onboardingStart;
+
+  /// Hábito sugerido (Templanza). Copy no clínico.
+  ///
+  /// In es, this message translates to:
+  /// **'Moderar el tiempo en pantallas'**
+  String get suggestionScreenTime;
+
+  /// No description provided for @suggestionConsumption.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuidar lo que consumo'**
+  String get suggestionConsumption;
+
+  /// Hábito sugerido (Coraje).
+  ///
+  /// In es, this message translates to:
+  /// **'Mover el cuerpo cada día'**
+  String get suggestionMove;
+
+  /// No description provided for @suggestionDiscomfort.
+  ///
+  /// In es, this message translates to:
+  /// **'Hacer algo incómodo a propósito'**
+  String get suggestionDiscomfort;
+
+  /// Hábito sugerido (Sabiduría).
+  ///
+  /// In es, this message translates to:
+  /// **'Leer unos minutos'**
+  String get suggestionRead;
+
+  /// No description provided for @suggestionReflect.
+  ///
+  /// In es, this message translates to:
+  /// **'Reflexionar al final del día'**
+  String get suggestionReflect;
+
+  /// Hábito sugerido (Justicia).
+  ///
+  /// In es, this message translates to:
+  /// **'Un gesto amable al día'**
+  String get suggestionKindness;
+
+  /// No description provided for @suggestionKeepWord.
+  ///
+  /// In es, this message translates to:
+  /// **'Cumplir mi palabra'**
+  String get suggestionKeepWord;
+
+  /// No description provided for @homeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy'**
+  String get homeTitle;
+
+  /// No description provided for @homeHabitsSectionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que estás trabajando'**
+  String get homeHabitsSectionTitle;
+
+  /// No description provided for @homeOpenHabits.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver hábitos'**
+  String get homeOpenHabits;
+
+  /// No description provided for @homeOpenGallery.
+  ///
+  /// In es, this message translates to:
+  /// **'Galería de diseño (debug)'**
+  String get homeOpenGallery;
+
+  /// No description provided for @habitsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus hábitos'**
+  String get habitsTitle;
+
+  /// No description provided for @habitsAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar hábito'**
+  String get habitsAdd;
+
+  /// No description provided for @habitsArchive.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivar'**
+  String get habitsArchive;
+
+  /// Confirmación breve tras archivar.
+  ///
+  /// In es, this message translates to:
+  /// **'Hábito archivado'**
+  String get habitsArchived;
+
+  /// No description provided for @habitFormTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo hábito'**
+  String get habitFormTitle;
+
+  /// No description provided for @habitFormLabelHint.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué quieres trabajar?'**
+  String get habitFormLabelHint;
+
+  /// No description provided for @habitFormVirtueLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'¿A qué virtud pertenece?'**
+  String get habitFormVirtueLabel;
+
+  /// No description provided for @habitFormSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get habitFormSave;
+
+  /// Validación no punitiva de label vacío.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un nombre para el hábito.'**
+  String get habitFormEmptyLabel;
+
+  /// Mensaje al intentar un 4º hábito activo. Claro y no punitivo.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya tienes tres hábitos activos. Archiva uno para agregar otro.'**
+  String get habitsLimitReached;
 }
 
 class _AppLocalizationsDelegate
