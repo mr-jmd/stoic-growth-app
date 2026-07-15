@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Sprint 0 (bootstrap) is complete.** The app is no longer the bare `flutter create` scaffold:
 - `lib/main.dart` boots `StoicApp` (`lib/src/app.dart`) via `ProviderScope` + a Riverpod-provided `GoRouter` (`lib/src/core/routing/app_router.dart`), currently routing to a single placeholder screen.
 - Feature-first folder structure exists under `lib/src/{core,features,shared}` (see Architecture below); `core/design_system`, `core/l10n` and `shared/` are populated (Sprint 1), `features/` is still empty pending Sprint 3+.
-- A minimal Drift database (`lib/src/core/database/app_database.dart`, one `AppMeta` table) proves the Drift + `riverpod_generator` + `build_runner` codegen toolchain works on this SDK; the real MVP schema (5 entities) is Sprint 2 work, not yet done.
+- A minimal Drift database (`lib/src/core/database/app_database.dart`, initially one `AppMeta` table) proved the Drift + `riverpod_generator` + `build_runner` codegen toolchain works on this SDK; the full MVP schema was then built on top in Sprint 2 (see below).
 - The `appDatabase` provider (`lib/src/core/database/database_provider.dart`, `@Riverpod(keepAlive: true)`) exposes the DB and disposes it — the pattern Sprint 2+ repositories follow.
 - Dependencies added: `flutter_riverpod`, `riverpod_annotation`, `go_router`, `drift` + `drift_flutter`, `path_provider`, `path`; dev: `riverpod_generator`, `build_runner`, `drift_dev`.
 - **`riverpod_lint`/`custom_lint` are intentionally NOT installed** — they don't yet support the `riverpod` 3.x / `riverpod_annotation` 4.x resolved by this project's SDK constraint. Re-check compatibility before adding them.
@@ -23,7 +23,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Offline guard:** `test/support/no_network_http_overrides.dart` (`HttpOverrides` that throws on any connection + `withNoNetwork` helper). Extend its coverage each sprint through Sprint 7.
 - Dependencies added this sprint: `flutter_localizations` (SDK), `intl`.
 
-Sprints 2–7 (full data layer, onboarding, streaks/relapse, journal, crisis mode, dashboard) are not yet built — see `docs/SPRINT_PLAN.md` for what each entails.
+**Sprint 2 (local data layer) is complete.** The full MVP schema, DAOs, repositories and a real migration are built and verified (`build_runner` clean, `flutter analyze` clean, 11 tests green against `NativeDatabase.memory()`, debug APK builds):
+- **Schema** — 6 Drift tables under `lib/src/core/database/tables/` (one class per file): `UserProfiles` (no auth fields), `Habits` (`virtue` via `textEnum`; `currentStreakCount` is a directly-editable int), `JournalEntries` (day-precision `date`; nullable `moodScore`/`energyScore`), `JournalEntryTags` (join, FK cascade), `HabitCheckIns` (**append-only** event log — the real "streak record"), `RelapseEvents` (FK to habit + nullable check-in). `HabitCheckIns`/`RelapseEvents` are pure history — never deleted or mutated by a streak reset.
+- **Enums** in `lib/src/shared/` stored as `textEnum` (the `.name`): `JournalType`, `JournalInputMethod`, `EveningTag`, `CheckInStatus` (plus `Virtue` from Sprint 1). Display copy stays in l10n.
+- **DAOs** per cluster via `@DriftAccessor` (`daos/`): `HabitsDao`, `JournalDao`, `UserProfileDao` — not monolithic.
+- **Repositories** in `lib/src/core/database/repositories/` (kept in the data layer, not `features/`, until Sprint 3+ consumes them), exposed via `@riverpod` over `appDatabaseProvider`, **no abstract interfaces**. `HabitRepository.recordCheckIn` inserts a check-in and recomputes the streak in one `db.transaction`; `JournalRepository.saveEntry` writes entry + tags atomically.
+- **Migration** — `schemaVersion` is 2; `onUpgrade` creates the Sprint 2 tables when upgrading from the Sprint 0 v1 (AppMeta-only) DB; `beforeOpen` sets `PRAGMA foreign_keys = ON`. `AppDatabase.forTesting(executor)` injects an in-memory DB for tests.
+- **`drift_dev schema dump` is currently unusable** on this dependency set (`drift_dev` ≥2.34.1+1 needs `analyzer ^13`, but `riverpod_generator ^4.0.4` needs `analyzer ^12` — a hard conflict). The migration path is instead covered by the `onUpgrade` implementation + a round-trip test. Re-check when analyzer/riverpod_generator/drift_dev realign before relying on schema-export migration tests.
+
+Sprints 3–7 (onboarding, streaks/relapse, journal, crisis mode, dashboard) are not yet built — see `docs/SPRINT_PLAN.md` for what each entails.
 
 The repo name `stoic-growth-app` is a technical placeholder. **"Andamio" is the working name** used in design/development (see `docs/DESIGN_BRIEF.md`); "Virtude" is the backup alternative if Andamio fails domain/social validation. The final brand name isn't locked yet (see README section 12).
 

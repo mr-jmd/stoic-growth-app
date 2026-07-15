@@ -132,6 +132,17 @@ Decisiones ya confirmadas:
 
 ## Sprint 2 — Capa de datos local (Drift)
 
+> **Estado: COMPLETO.** Schema completo del MVP, DAOs, repositorios y migración implementados y verificados (`build_runner` sin errores, `flutter analyze` limpio, 11 tests en verde con `NativeDatabase.memory()`, `flutter build apk --debug` OK con la SQLite nativa). Ubicación: `app/lib/src/core/database/{tables,daos,repositories}/`, enums de dominio en `app/lib/src/shared/`, tests en `app/test/core/database/data_layer_test.dart`.
+>
+> **Decisiones cerradas en este sprint:**
+> - **Enums vía `textEnum`** (no `intEnum`): `Virtue`, `JournalType`, `JournalInputMethod`, `EveningTag`, `CheckInStatus` se guardan por `.name` — más estable ante reordenamientos; renombrar un valor es una migración. Todos viven en `lib/src/shared/`.
+> - **Repositorios en `core/database/repositories/`** (no en `features/*/data/`): mantiene la capa de datos cohesionada mientras `features/` sigue vacío; Sprint 3+ los consume. Expuestos vía `@riverpod` sobre `appDatabaseProvider`, sin interfaces abstractas.
+> - **Constructor `AppDatabase.forTesting(executor)`** para inyectar `NativeDatabase.memory()` en tests, en vez de override de provider (más directo para tests de capa de datos pura; el override de `appDatabaseProvider` sigue disponible para tests de widget/integración).
+> - **Migración v1→v2 real, no stub vacío:** `schemaVersion` sube a 2 y `onUpgrade` crea las 6 tablas nuevas cuando viene de v1 (Sprint 0 dejó solo `AppMeta`). `beforeOpen` activa `PRAGMA foreign_keys = ON`. FKs con `onDelete: cascade` en join/historial.
+> - **`recordCheckIn` ya transaccional** (insert de check-in + recálculo de streak en `db.transaction`); Sprint 4 extiende con el flujo recaída de dos tablas (check-in + `RelapseEvents`) atómico. `logRelapseEvent` queda como primitiva de historial.
+> - **Export de schema de `drift_dev` NO realizado — bloqueado por conflicto de dependencias.** `drift_dev schema dump` está roto en este set: `drift_dev ≥2.34.1+1` exige `analyzer ^13` pero `riverpod_generator ^4.0.4` exige `analyzer ^12` (incompatibles; no se puede subir `drift_dev` sin romper el codegen de Riverpod). Es el riesgo de tooling que anticipa la sección "Racional de versiones". **Mitigación aplicada:** el camino de migración queda establecido y probado vía la implementación de `onUpgrade` + un test de round-trip que confirma `schemaVersion == 2` y que `onUpgrade` es invocable. **Pendiente:** re-checar compatibilidad y generar el export cuando `analyzer`/`riverpod_generator`/`drift_dev` se realineen.
+> - **Dependencias:** ninguna nueva (el stack de Drift/Riverpod ya estaba desde Sprint 0).
+
 **Objetivo:** Modelar y persistir las 5 entidades del MVP (usuario local, hábito/virtud, entrada de diario, registro de racha, evento de recaída) con Drift, con estrategia de migración desde el día uno.
 
 **Tareas técnicas — tablas** (`core/database/tables/`, una clase `Table` por archivo):
