@@ -92,6 +92,17 @@ Decisiones ya confirmadas:
 
 ## Sprint 1 — Sistema de diseño + i18n
 
+> **Estado: COMPLETO.** Sistema de diseño dual claro/oscuro, i18n y galería implementados y verificados (`flutter analyze` limpio, `flutter test` en verde con guardia offline, `flutter build apk --debug` OK con fuentes empaquetadas). Ubicación: `app/lib/src/core/design_system/` (tokens, theme, components, gallery), `app/lib/src/core/l10n/` (i18n), `app/lib/src/shared/` (`Virtue`, `VirtueProgressState` y sus labels), `app/assets/fonts/` (OFL vendorizadas).
+>
+> **Decisiones cerradas en este sprint:**
+> - **Tipografía = variable fonts.** Google Fonts ya solo publica Cormorant Garamond y Source Sans 3 como *variable fonts* (eje `wght`); se vendorizaron esos VF (roman + itálica de Cormorant) en `assets/fonts/` con sus licencias OFL. Flutter mapea `fontWeight`→`wght` y los tokens fijan además `FontVariation('wght', …)`. No se usan instancias estáticas ni `google_fonts` runtime.
+> - **`ThemeMode.system`** (opción recomendada del DESIGN_BRIEF §8.4): cero persistencia nueva, sin tocar el schema de Drift. El toggle manual persistido queda como follow-up aditivo de Fase 2+.
+> - **Tonos claros de "sin desbastar"** para Templanza/Coraje/Sabiduría (el brief solo daba Justicia explícito) se derivaron como tintes pálidos análogos y viven en `tokens/palette.dart` (único archivo con literales `Color(0x…)`). Candidatos a afinar visualmente en device.
+> - **Home en debug = galería.** Mientras no exista el dashboard (Sprint 7), `GoRouter` sirve la galería debug-only en `/` bajo `kDebugMode`, y un placeholder en release. La galería trae un toggle de brightness **local** que no altera el tema global.
+> - **Enum `Virtue` en `lib/src/shared/`** (no en la capa de Drift): fuente única que Sprint 2 importará para el type converter, sin que ninguna capa sea dueña de la otra. Se agregó `VirtueProgressState { sinDesbastar, tomandoColor, pulida, enReposo }` en el mismo lugar.
+> - **Guardia offline** implementada como `HttpOverrides` que lanza ante cualquier conexión (`test/support/no_network_http_overrides.dart` + helper `withNoNetwork`); los tests de galería corren bajo ella. Es la base a extender hasta Sprint 7.
+> - **Dependencias agregadas:** `flutter_localizations` (SDK) + `intl`. Se activó `generate: true` y `l10n.yaml`. Sin nuevos paquetes de UI/estado.
+
 **Objetivo:** Establecer el lenguaje visual sobrio tierra/mármol (tokens, paleta, tipografía, tema, componentes base) y el scaffolding de i18n, para que toda la app posterior consuma un sistema consistente desde el día uno.
 
 **Tareas técnicas:**

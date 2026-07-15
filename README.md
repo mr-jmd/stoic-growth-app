@@ -15,7 +15,7 @@ Documento técnico de propuesta — julio de 2026
 3. [Problema y oportunidad de mercado](#3-problema-y-oportunidad-de-mercado)
 4. [Propuesta funcional](#4-propuesta-funcional)
 5. [Diferenciación frente al mercado](#5-diferenciación-frente-al-mercado)
-6. [Arquitectura técnica recomendada](#6-arquitectura-técnica-recomendada)
+6. [Arquitectura técnica](#6-arquitectura-técnica)
 7. [Modelo de datos inicial](#7-modelo-de-datos-inicial)
 8. [Roadmap recomendado](#8-roadmap-recomendado)
 9. [Modelo de monetización](#9-modelo-de-monetización)
@@ -138,38 +138,49 @@ A diferencia de un chatbot de soporte emocional genérico, el agente de esta app
 
 ---
 
-## 6. Arquitectura técnica recomendada
+## 6. Arquitectura técnica
 
-El criterio de selección es exclusivamente técnico: mejor rendimiento, mejor consistencia visual entre Android e iOS, y mejor capacidad de escalar a futuro.
+Esta sección describe la arquitectura **en uso**, no una recomendación abierta: las decisiones de stack ya están tomadas y parte del stack ya está implementado. El criterio que las guió sigue siendo técnico: mejor rendimiento, mejor consistencia visual entre Android e iOS, y mejor capacidad de escalar a futuro. La ejecución sprint por sprint vive en `docs/SPRINT_PLAN.md`; las decisiones de diseño detalladas, en `docs/DESIGN_BRIEF.md`.
 
-### 6.1 Frontend móvil
+> **Estado de implementación (a la fecha):** Sprint 0 (bootstrap del stack) y Sprint 1 (sistema de diseño + i18n) están completos. El backend de sync y la capa de IA son de Fase 2 y **todavía no existen en el código** — el MVP no los necesita.
 
-- **Recomendado: Flutter (Dart).** Motor de renderizado propio (Impeller/Skia), lo que garantiza que la interfaz se vea y se sienta exactamente igual en Android e iOS sin depender de componentes nativos de cada plataforma. Rendimiento cercano al nativo, animaciones fluidas de fábrica —clave para ejercicios de respiración, transiciones y journaling— y una sola base de código real. Precedente directo: **Medito**, la app de bienestar gratuita y open source usada como referencia de mercado, está construida en Flutter, con arquitectura y tamaño de equipo comparables a los de este proyecto.
-- **Alternativa considerada: React Native (New Architecture).** Ecosistema JavaScript muy grande y mucha disponibilidad de talento, pero sigue dependiendo de un puente hacia componentes nativos, lo que introduce más variabilidad visual entre plataformas y más fricción al escalar animaciones o UI muy custom.
-- **Alternativa considerada: Kotlin Multiplatform (Compose Multiplatform).** Permite compartir lógica de negocio con un futuro backend en Kotlin y ofrece rendimiento nativo real, pero su ecosistema de UI compartida es todavía menos maduro y su comunidad es más pequeña — mayor riesgo para un proyecto que necesita moverse rápido.
-- **Estado y navegación:** Riverpod para manejo de estado y GoRouter para navegación — el combo recomendado por el propio equipo de Flutter para apps de tamaño mediano-grande.
-- **UI/diseño:** sistema de diseño propio, sobrio, en tonos tierra/mármol (evocando la estética estoica clásica), sin gamificación infantil ni estridencia visual.
+### 6.1 Frontend móvil — *en uso*
 
-### 6.2 Backend y persistencia
+- **Flutter (Dart), plataformas Android e iOS.** Motor de renderizado propio (Impeller/Skia): la interfaz se ve y se siente igual en ambas plataformas sin depender de componentes nativos, con animaciones fluidas de fábrica (clave para respiración, transiciones y journaling) y una sola base de código. Precedente de mercado: **Medito**, app de bienestar gratuita y open source, está construida en Flutter con equipo de tamaño comparable. Se descartaron React Native (puente nativo → más variabilidad visual) y Kotlin Multiplatform (UI compartida menos madura).
+- **SDK fijado con FVM** a una versión exacta (`.fvmrc` → Flutter `3.44.6`), no a un canal móvil, para builds reproducibles. Todos los comandos se corren con el prefijo `fvm`.
+- **Estado y navegación:** **Riverpod** (con `riverpod_annotation` + `riverpod_generator`, codegen vía `build_runner`) y **GoRouter**, expuesto como un único router top-level vía provider. Convención de un provider `@riverpod` por repositorio.
+- **Codegen:** `build_runner` orquesta `riverpod_generator` y `drift_dev`; la localización usa `gen-l10n`. Los `.g.dart` se regeneran al tocar código anotado o el schema de Drift.
 
-- **Local-first:** SQLite vía Drift (ORM reactivo nativo de Flutter) como fuente de verdad en el dispositivo. La app debe funcionar completamente offline.
-- **Backend (sync y backup):** API en .NET (ASP.NET Core Minimal API) con PostgreSQL, desplegada como servicios independientes (auth, sync, IA) para escalar cada uno por separado según demanda.
-- **Alternativa más rápida de lanzar:** Supabase (Postgres + Auth + Realtime), aunque implica menor control de escalabilidad a largo plazo que una API propia.
-- **Autenticación:** opcional y nunca obligatoria en el MVP — fricción mínima.
+### 6.2 Sistema de diseño e i18n — *en uso (Sprint 1)*
 
-### 6.3 Capa de inteligencia artificial
+- **Sistema de diseño propio**, sobrio, en tonos tierra/piedra, sin gamificación ni estridencia. Un único sistema de material con **dos temas: claro ("mármol pulido") y oscuro ("basalto pulido")**, activados por `ThemeMode.system`. Los tokens (espaciado, radios, tipografía, color por virtud, elevación) viven centralizados como `ThemeExtension`; ningún valor de color/tipografía se hardcodea en código de feature. Detalle completo en `docs/DESIGN_BRIEF.md`.
+- **Progreso por virtud como estado de material** (no puntaje ni barra): las cuatro virtudes cardinales son un enum fijo, y la recaída se representa como "piedra en reposo" (cálida, re-construible), nunca como rojo/alarma ni "racha rota".
+- **Tipografía OFL vendorizada** (Cormorant Garamond + Source Sans 3) empaquetada en `assets/fonts/`; **nunca** `google_fonts` en runtime, porque romperría el requisito 100% offline.
+- **Internacionalización desde el primer sprint** (`flutter_localizations` + `gen-l10n`): todo string user-facing pasa por la capa de localización (`app_es.arb`), listo para expansión más allá de LATAM.
 
-- **Modelo:** API de un proveedor externo (Anthropic o similar) en vez de entrenar modelo propio.
-- **Orquestación:** capa de prompts con clasificación de riesgo antes de cualquier respuesta generativa; plantillas fijas (no generativas) para escenarios de alto riesgo, respuestas generativas solo para el rol socrático de bajo riesgo.
+### 6.3 Persistencia local — *en uso*
+
+- **Local-first:** SQLite vía **Drift** (ORM reactivo de Flutter) como **fuente de verdad en el dispositivo**. La app funciona completamente offline; una prueba-guardia en tests falla si algún flujo intenta abrir una conexión de red. El schema completo del MVP (perfil local, hábito/virtud, diario, racha, recaída) es trabajo de Sprint 2.
+- **Sin cuenta ni autenticación obligatoria** en el MVP — fricción mínima, y la lógica de navegación nunca depende de un provider de sesión.
+- *Nota de dependencias:* la SQLite nativa la aporta `drift_flutter` vía native-assets; `sqlite3_flutter_libs` está deprecado y **no** es dependencia directa.
+
+### 6.4 Backend de sync/backup — *planeado (Fase 2, no implementado)*
+
+- No forma parte del MVP y no existe en el repo. Cuando se construya: API en .NET (ASP.NET Core Minimal API) con PostgreSQL, en servicios independientes (auth, sync, IA) para escalar cada uno por separado. Alternativa más rápida de lanzar: Supabase (Postgres + Auth + Realtime), con menor control de escalabilidad a largo plazo. La sincronización es siempre backup del dato local, nunca requisito para usar la app.
+
+### 6.5 Capa de inteligencia artificial — *planeada (Fase 2, no implementada)*
+
+- **Modelo:** API de un proveedor externo (Anthropic o similar), sin modelo propio.
+- **Orquestación:** clasificación de riesgo antes de cualquier respuesta generativa; plantillas fijas (no generativas) para alto riesgo, generación solo para el rol socrático de bajo riesgo.
 - **Registro:** logging estructurado y auditable de interacciones críticas, con consentimiento explícito y retención mínima.
+- El **modo de crisis del MVP** (Sprint 6) es contenido estático empaquetado, sin IA y sin red — no depende de esta capa.
 
 > Ver [sección 9](#9-modelo-de-monetización) para el desglose de costo por token y los límites de uso exactos.
 
-### 6.4 Infraestructura y distribución
+### 6.6 Infraestructura y distribución
 
-- CI/CD con GitHub Actions y Codemagic o Fastlane para automatizar builds y publicación en App Store y Google Play desde un solo pipeline.
-- Repositorio público (open source) con licencia permisiva, siguiendo el modelo de Medito.
-- Internacionalización desde el primer sprint si se proyecta expansión más allá de LATAM.
+- **En uso:** repositorio público (open source), Android/iOS únicamente (sin soporte de escritorio web/desktop).
+- **Planeado:** CI/CD con GitHub Actions y Codemagic o Fastlane para automatizar builds y publicación en App Store y Google Play. Hoy **no hay configuración de CI** en el repo.
 
 ---
 
@@ -384,6 +395,7 @@ Esta propuesta no compite función por función contra apps de bienestar ya cons
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| 1.3 | 2026-07-14 | Se reescribe la sección 6 ("Arquitectura técnica", antes "recomendada") para documentar la arquitectura **en uso** en vez de una recomendación abierta: se marca qué está implementado (Sprint 0 bootstrap; Sprint 1 sistema de diseño dual claro/oscuro + i18n + tipografía OFL vendorizada) y qué es Fase 2 no construida (backend .NET/Postgres, capa de IA). Se agregan las decisiones ya cerradas (FVM con SDK fijo, Riverpod+GoRouter con codegen, Drift local-first con guardia offline, `drift_flutter` en vez de `sqlite3_flutter_libs`). |
 | 1.2 | 2026-07-14 | Se fija **Andamio** como nombre de trabajo (sección 12 y encabezado) — ya en uso en `docs/DESIGN_BRIEF.md` para diseño/desarrollo. Virtude pasa a alternativa de respaldo. Sigue pendiente la validación de dominio/redes para el nombre de marca definitivo. |
 | 1.1 | 2026-07-14 | Se agrega referencia a `docs/SPRINT_PLAN.md` en la sección 8 (Roadmap): plan de implementación sprint por sprint de la Fase 1, ya en ejecución (Sprint 0 completo — scaffold Flutter con Riverpod, GoRouter y Drift). El README no cambia como propuesta; solo se enlaza al documento operativo. |
 | 1.0 | 2026-07-11 | Versión inicial. Documento técnico consolidado: visión y arquitectura filosófica (tres disciplinas, cuatro virtudes), propuesta funcional, stack técnico (Flutter + .NET/PostgreSQL), modelo de datos, roadmap, modelo de monetización de dos capas, rediseño de UX de journaling y flujo del Interlocutor, moat competitivo y estrategia go-to-market, e historial de naming con `stoic-growth-app` como nombre de trabajo. |

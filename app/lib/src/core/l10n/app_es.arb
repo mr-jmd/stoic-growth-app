@@ -1,0 +1,143 @@
+{
+  "@@locale": "es",
+
+  "appTitle": "Andamio",
+  "@appTitle": {
+    "description": "Nombre visible de la app (working name)."
+  },
+
+  "virtueTemplanza": "Templanza",
+  "@virtueTemplanza": {
+    "description": "Nombre de la virtud cardinal: temperance."
+  },
+  "virtueCoraje": "Coraje",
+  "@virtueCoraje": {
+    "description": "Nombre de la virtud cardinal: courage."
+  },
+  "virtueSabiduria": "Sabiduría",
+  "@virtueSabiduria": {
+    "description": "Nombre de la virtud cardinal: wisdom."
+  },
+  "virtueJusticia": "Justicia",
+  "@virtueJusticia": {
+    "description": "Nombre de la virtud cardinal: justice."
+  },
+
+  "virtueStateSinDesbastar": "Sin desbastar",
+  "@virtueStateSinDesbastar": {
+    "description": "Estado de progreso de virtud (bajo / recién empieza). Metáfora de material, sin puntaje."
+  },
+  "virtueStateTomandoColor": "Tomando color",
+  "@virtueStateTomandoColor": {
+    "description": "Estado de progreso de virtud (medio)."
+  },
+  "virtueStatePulida": "Pulida",
+  "@virtueStatePulida": {
+    "description": "Estado de progreso de virtud (alto / constante)."
+  },
+  "virtueStateEnReposo": "En reposo",
+  "@virtueStateEnReposo": {
+    "description": "Estado de virtud tras una recaída. Nunca 'roto', nunca vacío — es re-construible."
+  },
+
+  "navToday": "Hoy",
+  "@navToday": {
+    "description": "Etiqueta de navegación: pantalla de inicio / dashboard."
+  },
+  "navJournal": "Diario",
+  "@navJournal": {
+    "description": "Etiqueta de navegación: diario."
+  },
+  "navHabits": "Hábitos",
+  "@navHabits": {
+    "description": "Etiqueta de navegación: hábitos."
+  },
+
+  "crisisAccessLabel": "Un momento de calma",
+  "@crisisAccessLabel": {
+    "description": "Etiqueta del acceso persistente a modo de crisis. Tono calmo, nunca de alarma."
+  },
+
+  "emptyHabitsTitle": "Aún no hay nada que cuidar aquí",
+  "@emptyHabitsTitle": {
+    "description": "Título del empty-state para 0 hábitos activos (no es el primer uso)."
+  },
+  "emptyHabitsBody": "Cuando elijas qué trabajar, aparecerá en este espacio.",
+  "@emptyHabitsBody": {
+    "description": "Cuerpo del empty-state para 0 hábitos activos."
+  },
+  "emptyHabitsAction": "Elegir un hábito",
+  "@emptyHabitsAction": {
+    "description": "Acción del empty-state para agregar un hábito."
+  },
+
+  "galleryTitle": "Galería del sistema de diseño",
+  "@galleryTitle": {
+    "description": "Título de la pantalla-galería debug-only del Sprint 1."
+  },
+  "gallerySectionTypography": "Tipografía",
+  "@gallerySectionTypography": {},
+  "gallerySectionColor": "Paleta y superficies",
+  "@gallerySectionColor": {},
+  "gallerySectionVirtues": "Virtudes y estados de progreso",
+  "@gallerySectionVirtues": {},
+  "gallerySectionButtons": "Botones",
+  "@gallerySectionButtons": {},
+  "gallerySectionChips": "Chips seleccionables",
+  "@gallerySectionChips": {},
+  "gallerySectionCards": "Tarjetas",
+  "@gallerySectionCards": {},
+  "gallerySectionEmptyState": "Empty state",
+  "@gallerySectionEmptyState": {},
+  "gallerySectionNav": "Navegación y crisis",
+  "@gallerySectionNav": {},
+  "galleryToggleLight": "Claro",
+  "@galleryToggleLight": {
+    "description": "Opción del toggle local de brightness en la galería: modo claro."
+  },
+  "galleryToggleDark": "Oscuro",
+  "@galleryToggleDark": {
+    "description": "Opción del toggle local de brightness en la galería: modo oscuro."
+  },
+
+  "galleryQuoteDemo": "No es lo que te sucede, sino cómo reaccionas a ello lo que importa.",
+  "@galleryQuoteDemo": {
+    "description": "Cita de demostración (Epicteto, dominio público) para mostrar el rol tipográfico 'quote' en la galería."
+  },
+  "galleryQuoteAttribution": "Epicteto",
+  "@galleryQuoteAttribution": {},
+  "galleryEyebrowQuote": "CITA DE HOY",
+  "@galleryEyebrowQuote": {
+    "description": "Eyebrow de sección de demostración."
+  },
+  "galleryReflectionDemo": "¿Qué está bajo tu control en esto?",
+  "@galleryReflectionDemo": {
+    "description": "Pregunta de reflexión de demostración (rol tipográfico 'reflection', itálica)."
+  },
+  "galleryPromptDemo": "Hoy depende de mí:",
+  "@galleryPromptDemo": {
+    "description": "Prompt de demostración (rol 'promptDisplay')."
+  },
+
+  "buttonPrimaryDemo": "Continuar",
+  "@buttonPrimaryDemo": {},
+  "buttonSecondaryDemo": "Ahora no",
+  "@buttonSecondaryDemo": {},
+
+  "chipMoodLow": "Bajo",
+  "@chipMoodLow": {
+    "description": "Chip cualitativo de ánimo/energía: nivel bajo. Sin lenguaje clínico."
+  },
+  "chipMoodMedium": "Medio",
+  "@chipMoodMedium": {},
+  "chipMoodHigh": "Alto",
+  "@chipMoodHigh": {},
+  "chipEveningRest": "Descansé bien",
+  "@chipEveningRest": {
+    "description": "Chip nocturno de demostración (copy provisional; el copy exacto de README 10.1 se fija en Sprint 5)."
+  },
+  "chipEveningPresent": "Estuve presente",
+  "@chipEveningPresent": {},
+  "chipEveningKind": "Fui amable conmigo",
+  "@chipEveningKind": {}
+}

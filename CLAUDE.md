@@ -8,13 +8,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Sprint 0 (bootstrap) is complete.** The app is no longer the bare `flutter create` scaffold:
 - `lib/main.dart` boots `StoicApp` (`lib/src/app.dart`) via `ProviderScope` + a Riverpod-provided `GoRouter` (`lib/src/core/routing/app_router.dart`), currently routing to a single placeholder screen.
-- Feature-first folder structure exists under `lib/src/{core,features,shared}` (see Architecture below), mostly still empty pending Sprint 1+.
+- Feature-first folder structure exists under `lib/src/{core,features,shared}` (see Architecture below); `core/design_system`, `core/l10n` and `shared/` are populated (Sprint 1), `features/` is still empty pending Sprint 3+.
 - A minimal Drift database (`lib/src/core/database/app_database.dart`, one `AppMeta` table) proves the Drift + `riverpod_generator` + `build_runner` codegen toolchain works on this SDK; the real MVP schema (5 entities) is Sprint 2 work, not yet done.
+- The `appDatabase` provider (`lib/src/core/database/database_provider.dart`, `@Riverpod(keepAlive: true)`) exposes the DB and disposes it — the pattern Sprint 2+ repositories follow.
 - Dependencies added: `flutter_riverpod`, `riverpod_annotation`, `go_router`, `drift` + `drift_flutter`, `path_provider`, `path`; dev: `riverpod_generator`, `build_runner`, `drift_dev`.
 - **`riverpod_lint`/`custom_lint` are intentionally NOT installed** — they don't yet support the `riverpod` 3.x / `riverpod_annotation` 4.x resolved by this project's SDK constraint. Re-check compatibility before adding them.
 - **`sqlite3_flutter_libs` is intentionally NOT a direct dependency** — it's deprecated since 0.6.0 (native SQLite is now bundled via `drift_flutter`'s native-assets hooks); don't re-add it.
 
-Sprints 1–7 (design system, full data layer, onboarding, streaks/relapse, journal, crisis mode, dashboard) are not yet built — see `docs/SPRINT_PLAN.md` for what each entails.
+**Sprint 1 (design system + i18n) is complete.** The visual language and localization scaffolding are built and verified (`flutter analyze` clean, `flutter test` green under an offline guard, `flutter build apk --debug` bundles the fonts):
+- **Design system** under `lib/src/core/design_system/` — a single material system with **two themes**: light ("mármol pulido") / dark ("basalto pulido"), toggled by `ThemeMode.system`. `tokens/` holds `StoicTokens` (a `ThemeExtension` with `.light()`/`.dark()` factories: shared spacing/radii/typography, per-mode color/elevation/virtue-slab gradients) and `palette.dart` — **the only file allowed to contain `Color(0x…)` literals** (enforced by DESIGN_BRIEF §7 greps). `theme/stoic_theme.dart` builds two `ThemeData` from that one token source via `ColorScheme.fromSeed(#D7CEBB)` corrected by hand. `components/` has the base widgets (`AppScaffold`, `AppButton`, `SelectableChip`, `AppCard`, `VirtueIndicator`, `EmptyState`, `AppBottomNav`, `CrisisAccessButton`); all read `context.stoic` / `ColorScheme`, never `if (isDark)`. `gallery/design_gallery_screen.dart` is a debug-only reference (served at `/` under `kDebugMode`) with a local brightness toggle. The "no gamification" checklist lives in the `design_system.dart` barrel doc.
+- **Fonts:** Cormorant Garamond + Source Sans 3 vendored as **variable fonts** (`wght` axis) in `app/assets/fonts/`, declared in `pubspec.yaml`. **Never** add `google_fonts` (runtime fetch breaks the offline invariant).
+- **i18n:** `flutter_localizations` + `gen-l10n`, single `app_es.arb` in `lib/src/core/l10n/`. Every user-facing string goes through `AppLocalizations` from here on — no literals. `l10n.yaml` configures codegen (`generate: true`).
+- **Shared domain:** `lib/src/shared/virtue.dart` (`Virtue` enum, fixed 4 values — Sprint 2's Drift type converter imports this, not vice-versa) and `virtue_progress_state.dart` (`VirtueProgressState { sinDesbastar, tomandoColor, pulida, enReposo }`; `enReposo` is the relapse "resting stone" state — never red/empty).
+- **Offline guard:** `test/support/no_network_http_overrides.dart` (`HttpOverrides` that throws on any connection + `withNoNetwork` helper). Extend its coverage each sprint through Sprint 7.
+- Dependencies added this sprint: `flutter_localizations` (SDK), `intl`.
+
+Sprints 2–7 (full data layer, onboarding, streaks/relapse, journal, crisis mode, dashboard) are not yet built — see `docs/SPRINT_PLAN.md` for what each entails.
 
 The repo name `stoic-growth-app` is a technical placeholder. **"Andamio" is the working name** used in design/development (see `docs/DESIGN_BRIEF.md`); "Virtude" is the backup alternative if Andamio fails domain/social validation. The final brand name isn't locked yet (see README section 12).
 
@@ -27,6 +36,7 @@ cd app
 
 fvm flutter pub get                                    # install dependencies
 fvm dart run build_runner build                        # regenerate Drift/Riverpod codegen (.g.dart files) after touching @DriftDatabase or @riverpod code
+fvm flutter gen-l10n                                    # regenerate AppLocalizations after editing lib/src/core/l10n/app_es.arb (also runs on pub get)
 fvm flutter run                                         # run on a connected device/emulator
 fvm flutter analyze                                     # static analysis (uses analysis_options.yaml / flutter_lints)
 fvm flutter test                                         # run all tests
@@ -49,7 +59,7 @@ The proposal specifies this stack — `docs/SPRINT_PLAN.md` sequences it into sp
   - Crisis/grounding mode: **fixed templates, no generative AI, always free, no external dependency** (safety-critical — must not depend on API availability/latency).
   - Reflective/Socratic mode: generative AI, free tier capped at 15 interactions/month/user, then degrades to a pre-written reflection library (never a hard block).
   - Risk classification must run before any generative response; high-risk signals (self-harm, crisis) route to fixed templates and human help lines, never to freeform generation.
-- **i18n:** planned from the first sprint if expansion beyond LATAM is expected.
+- **i18n:** implemented in Sprint 1 (`flutter_localizations` + `gen-l10n`, single `app_es.arb`); every user-facing string goes through `AppLocalizations`.
 
 ## Product/domain model (for feature work)
 

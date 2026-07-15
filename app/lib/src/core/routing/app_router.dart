@@ -1,6 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../design_system/design_system.dart';
+import '../design_system/gallery/design_gallery_screen.dart';
+import '../l10n/app_localizations.dart';
 
 part 'app_router.g.dart';
 
@@ -12,7 +17,11 @@ GoRouter appRouter(Ref ref) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const _PlaceholderScreen(),
+        // Until the real home/dashboard lands (Sprint 7), `/` shows the
+        // debug-only design-system gallery in debug builds and a plain
+        // placeholder in release builds.
+        builder: (context, state) =>
+            kDebugMode ? const DesignGalleryScreen() : const _PlaceholderScreen(),
       ),
     ],
   );
@@ -23,8 +32,8 @@ class _PlaceholderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Stoic Growth App')),
+    return AppScaffold(
+      body: Center(child: Text(AppLocalizations.of(context).appTitle)),
     );
   }
 }

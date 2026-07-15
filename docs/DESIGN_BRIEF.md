@@ -234,10 +234,22 @@ difiere de forma no obvia, se anota abajo.
 
 ---
 
+> **Estado: implementado en Sprint 1.** Este brief es intención de diseño; el sistema (tokens duales,
+> temas claro/oscuro, componentes, galería debug-only) ya vive en `app/lib/src/core/design_system/`.
+> Dos notas donde la implementación concreta difiere/precisa el brief:
+> - **Fuentes = variable fonts.** Google Fonts ya solo publica Cormorant Garamond y Source Sans 3 como
+>   *variable fonts* (eje `wght`); se vendorizaron esos VF (no instancias estáticas). Flutter mapea
+>   `fontWeight`→`wght` y los tokens fijan además `FontVariation('wght', …)`. El requisito duro —
+>   vendorizar OFL, sin `google_fonts` runtime — se cumple igual.
+> - **Tonos claros de `sin desbastar`** para Templanza/Coraje/Sabiduría (§3.2 solo daba Justicia
+>   explícito) se derivaron como tintes pálidos análogos y viven en `tokens/palette.dart`. Son
+>   candidatos a afinar visualmente en device.
+
 ## 7. Notas de implementación
 
 - Fuentes: vendorizar los `.ttf` OFL (Cormorant Garamond, Source Sans 3) a `assets/fonts/` y
   declararlos en `pubspec.yaml`. Sin fetch en runtime. Las fuentes son compartidas por ambos temas.
+  (Implementación real: los `.ttf` son *variable fonts* con eje `wght` — ver nota de estado arriba.)
 - `Virtue` es enum Dart fijo; sus etiquetas de display y las etiquetas de estado (`pulida`,
   `en reposo`, etc.) van en `app_es.arb`. Las etiquetas de estado son las mismas en claro y oscuro.
 - Verificación de Sprint 1 (ampliada por el modo oscuro):
