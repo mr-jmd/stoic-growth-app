@@ -58,79 +58,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get emptyHabitsAction => 'Elegir un hábito';
 
   @override
-  String get galleryTitle => 'Galería del sistema de diseño';
-
-  @override
-  String get gallerySectionTypography => 'Tipografía';
-
-  @override
-  String get gallerySectionColor => 'Paleta y superficies';
-
-  @override
-  String get gallerySectionVirtues => 'Virtudes y estados de progreso';
-
-  @override
-  String get gallerySectionButtons => 'Botones';
-
-  @override
-  String get gallerySectionChips => 'Chips seleccionables';
-
-  @override
-  String get gallerySectionCards => 'Tarjetas';
-
-  @override
-  String get gallerySectionEmptyState => 'Empty state';
-
-  @override
-  String get gallerySectionNav => 'Navegación y crisis';
-
-  @override
-  String get galleryToggleLight => 'Claro';
-
-  @override
-  String get galleryToggleDark => 'Oscuro';
-
-  @override
-  String get galleryQuoteDemo =>
-      'No es lo que te sucede, sino cómo reaccionas a ello lo que importa.';
-
-  @override
-  String get galleryQuoteAttribution => 'Epicteto';
-
-  @override
-  String get galleryEyebrowQuote => 'CITA DE HOY';
-
-  @override
-  String get galleryReflectionDemo => '¿Qué está bajo tu control en esto?';
-
-  @override
-  String get galleryPromptDemo => 'Hoy depende de mí:';
-
-  @override
-  String get buttonPrimaryDemo => 'Continuar';
-
-  @override
-  String get buttonSecondaryDemo => 'Ahora no';
-
-  @override
-  String get chipMoodLow => 'Bajo';
-
-  @override
-  String get chipMoodMedium => 'Medio';
-
-  @override
-  String get chipMoodHigh => 'Alto';
-
-  @override
-  String get chipEveningRest => 'Descansé bien';
-
-  @override
-  String get chipEveningPresent => 'Estuve presente';
-
-  @override
-  String get chipEveningKind => 'Fui amable conmigo';
-
-  @override
   String get onboardingIntroTitle => 'Construye tu carácter, día a día';
 
   @override
@@ -200,9 +127,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get homeOpenHabits => 'Ver hábitos';
-
-  @override
-  String get homeOpenGallery => 'Galería de diseño (debug)';
 
   @override
   String get habitsTitle => 'Tus hábitos';

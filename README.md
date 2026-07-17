@@ -23,9 +23,8 @@ Documento técnico de propuesta — julio de 2026
 11. [Moat competitivo y estrategia go-to-market](#11-moat-competitivo-y-estrategia-go-to-market)
 12. [Naming](#12-naming)
 13. [Riesgos y mitigación](#13-riesgos-y-mitigación)
-14. [Próximos pasos concretos](#14-próximos-pasos-concretos)
-15. [Conclusión](#15-conclusión)
-16. [Historial de actualizaciones](#historial-de-actualizaciones)
+14. [Conclusión](#14-conclusión)
+15. [Historial de actualizaciones](#historial-de-actualizaciones)
 
 ---
 
@@ -140,9 +139,9 @@ A diferencia de un chatbot de soporte emocional genérico, el agente de esta app
 
 ## 6. Arquitectura técnica
 
-Esta sección describe la arquitectura **en uso**, no una recomendación abierta: las decisiones de stack ya están tomadas y parte del stack ya está implementado. El criterio que las guió sigue siendo técnico: mejor rendimiento, mejor consistencia visual entre Android e iOS, y mejor capacidad de escalar a futuro. La ejecución sprint por sprint vive en `docs/SPRINT_PLAN.md`; las decisiones de diseño detalladas, en `docs/DESIGN_BRIEF.md`.
+Esta sección describe la arquitectura **en uso**, no una recomendación abierta: las decisiones de stack ya están tomadas y el MVP ya está implementado. El criterio que las guió sigue siendo técnico: mejor rendimiento, mejor consistencia entre Android e iOS, y mejor capacidad de escalar a futuro. El detalle técnico completo vive en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), y el desglose de cada funcionalidad en [`docs/features/`](docs/features/).
 
-> **Estado de implementación (a la fecha):** Sprint 0 (bootstrap del stack) y Sprint 1 (sistema de diseño + i18n) están completos. El backend de sync y la capa de IA son de Fase 2 y **todavía no existen en el código** — el MVP no los necesita.
+> **Estado de implementación:** el **MVP (Fase 1) está completo** — onboarding, hábitos, rachas/recaída, diario (mañana/noche + ánimo/energía + voz), modo de crisis y dashboard de virtudes, 100% offline y sin cuenta. El backend de sync y la capa de IA son de Fase 2 y **todavía no existen en el código** — el MVP no los necesita. El **sistema visual se va a replantear desde cero**; por eso este documento no fija reglas de diseño.
 
 ### 6.1 Frontend móvil — *en uso*
 
@@ -151,12 +150,11 @@ Esta sección describe la arquitectura **en uso**, no una recomendación abierta
 - **Estado y navegación:** **Riverpod** (con `riverpod_annotation` + `riverpod_generator`, codegen vía `build_runner`) y **GoRouter**, expuesto como un único router top-level vía provider. Convención de un provider `@riverpod` por repositorio.
 - **Codegen:** `build_runner` orquesta `riverpod_generator` y `drift_dev`; la localización usa `gen-l10n`. Los `.g.dart` se regeneran al tocar código anotado o el schema de Drift.
 
-### 6.2 Sistema de diseño e i18n — *en uso (Sprint 1)*
+### 6.2 Temas e i18n — *en uso*
 
-- **Sistema de diseño propio**, sobrio, en tonos tierra/piedra, sin gamificación ni estridencia. Un único sistema de material con **dos temas: claro ("mármol pulido") y oscuro ("basalto pulido")**, activados por `ThemeMode.system`. Los tokens (espaciado, radios, tipografía, color por virtud, elevación) viven centralizados como `ThemeExtension`; ningún valor de color/tipografía se hardcodea en código de feature. Detalle completo en `docs/DESIGN_BRIEF.md`.
-- **Progreso por virtud como estado de material** (no puntaje ni barra): las cuatro virtudes cardinales son un enum fijo, y la recaída se representa como "piedra en reposo" (cálida, re-construible), nunca como rojo/alarma ni "racha rota".
-- **Tipografía OFL vendorizada** (Cormorant Garamond + Source Sans 3) empaquetada en `assets/fonts/`; **nunca** `google_fonts` en runtime, porque romperría el requisito 100% offline.
-- **Internacionalización desde el primer sprint** (`flutter_localizations` + `gen-l10n`): todo string user-facing pasa por la capa de localización (`app_es.arb`), listo para expansión más allá de LATAM.
+- **Capa de tema centralizada por tokens** (`ThemeExtension`): el código de feature lee todo por el tema, sin hardcodear valores. Esto permite reemplazar el lenguaje visual sin tocar las features. *El sistema visual actual es interino y se va a replantear desde cero, así que este README no fija reglas de diseño.*
+- **Tipografía OFL vendorizada** empaquetada en `assets/fonts/`; **nunca** `google_fonts` en runtime, porque rompería el requisito 100% offline.
+- **Internacionalización** (`flutter_localizations` + `gen-l10n`): todo string user-facing pasa por la capa de localización (`app_es.arb`), listo para expansión más allá de LATAM.
 
 ### 6.3 Persistencia local — *en uso*
 
@@ -202,7 +200,7 @@ Esta sección describe la arquitectura **en uso**, no una recomendación abierta
 
 ## 8. Roadmap recomendado
 
-> **Implementación en curso.** La ejecución técnica de la Fase 1 (MVP) descrita abajo se está llevando en `docs/SPRINT_PLAN.md`: un plan sprint por sprint (Sprint 0 en adelante) con tareas técnicas, de arquitectura y de diseño/UX, criterios de aceptación y dependencias para cada sprint, además de las líneas rojas de la sección 9.6 como invariantes de proyecto. Ese documento es la referencia operativa de qué se está construyendo ahora mismo; este README sigue siendo la propuesta y visión de producto.
+> **La Fase 1 (MVP) está construida.** Su implementación quedó registrada en `docs/SPRINT_PLAN.md` (histórico sprint por sprint), y cada funcionalidad terminada está documentada en [`docs/features/`](docs/features/). La arquitectura técnica vive en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Este README sigue siendo la propuesta y visión de producto.
 
 ### Fase 1 — MVP (núcleo estoico)
 
@@ -322,12 +320,12 @@ Cuantos más días de diario, hábitos y patrones de recaída acumula un usuario
 
 ## 12. Naming
 
-**Estado: nombre de trabajo elegido — Andamio.** El repositorio sigue usando `stoic-growth-app` como nombre técnico/placeholder, pero **Andamio** es el nombre de trabajo que ya está en uso en diseño y desarrollo (ver `docs/DESIGN_BRIEF.md`). No es aún el nombre final de marca — eso requiere validar disponibilidad de dominio y redes sociales (ver sección 14). Las dos opciones que llegaron limpias tras todas las rondas de evaluación —sin colisión de marca, sin choque cultural o político, y con significado coherente con el producto— fueron:
+**Estado: nombre de trabajo elegido — Andamio.** El repositorio sigue usando `stoic-growth-app` como nombre técnico/placeholder, pero **Andamio** es el nombre de trabajo que ya está en uso en desarrollo. No es aún el nombre final de marca — eso requiere validar disponibilidad de dominio y redes sociales. Las dos opciones que llegaron limpias tras todas las rondas de evaluación —sin colisión de marca, sin choque cultural o político, y con significado coherente con el producto— fueron:
 
 - **Andamio** (elegido como nombre de trabajo) — estructura temporal que sostiene mientras se construye algo permanente. Verificado sin colisión de app ni referencia cultural/política. Metáfora de que la app te sostiene mientras construyes disciplina real, no un fin en sí misma.
 - **Virtude** (alternativa de respaldo) — forma en portugués de "virtud", conecta directo con el sistema de las cuatro virtudes cardinales (sección 2.2). Verificado sin colisión de app exacta; existe un campo semántico vecino ocupado (apps "Virtues", "Deugden"), pero ninguna es competidor funcional directo. Queda como plan B si Andamio no pasa la validación de dominio/redes o surge algún conflicto no detectado.
 
-El nombre de marca definitivo (posiblemente distinto de ambos, o uno de estos dos confirmado) se puede fijar más adelante sin bloquear el desarrollo (renombrar el repo de GitHub es trivial, ver sección 14).
+El nombre de marca definitivo (posiblemente distinto de ambos, o uno de estos dos confirmado) se puede fijar más adelante sin bloquear el desarrollo (renombrar el repo de GitHub es trivial).
 
 ### Historial de nombres evaluados y descartados
 
@@ -373,19 +371,7 @@ Por transparencia y para no repetir evaluaciones, este es el registro completo d
 
 ---
 
-## 14. Próximos pasos concretos
-
-- [ ] Validar la propuesta con 10-15 conversaciones reales de usuarios potenciales antes de escribir código.
-- [ ] Confirmar disponibilidad de nombre (dominio, redes, tienda de apps) para el nombre final de marca (ver sección 12).
-- [ ] Definir el sistema de diseño (tono visual, tipografía, paleta) coherente con la identidad estoica.
-- [ ] Construir el MVP de Fase 1 en Flutter, 100% local, en un ciclo corto (4-6 semanas).
-- [ ] Probar el MVP con un grupo cerrado antes de invertir en la capa de IA.
-- [ ] Identificar 1-2 aliados institucionales o comunidades de estoicismo/disciplina para distribución inicial.
-- [ ] Diseñar la clasificación de riesgo del Interlocutor y las plantillas fijas de crisis antes de integrar IA generativa.
-
----
-
-## 15. Conclusión
+## 14. Conclusión
 
 Esta propuesta no compite función por función contra apps de bienestar ya consolidadas: compite ofreciendo un marco de sentido que ninguna de ellas tiene, sostenido por un moat estructural (distribución institucional, cohortes, dato longitudinal) que no depende únicamente de la temática. Un MVP austero, local-first y sin IA desde el día uno reduce el riesgo técnico, ético y financiero, y un modelo de monetización de dos capas permite escalar el costo de IA sin comprometer la gratuidad del núcleo. La validación real ocurre cuando la gente vuelve a abrir la app al día siguiente — todo lo demás está diseñado para proteger esa condición.
 
@@ -395,8 +381,9 @@ Esta propuesta no compite función por función contra apps de bienestar ya cons
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| 1.4 | 2026-07-17 | **MVP (Fase 1) completo.** Se actualiza la sección 6 y 8 para reflejar que el MVP está construido (onboarding, hábitos, rachas/recaída, diario con voz, crisis, dashboard de virtudes). Se agregan `docs/ARCHITECTURE.md` y `docs/features/` (un doc por funcionalidad). Se **elimina el design brief** y todo contenido de reglas de diseño del README (sección 6.2 reducida a temas/i18n/offline): el sistema visual se va a **replantear desde cero**. Se quita la sección 14 ("Próximos pasos concretos") para concentrarse solo en el proyecto de software. Se retira la galería de diseño de la app. |
 | 1.3 | 2026-07-14 | Se reescribe la sección 6 ("Arquitectura técnica", antes "recomendada") para documentar la arquitectura **en uso** en vez de una recomendación abierta: se marca qué está implementado (Sprint 0 bootstrap; Sprint 1 sistema de diseño dual claro/oscuro + i18n + tipografía OFL vendorizada) y qué es Fase 2 no construida (backend .NET/Postgres, capa de IA). Se agregan las decisiones ya cerradas (FVM con SDK fijo, Riverpod+GoRouter con codegen, Drift local-first con guardia offline, `drift_flutter` en vez de `sqlite3_flutter_libs`). |
-| 1.2 | 2026-07-14 | Se fija **Andamio** como nombre de trabajo (sección 12 y encabezado) — ya en uso en `docs/DESIGN_BRIEF.md` para diseño/desarrollo. Virtude pasa a alternativa de respaldo. Sigue pendiente la validación de dominio/redes para el nombre de marca definitivo. |
+| 1.2 | 2026-07-14 | Se fija **Andamio** como nombre de trabajo (sección 12 y encabezado). Virtude pasa a alternativa de respaldo. Sigue pendiente la validación de dominio/redes para el nombre de marca definitivo. |
 | 1.1 | 2026-07-14 | Se agrega referencia a `docs/SPRINT_PLAN.md` en la sección 8 (Roadmap): plan de implementación sprint por sprint de la Fase 1, ya en ejecución (Sprint 0 completo — scaffold Flutter con Riverpod, GoRouter y Drift). El README no cambia como propuesta; solo se enlaza al documento operativo. |
 | 1.0 | 2026-07-11 | Versión inicial. Documento técnico consolidado: visión y arquitectura filosófica (tres disciplinas, cuatro virtudes), propuesta funcional, stack técnico (Flutter + .NET/PostgreSQL), modelo de datos, roadmap, modelo de monetización de dos capas, rediseño de UX de journaling y flujo del Interlocutor, moat competitivo y estrategia go-to-market, e historial de naming con `stoic-growth-app` como nombre de trabajo. |
 

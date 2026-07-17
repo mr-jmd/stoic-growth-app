@@ -12,7 +12,6 @@ import '../../features/journal/evening_screen.dart';
 import '../../features/journal/morning_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../database/repositories/onboarding_repository.dart';
-import '../design_system/gallery/design_gallery_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -82,16 +81,9 @@ GoRouter appRouter(Ref ref) {
         path: '/crisis',
         builder: (context, state) => const CrisisScreen(),
       ),
-      // Debug-only design-system reference, exempt from the onboarding gate.
-      if (kDebugMode)
-        GoRoute(
-          path: '/gallery',
-          builder: (context, state) => const DesignGalleryScreen(),
-        ),
     ],
     redirect: (context, state) {
       final location = state.matchedLocation;
-      if (location == '/gallery') return null; // always reachable in debug
       if (location == '/crisis') return null; // safety: never gate crisis mode
 
       final completed = readCompleted();

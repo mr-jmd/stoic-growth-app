@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -65,14 +64,6 @@ class HomeScreen extends ConsumerWidget {
             variant: AppButtonVariant.secondary,
             onPressed: () => context.push('/journal/evening'),
           ),
-          if (kDebugMode) ...[
-            SizedBox(height: tokens.spacing.sm),
-            AppButton(
-              label: l.homeOpenGallery,
-              variant: AppButtonVariant.secondary,
-              onPressed: () => context.push('/gallery'),
-            ),
-          ],
         ],
       ),
     );
