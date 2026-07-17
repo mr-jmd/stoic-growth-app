@@ -664,6 +664,24 @@ abstract class AppLocalizations {
   /// **'Guardar'**
   String get dialogSave;
 
+  /// Encabezado de la cuadrícula de las 4 virtudes en el dashboard. El framing primario de la home.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus virtudes'**
+  String get homeVirtuesSectionTitle;
+
+  /// Eyebrow de la tarjeta de cita diaria.
+  ///
+  /// In es, this message translates to:
+  /// **'PARA HOY'**
+  String get homeQuoteEyebrow;
+
+  /// Subtítulo de la sección de hábitos en el dashboard.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que estás trabajando'**
+  String get homeHabitsSectionSubtitle;
+
   /// Encabezado de la sección de diario en la home.
   ///
   /// In es, this message translates to:

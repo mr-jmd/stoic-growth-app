@@ -306,6 +306,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dialogSave => 'Guardar';
 
   @override
+  String get homeVirtuesSectionTitle => 'Tus virtudes';
+
+  @override
+  String get homeQuoteEyebrow => 'PARA HOY';
+
+  @override
+  String get homeHabitsSectionSubtitle => 'Lo que estás trabajando';
+
+  @override
   String get homeJournalSectionTitle => 'Diario';
 
   @override

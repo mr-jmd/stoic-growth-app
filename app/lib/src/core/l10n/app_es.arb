@@ -298,6 +298,16 @@
   "dialogSave": "Guardar",
   "@dialogSave": { "description": "Acción genérica de guardar en un diálogo." },
 
+  "homeVirtuesSectionTitle": "Tus virtudes",
+  "@homeVirtuesSectionTitle": {
+    "description": "Encabezado de la cuadrícula de las 4 virtudes en el dashboard. El framing primario de la home."
+  },
+  "homeQuoteEyebrow": "PARA HOY",
+  "@homeQuoteEyebrow": { "description": "Eyebrow de la tarjeta de cita diaria." },
+  "homeHabitsSectionSubtitle": "Lo que estás trabajando",
+  "@homeHabitsSectionSubtitle": {
+    "description": "Subtítulo de la sección de hábitos en el dashboard."
+  },
   "homeJournalSectionTitle": "Diario",
   "@homeJournalSectionTitle": { "description": "Encabezado de la sección de diario en la home." },
   "homeOpenMorning": "Reflexión de la mañana",

@@ -21,6 +21,7 @@ class HabitsListScreen extends ConsumerWidget {
     final habits = ref.watch(activeHabitsProvider);
 
     return AppScaffold(
+      onBack: () => context.pop(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
         child: Column(

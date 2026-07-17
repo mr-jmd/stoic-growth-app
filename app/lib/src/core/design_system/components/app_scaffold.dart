@@ -12,6 +12,7 @@ class AppScaffold extends StatelessWidget {
     required this.body,
     this.bottomBar,
     this.crisisAccess,
+    this.onBack,
   });
 
   final Widget body;
@@ -20,9 +21,36 @@ class AppScaffold extends StatelessWidget {
   /// Optional persistent crisis affordance, pinned bottom-end above the bar.
   final Widget? crisisAccess;
 
+  /// When set, a back control is shown at the top-start. Pushed screens without
+  /// their own back affordance pass this (there's no AppBar) so they're never
+  /// dead-ends on platforms without a system back button.
+  final VoidCallback? onBack;
+
   @override
   Widget build(BuildContext context) {
     final c = context.stoic.colors;
+
+    Widget content = body;
+    if (onBack != null) {
+      content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: context.stoic.spacing.sm,
+              top: context.stoic.spacing.sm,
+            ),
+            child: IconButton(
+              onPressed: onBack,
+              icon: const Icon(Icons.arrow_back),
+              color: c.faint,
+            ),
+          ),
+          Expanded(child: body),
+        ],
+      );
+    }
+
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: RadialGradient(
@@ -36,10 +64,10 @@ class AppScaffold extends StatelessWidget {
         bottomNavigationBar: bottomBar,
         body: SafeArea(
           child: crisisAccess == null
-              ? body
+              ? content
               : Stack(
                   children: [
-                    Positioned.fill(child: body),
+                    Positioned.fill(child: content),
                     Positioned(
                       right: context.stoic.spacing.lg,
                       bottom: context.stoic.spacing.lg,

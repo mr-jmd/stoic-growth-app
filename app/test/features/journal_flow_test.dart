@@ -1,14 +1,55 @@
+import 'package:app/src/core/database/app_database.dart';
+import 'package:app/src/core/database/database_provider.dart';
 import 'package:app/src/core/database/repositories/journal_repository.dart';
-import 'package:app/src/core/database/repositories/onboarding_repository.dart';
+import 'package:app/src/core/design_system/theme/stoic_theme.dart';
 import 'package:app/src/core/l10n/app_localizations.dart';
 import 'package:app/src/features/journal/evening_screen.dart';
 import 'package:app/src/features/journal/morning_screen.dart';
 import 'package:app/src/shared/journal_enums.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import '../support/no_network_http_overrides.dart';
 import '../support/test_app.dart';
+
+const List<LocalizationsDelegate<dynamic>> _delegates = [
+  AppLocalizations.delegate,
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
+
+/// A minimal router with a stub home + the two journal routes, so a screen's
+/// `context.pop()` on save has somewhere to return to. Driven directly through
+/// GoRouter (not by tapping through the real dashboard), which keeps these tests
+/// focused on the journal screens themselves.
+GoRouter _journalRouter() => GoRouter(
+      routes: [
+        GoRoute(path: '/', builder: (_, _) => const Scaffold()),
+        GoRoute(
+          path: '/journal/morning',
+          builder: (_, _) => const MorningScreen(),
+        ),
+        GoRoute(
+          path: '/journal/evening',
+          builder: (_, _) => const EveningScreen(),
+        ),
+      ],
+    );
+
+Widget _journalApp(AppDatabase db, GoRouter router) => ProviderScope(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+      child: MaterialApp.router(
+        routerConfig: router,
+        theme: stoicLightTheme(),
+        darkTheme: stoicDarkTheme(),
+        localizationsDelegates: _delegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
+    );
 
 void main() {
   final es = lookupAppLocalizations(const Locale('es'));
@@ -18,15 +59,11 @@ void main() {
       (tester) async {
     final db = newTestDatabase();
     addTearDown(db.close);
-    // Skip onboarding so the app lands on home, then navigate to the evening
-    // screen through the real router.
-    await OnboardingRepository(db).complete();
+    final router = _journalRouter();
 
     await withNoNetwork(() async {
-      await tester.pumpWidget(testApp(db));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text(es.homeOpenEvening));
+      await tester.pumpWidget(_journalApp(db, router));
+      router.push('/journal/evening');
       await tester.pumpAndSettle();
       expect(find.byType(EveningScreen), findsOneWidget);
 
@@ -47,13 +84,11 @@ void main() {
       (tester) async {
     final db = newTestDatabase();
     addTearDown(db.close);
-    await OnboardingRepository(db).complete();
+    final router = _journalRouter();
 
     await withNoNetwork(() async {
-      await tester.pumpWidget(testApp(db));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text(es.homeOpenMorning));
+      await tester.pumpWidget(_journalApp(db, router));
+      router.push('/journal/morning');
       await tester.pumpAndSettle();
       expect(find.byType(MorningScreen), findsOneWidget);
 
@@ -64,7 +99,6 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      // Back on home, and the entry is persisted for today.
       final entry = await JournalRepository(db)
           .getEntryForDay(DateTime.now(), JournalType.morning);
       expect(entry, isNotNull);
@@ -75,9 +109,6 @@ void main() {
   });
 }
 
-/// Unmounts the tree and pumps once more so Drift's stream-close timer, the
-/// SnackBar auto-dismiss timer, and any focused-field cursor timer fire before
-/// the pending-timer invariant runs.
 Future<void> _disposeTree(WidgetTester tester) async {
   await tester.pumpWidget(const SizedBox());
   await tester.pump(const Duration(milliseconds: 50));

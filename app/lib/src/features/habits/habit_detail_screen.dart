@@ -28,6 +28,7 @@ class HabitDetailScreen extends ConsumerWidget {
     final habit = ref.watch(habitByIdProvider(habitId));
 
     return AppScaffold(
+      onBack: () => context.pop(),
       body: habit.when(
         loading: () => const SizedBox.shrink(),
         error: (_, _) => const SizedBox.shrink(),
