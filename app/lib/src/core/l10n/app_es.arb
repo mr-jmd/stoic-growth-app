@@ -362,6 +362,10 @@
   "moodLevelHigh": "Alto",
   "@moodLevelHigh": {},
 
+  "journalMicTooltip": "Dictar por voz",
+  "@journalMicTooltip": {
+    "description": "Etiqueta del botón de micrófono en los campos de texto del diario. Opcional; el texto siempre se puede escribir."
+  },
   "journalSave": "Guardar",
   "@journalSave": {},
   "journalSaved": "Guardado.",

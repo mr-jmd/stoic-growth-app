@@ -384,6 +384,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get moodLevelHigh => 'Alto';
 
   @override
+  String get journalMicTooltip => 'Dictar por voz';
+
+  @override
   String get journalSave => 'Guardar';
 
   @override

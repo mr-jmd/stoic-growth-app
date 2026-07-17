@@ -49,6 +49,12 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Voice dictation for the journal (speech_to_text). Optional — text can
+	     always be typed. On-device recognition only; audio is not sent anywhere. -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Para dictar tus reflexiones por voz. Siempre puedes escribirlas a mano.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Para convertir tu voz en texto en tu diario, en el dispositivo.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

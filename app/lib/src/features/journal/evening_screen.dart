@@ -9,6 +9,7 @@ import '../../shared/journal_enums.dart';
 import '../../shared/journal_l10n.dart';
 import '../../shared/qualitative_level.dart';
 import 'mood_energy_picker.dart';
+import 'speech/mic_button.dart';
 
 /// Evening reflection (README 10.1): three fixed multi-select chips, optional
 /// mood/energy, and a free-text note that stays **collapsed** — the text field
@@ -28,6 +29,7 @@ class _EveningScreenState extends ConsumerState<EveningScreen> {
   QualitativeLevel? _mood;
   QualitativeLevel? _energy;
   bool _showNote = false;
+  bool _usedVoice = false;
   bool _saving = false;
 
   @override
@@ -111,7 +113,10 @@ class _EveningScreenState extends ConsumerState<EveningScreen> {
                     // The optional free-text note: collapsed by default. The
                     // field only enters the tree once the user opts in.
                     if (_showNote)
-                      _NoteField(controller: _note)
+                      _NoteField(
+                        controller: _note,
+                        onVoiceUsed: () => _usedVoice = true,
+                      )
                     else
                       _AddNoteButton(
                         onTap: () => setState(() => _showNote = true),
@@ -154,6 +159,8 @@ class _EveningScreenState extends ConsumerState<EveningScreen> {
           freeText: note.isEmpty ? null : note,
           moodScore: _mood?.score,
           energyScore: _energy?.score,
+          inputMethod:
+              _usedVoice ? JournalInputMethod.voice : JournalInputMethod.typed,
         );
 
     messenger.showSnackBar(SnackBar(content: Text(l.journalSaved)));
@@ -193,9 +200,10 @@ class _AddNoteButton extends StatelessWidget {
 }
 
 class _NoteField extends StatelessWidget {
-  const _NoteField({required this.controller});
+  const _NoteField({required this.controller, this.onVoiceUsed});
 
   final TextEditingController controller;
+  final VoidCallback? onVoiceUsed;
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +224,8 @@ class _NoteField extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: scheme.surfaceContainer,
+            suffixIcon:
+                MicButton(controller: controller, onVoiceUsed: onVoiceUsed),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(tokens.radii.card),
               borderSide: BorderSide(color: tokens.colors.line),

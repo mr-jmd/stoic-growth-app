@@ -820,6 +820,12 @@ abstract class AppLocalizations {
   /// **'Alto'**
   String get moodLevelHigh;
 
+  /// Etiqueta del botón de micrófono en los campos de texto del diario. Opcional; el texto siempre se puede escribir.
+  ///
+  /// In es, this message translates to:
+  /// **'Dictar por voz'**
+  String get journalMicTooltip;
+
   /// No description provided for @journalSave.
   ///
   /// In es, this message translates to:

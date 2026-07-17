@@ -8,6 +8,7 @@ import '../../core/l10n/app_localizations.dart';
 import '../../shared/journal_enums.dart';
 import '../../shared/qualitative_level.dart';
 import 'mood_energy_picker.dart';
+import 'speech/mic_button.dart';
 
 /// Morning reflection (README 10.1): the "Hoy depende de mí: ___" prompt,
 /// completable in a single tap via a pre-written short phrase (or typed in the
@@ -24,6 +25,7 @@ class _MorningScreenState extends ConsumerState<MorningScreen> {
   final _phrase = TextEditingController();
   QualitativeLevel? _mood;
   QualitativeLevel? _energy;
+  bool _usedVoice = false;
   bool _saving = false;
 
   @override
@@ -97,7 +99,10 @@ class _MorningScreenState extends ConsumerState<MorningScreen> {
                     SizedBox(height: tokens.spacing.lg),
                     Text(l.morningCustomHint, style: tokens.text.eyebrow),
                     SizedBox(height: tokens.spacing.sm),
-                    _PhraseField(controller: _phrase),
+                    _PhraseField(
+                      controller: _phrase,
+                      onVoiceUsed: () => _usedVoice = true,
+                    ),
                     SizedBox(height: tokens.spacing.xxl),
                     MoodEnergyPicker(
                       question: l.journalMoodQuestion,
@@ -147,6 +152,8 @@ class _MorningScreenState extends ConsumerState<MorningScreen> {
           phrase: phrase.isEmpty ? null : phrase,
           moodScore: _mood?.score,
           energyScore: _energy?.score,
+          inputMethod:
+              _usedVoice ? JournalInputMethod.voice : JournalInputMethod.typed,
         );
 
     messenger.showSnackBar(SnackBar(content: Text(l.journalSaved)));
@@ -155,9 +162,10 @@ class _MorningScreenState extends ConsumerState<MorningScreen> {
 }
 
 class _PhraseField extends StatelessWidget {
-  const _PhraseField({required this.controller});
+  const _PhraseField({required this.controller, this.onVoiceUsed});
 
   final TextEditingController controller;
+  final VoidCallback? onVoiceUsed;
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +179,7 @@ class _PhraseField extends StatelessWidget {
       decoration: InputDecoration(
         filled: true,
         fillColor: scheme.surfaceContainer,
+        suffixIcon: MicButton(controller: controller, onVoiceUsed: onVoiceUsed),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(tokens.radii.card),
           borderSide: BorderSide(color: tokens.colors.line),
