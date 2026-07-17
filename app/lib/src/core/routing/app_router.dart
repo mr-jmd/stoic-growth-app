@@ -2,8 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/habits/habit_detail_screen.dart';
 import '../../features/habits/habit_form_screen.dart';
 import '../../features/habits/habits_list_screen.dart';
+import '../../features/habits/relapse_form_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../database/repositories/onboarding_repository.dart';
@@ -46,9 +48,22 @@ GoRouter appRouter(Ref ref) {
         path: '/habits',
         builder: (context, state) => const HabitsListScreen(),
       ),
+      // Declared before '/habits/:id' so "new" isn't captured as an id.
       GoRoute(
         path: '/habits/new',
         builder: (context, state) => const HabitFormScreen(),
+      ),
+      GoRoute(
+        path: '/habits/:id',
+        builder: (context, state) => HabitDetailScreen(
+          habitId: int.parse(state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: '/habits/:id/relapse',
+        builder: (context, state) => RelapseFormScreen(
+          habitId: int.parse(state.pathParameters['id']!),
+        ),
       ),
       // Debug-only design-system reference, exempt from the onboarding gate.
       if (kDebugMode)

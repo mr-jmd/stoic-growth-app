@@ -531,6 +531,138 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ya tienes tres hábitos activos. Archiva uno para agregar otro.'**
   String get habitsLimitReached;
+
+  /// Etiqueta bajo el número de días constantes. Minúscula, sin framing de 'racha' gamificada.
+  ///
+  /// In es, this message translates to:
+  /// **'días de constancia'**
+  String get habitDetailStreakLabel;
+
+  /// Texto cuando la constancia está en 0. Cálido, re-construible, nunca 'rompiste tu racha'.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy es un buen día para empezar de nuevo.'**
+  String get habitDetailStreakZero;
+
+  /// Acción primaria: marca el día como cumplido (suma un día de constancia).
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar hoy'**
+  String get habitDetailRegisterToday;
+
+  /// Confirmación breve tras registrar un día constante. Sin exclamaciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrado. Un día más.'**
+  String get habitDetailRegistered;
+
+  /// Acción para editar directamente el número de días. Tan visible como registrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustar'**
+  String get habitDetailEditStreak;
+
+  /// Título del diálogo de edición directa del contador.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustar los días de constancia'**
+  String get habitDetailEditStreakTitle;
+
+  /// Etiqueta accesible del botón de restar uno.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar un día'**
+  String get habitDetailDecrement;
+
+  /// Etiqueta accesible del botón de sumar uno.
+  ///
+  /// In es, this message translates to:
+  /// **'Sumar un día'**
+  String get habitDetailIncrement;
+
+  /// Acceso al formulario de recaída. Neutro, sin culpa, tan de primer nivel como registrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar una recaída'**
+  String get habitDetailRegisterRelapse;
+
+  /// Encabezado de la lista de check-ins. Las recaídas pasadas quedan visibles como dato.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu historial'**
+  String get habitDetailHistoryTitle;
+
+  /// Empty-state del historial de constancia.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuando marques un día, quedará registrado aquí.'**
+  String get habitDetailHistoryEmpty;
+
+  /// Etiqueta de una entrada de éxito en el historial.
+  ///
+  /// In es, this message translates to:
+  /// **'Día constante'**
+  String get habitDetailHistorySuccess;
+
+  /// Etiqueta de una entrada de recaída en el historial. Reusa el estado 'en reposo', nunca 'fallo'.
+  ///
+  /// In es, this message translates to:
+  /// **'En reposo'**
+  String get habitDetailHistoryRelapse;
+
+  /// Título del formulario de recaída. Framing de aprendizaje, no de confesión.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué pasó, y qué aprendes de esto?'**
+  String get relapseFormTitle;
+
+  /// Subtítulo del formulario de recaída. Refuerza que no hay juicio.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin culpa. Esto es información para conocerte mejor. Todos los campos son opcionales.'**
+  String get relapseFormSubtitle;
+
+  /// Campo opcional: contexto.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué estaba pasando?'**
+  String get relapseFormContextLabel;
+
+  /// Campo opcional: detonante.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué lo detonó?'**
+  String get relapseFormTriggerLabel;
+
+  /// Campo opcional: aprendizaje.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué aprendes de esto?'**
+  String get relapseFormLearningLabel;
+
+  /// No description provided for @relapseFormSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get relapseFormSave;
+
+  /// Confirmación tras guardar una recaída. Cálida, orientada a retomar.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrado. Mañana es un buen día para retomar.'**
+  String get relapseFormSaved;
+
+  /// Acción genérica de cancelar en un diálogo.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get dialogCancel;
+
+  /// Acción genérica de guardar en un diálogo.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get dialogSave;
 }
 
 class _AppLocalizationsDelegate

@@ -234,4 +234,74 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get habitsLimitReached =>
       'Ya tienes tres hábitos activos. Archiva uno para agregar otro.';
+
+  @override
+  String get habitDetailStreakLabel => 'días de constancia';
+
+  @override
+  String get habitDetailStreakZero =>
+      'Hoy es un buen día para empezar de nuevo.';
+
+  @override
+  String get habitDetailRegisterToday => 'Registrar hoy';
+
+  @override
+  String get habitDetailRegistered => 'Registrado. Un día más.';
+
+  @override
+  String get habitDetailEditStreak => 'Ajustar';
+
+  @override
+  String get habitDetailEditStreakTitle => 'Ajustar los días de constancia';
+
+  @override
+  String get habitDetailDecrement => 'Quitar un día';
+
+  @override
+  String get habitDetailIncrement => 'Sumar un día';
+
+  @override
+  String get habitDetailRegisterRelapse => 'Registrar una recaída';
+
+  @override
+  String get habitDetailHistoryTitle => 'Tu historial';
+
+  @override
+  String get habitDetailHistoryEmpty =>
+      'Cuando marques un día, quedará registrado aquí.';
+
+  @override
+  String get habitDetailHistorySuccess => 'Día constante';
+
+  @override
+  String get habitDetailHistoryRelapse => 'En reposo';
+
+  @override
+  String get relapseFormTitle => '¿Qué pasó, y qué aprendes de esto?';
+
+  @override
+  String get relapseFormSubtitle =>
+      'Sin culpa. Esto es información para conocerte mejor. Todos los campos son opcionales.';
+
+  @override
+  String get relapseFormContextLabel => '¿Qué estaba pasando?';
+
+  @override
+  String get relapseFormTriggerLabel => '¿Qué lo detonó?';
+
+  @override
+  String get relapseFormLearningLabel => '¿Qué aprendes de esto?';
+
+  @override
+  String get relapseFormSave => 'Guardar';
+
+  @override
+  String get relapseFormSaved =>
+      'Registrado. Mañana es un buen día para retomar.';
+
+  @override
+  String get dialogCancel => 'Cancelar';
+
+  @override
+  String get dialogSave => 'Guardar';
 }

@@ -66,6 +66,7 @@ class HabitRepository {
   Stream<List<Habit>> watchActiveHabits() => _dao.watchActiveHabits();
   Future<List<Habit>> getAllHabits() => _dao.getAllHabits();
   Future<Habit?> getHabit(int id) => _dao.getHabit(id);
+  Stream<Habit?> watchHabit(int id) => _dao.watchHabit(id);
   Future<int> countActiveHabits() => _dao.countActiveHabits();
 
   /// Directly overwrites the streak count (the user-editable path). History is
@@ -104,9 +105,46 @@ class HabitRepository {
     });
   }
 
+  /// The Sprint 4 relapse flow: appends a `relapse` check-in **and** its paired
+  /// learning event, then resets the streak to 0 — all in one transaction, so
+  /// the two history rows and the reset can never be observed half-applied.
+  ///
+  /// All qualitative fields are optional (framed as learning, never confession).
+  /// The reset is only an immediately re-editable *default* via
+  /// [updateStreakManually] — never a locked reset. Prior [HabitCheckIns]/
+  /// [RelapseEvents] rows are append-only and left untouched. Returns the new
+  /// check-in id.
+  Future<int> logRelapse({
+    required int habitId,
+    String? context,
+    String? trigger,
+    String? learning,
+  }) {
+    return _db.transaction(() async {
+      final habit = await _dao.getHabit(habitId);
+      if (habit == null) {
+        throw StateError('Habit $habitId does not exist');
+      }
+      final checkInId = await _dao.insertCheckIn(HabitCheckInsCompanion.insert(
+        habitId: habitId,
+        date: DateTime.now(),
+        status: CheckInStatus.relapse,
+      ));
+      await _dao.insertRelapseEvent(RelapseEventsCompanion.insert(
+        habitId: habitId,
+        checkInId: Value(checkInId),
+        context: Value(context),
+        trigger: Value(trigger),
+        learning: Value(learning),
+      ));
+      await _dao.setStreakCount(habitId, 0);
+      return checkInId;
+    });
+  }
+
   /// Records a relapse as a learning event (all fields optional). Pure history —
   /// does not delete or mutate any prior [HabitCheckIns]/[RelapseEvents] row.
-  /// Sprint 4 wraps this together with the check-in insert in one transaction.
+  /// Low-level primitive; the two-table [logRelapse] flow is the one the UI uses.
   Future<int> logRelapseEvent({
     required int habitId,
     int? checkInId,
@@ -143,4 +181,18 @@ HabitRepository habitRepository(Ref ref) =>
 /// limitation between the two generators). The behaviour is identical.
 final activeHabitsProvider = StreamProvider<List<Habit>>(
   (ref) => ref.watch(habitRepositoryProvider).watchActiveHabits(),
+);
+
+/// Live single habit by id — backs the habit-detail screen's streak display so
+/// a check-in / relapse / manual edit reflects immediately. Manual (not
+/// `@riverpod`) for the same drift-return-type reason as [activeHabitsProvider].
+final habitByIdProvider = StreamProvider.family<Habit?, int>(
+  (ref, id) => ref.watch(habitRepositoryProvider).watchHabit(id),
+);
+
+/// Live append-only check-in history for one habit (newest last, as stored) —
+/// backs the consistency-history strip, where past relapses stay visible as
+/// data instead of being hidden or deleted.
+final habitCheckInsProvider = StreamProvider.family<List<HabitCheckIn>, int>(
+  (ref, id) => ref.watch(habitRepositoryProvider).watchCheckIns(id),
 );

@@ -78,13 +78,16 @@ class _HabitRow extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(habit.label, style: tokens.text.body),
-                SizedBox(height: tokens.spacing.xs),
-                Text(habit.virtue.label(l), style: tokens.text.eyebrow),
-              ],
+            child: InkWell(
+              onTap: () => context.push('/habits/${habit.id}'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(habit.label, style: tokens.text.body),
+                  SizedBox(height: tokens.spacing.xs),
+                  Text(habit.virtue.label(l), style: tokens.text.eyebrow),
+                ],
+              ),
             ),
           ),
           TextButton(

@@ -24,6 +24,12 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
   Future<Habit?> getHabit(int id) =>
       (select(habits)..where((h) => h.id.equals(id))).getSingleOrNull();
 
+  /// Live single habit — backs the Sprint 4 detail screen so the streak count
+  /// updates in place after a check-in, relapse or manual edit. Emits null if
+  /// the habit is archived-and-gone / never existed.
+  Stream<Habit?> watchHabit(int id) =>
+      (select(habits)..where((h) => h.id.equals(id))).watchSingleOrNull();
+
   Future<List<Habit>> getAllHabits() => select(habits).get();
 
   /// Active (non-archived) habits, ordered for display. Archived habits don't

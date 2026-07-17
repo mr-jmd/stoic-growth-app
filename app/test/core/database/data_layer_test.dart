@@ -84,6 +84,55 @@ void main() {
       expect((await habits.getHabit(id))!.currentStreakCount, 0);
     });
 
+    test('logRelapse appends both history rows atomically and resets the streak',
+        () async {
+      final id = await habits.addHabit(label: 'Redes', virtue: Virtue.templanza);
+      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
+      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
+
+      final before = await habits.getCheckIns(id);
+      final beforeIds = before.map((c) => c.id).toList();
+      expect(before.length, 2);
+
+      final checkInId = await habits.logRelapse(
+        habitId: id,
+        context: 'Noche difícil',
+        trigger: 'Aburrimiento',
+        learning: 'Reconocer el detonante antes',
+      );
+
+      // Both rows landed: a relapse check-in + its paired learning event.
+      final after = await habits.getCheckIns(id);
+      expect(after.length, 3);
+      // The two earlier successes are untouched (append-only log).
+      expect(after.map((c) => c.id), containsAll(beforeIds));
+      expect(after.where((c) => c.status == CheckInStatus.success).length, 2);
+      expect(after.singleWhere((c) => c.status == CheckInStatus.relapse).id,
+          checkInId);
+
+      final events = await habits.getRelapseEvents(id);
+      expect(events.length, 1);
+      expect(events.single.checkInId, checkInId);
+      expect(events.single.context, 'Noche difícil');
+      expect(events.single.trigger, 'Aburrimiento');
+      expect(events.single.learning, 'Reconocer el detonante antes');
+
+      // Streak reset to 0 as a re-editable default.
+      expect((await habits.getHabit(id))!.currentStreakCount, 0);
+    });
+
+    test('logRelapse records with all fields omitted (nothing is required)',
+        () async {
+      final id = await habits.addHabit(label: 'X', virtue: Virtue.coraje);
+      await habits.logRelapse(habitId: id);
+
+      final events = await habits.getRelapseEvents(id);
+      expect(events.length, 1);
+      expect(events.single.context, isNull);
+      expect(events.single.trigger, isNull);
+      expect(events.single.learning, isNull);
+    });
+
     test('a manual streak edit persists and leaves history untouched', () async {
       final id = await habits.addHabit(label: 'Leer', virtue: Virtue.sabiduria);
       await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);

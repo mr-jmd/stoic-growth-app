@@ -221,5 +221,80 @@
   "habitFormEmptyLabel": "Escribe un nombre para el hábito.",
   "@habitFormEmptyLabel": { "description": "Validación no punitiva de label vacío." },
   "habitsLimitReached": "Ya tienes tres hábitos activos. Archiva uno para agregar otro.",
-  "@habitsLimitReached": { "description": "Mensaje al intentar un 4º hábito activo. Claro y no punitivo." }
+  "@habitsLimitReached": { "description": "Mensaje al intentar un 4º hábito activo. Claro y no punitivo." },
+
+  "habitDetailStreakLabel": "días de constancia",
+  "@habitDetailStreakLabel": {
+    "description": "Etiqueta bajo el número de días constantes. Minúscula, sin framing de 'racha' gamificada."
+  },
+  "habitDetailStreakZero": "Hoy es un buen día para empezar de nuevo.",
+  "@habitDetailStreakZero": {
+    "description": "Texto cuando la constancia está en 0. Cálido, re-construible, nunca 'rompiste tu racha'."
+  },
+  "habitDetailRegisterToday": "Registrar hoy",
+  "@habitDetailRegisterToday": {
+    "description": "Acción primaria: marca el día como cumplido (suma un día de constancia)."
+  },
+  "habitDetailRegistered": "Registrado. Un día más.",
+  "@habitDetailRegistered": {
+    "description": "Confirmación breve tras registrar un día constante. Sin exclamaciones."
+  },
+  "habitDetailEditStreak": "Ajustar",
+  "@habitDetailEditStreak": {
+    "description": "Acción para editar directamente el número de días. Tan visible como registrar."
+  },
+  "habitDetailEditStreakTitle": "Ajustar los días de constancia",
+  "@habitDetailEditStreakTitle": {
+    "description": "Título del diálogo de edición directa del contador."
+  },
+  "habitDetailDecrement": "Quitar un día",
+  "@habitDetailDecrement": { "description": "Etiqueta accesible del botón de restar uno." },
+  "habitDetailIncrement": "Sumar un día",
+  "@habitDetailIncrement": { "description": "Etiqueta accesible del botón de sumar uno." },
+  "habitDetailRegisterRelapse": "Registrar una recaída",
+  "@habitDetailRegisterRelapse": {
+    "description": "Acceso al formulario de recaída. Neutro, sin culpa, tan de primer nivel como registrar."
+  },
+  "habitDetailHistoryTitle": "Tu historial",
+  "@habitDetailHistoryTitle": {
+    "description": "Encabezado de la lista de check-ins. Las recaídas pasadas quedan visibles como dato."
+  },
+  "habitDetailHistoryEmpty": "Cuando marques un día, quedará registrado aquí.",
+  "@habitDetailHistoryEmpty": {
+    "description": "Empty-state del historial de constancia."
+  },
+  "habitDetailHistorySuccess": "Día constante",
+  "@habitDetailHistorySuccess": {
+    "description": "Etiqueta de una entrada de éxito en el historial."
+  },
+  "habitDetailHistoryRelapse": "En reposo",
+  "@habitDetailHistoryRelapse": {
+    "description": "Etiqueta de una entrada de recaída en el historial. Reusa el estado 'en reposo', nunca 'fallo'."
+  },
+
+  "relapseFormTitle": "¿Qué pasó, y qué aprendes de esto?",
+  "@relapseFormTitle": {
+    "description": "Título del formulario de recaída. Framing de aprendizaje, no de confesión."
+  },
+  "relapseFormSubtitle": "Sin culpa. Esto es información para conocerte mejor. Todos los campos son opcionales.",
+  "@relapseFormSubtitle": {
+    "description": "Subtítulo del formulario de recaída. Refuerza que no hay juicio."
+  },
+  "relapseFormContextLabel": "¿Qué estaba pasando?",
+  "@relapseFormContextLabel": { "description": "Campo opcional: contexto." },
+  "relapseFormTriggerLabel": "¿Qué lo detonó?",
+  "@relapseFormTriggerLabel": { "description": "Campo opcional: detonante." },
+  "relapseFormLearningLabel": "¿Qué aprendes de esto?",
+  "@relapseFormLearningLabel": { "description": "Campo opcional: aprendizaje." },
+  "relapseFormSave": "Guardar",
+  "@relapseFormSave": {},
+  "relapseFormSaved": "Registrado. Mañana es un buen día para retomar.",
+  "@relapseFormSaved": {
+    "description": "Confirmación tras guardar una recaída. Cálida, orientada a retomar."
+  },
+
+  "dialogCancel": "Cancelar",
+  "@dialogCancel": { "description": "Acción genérica de cancelar en un diálogo." },
+  "dialogSave": "Guardar",
+  "@dialogSave": { "description": "Acción genérica de guardar en un diálogo." }
 }
