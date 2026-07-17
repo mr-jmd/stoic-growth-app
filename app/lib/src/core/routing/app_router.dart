@@ -7,6 +7,8 @@ import '../../features/habits/habit_form_screen.dart';
 import '../../features/habits/habits_list_screen.dart';
 import '../../features/habits/relapse_form_screen.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/journal/evening_screen.dart';
+import '../../features/journal/morning_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../database/repositories/onboarding_repository.dart';
 import '../design_system/gallery/design_gallery_screen.dart';
@@ -64,6 +66,14 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => RelapseFormScreen(
           habitId: int.parse(state.pathParameters['id']!),
         ),
+      ),
+      GoRoute(
+        path: '/journal/morning',
+        builder: (context, state) => const MorningScreen(),
+      ),
+      GoRoute(
+        path: '/journal/evening',
+        builder: (context, state) => const EveningScreen(),
       ),
       // Debug-only design-system reference, exempt from the onboarding gate.
       if (kDebugMode)

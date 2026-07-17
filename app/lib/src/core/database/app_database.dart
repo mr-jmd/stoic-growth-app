@@ -43,8 +43,9 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   // v1 (Sprint 0): AppMeta only. v2 (Sprint 2): the full MVP schema.
+  // v3 (Sprint 5): unique (date, type) index on journal_entries.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -59,6 +60,16 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(journalEntryTags);
           await m.createTable(habitCheckIns);
           await m.createTable(relapseEvents);
+        }
+        // v2 → v3: enforce one entry per (day, type). Fresh installs get this
+        // from the @TableIndex on JournalEntries via createAll; this covers DBs
+        // that already have the v2 journal table. No journal UI existed before
+        // Sprint 5, so there are no rows that could violate uniqueness.
+        if (from < 3) {
+          await customStatement(
+            'CREATE UNIQUE INDEX IF NOT EXISTS journal_entry_day '
+            'ON journal_entries (date, "type")',
+          );
         }
       },
       beforeOpen: (details) async {

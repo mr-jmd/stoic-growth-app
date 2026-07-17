@@ -2651,6 +2651,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $HabitCheckInsTable habitCheckIns = $HabitCheckInsTable(this);
   late final $RelapseEventsTable relapseEvents = $RelapseEventsTable(this);
+  late final Index journalEntryDay = Index(
+    'journal_entry_day',
+    'CREATE UNIQUE INDEX journal_entry_day ON journal_entries (date, type)',
+  );
   late final AppMetaDao appMetaDao = AppMetaDao(this as AppDatabase);
   late final HabitsDao habitsDao = HabitsDao(this as AppDatabase);
   late final JournalDao journalDao = JournalDao(this as AppDatabase);
@@ -2669,6 +2673,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     journalEntryTags,
     habitCheckIns,
     relapseEvents,
+    journalEntryDay,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([

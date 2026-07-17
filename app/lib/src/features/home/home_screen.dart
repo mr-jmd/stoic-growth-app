@@ -57,6 +57,20 @@ class HomeScreen extends ConsumerWidget {
               label: l.homeOpenHabits,
               onPressed: () => context.push('/habits'),
             ),
+            SizedBox(height: tokens.spacing.xxl),
+            Text(l.homeJournalSectionTitle, style: tokens.text.eyebrow),
+            SizedBox(height: tokens.spacing.md),
+            AppButton(
+              label: l.homeOpenMorning,
+              variant: AppButtonVariant.secondary,
+              onPressed: () => context.push('/journal/morning'),
+            ),
+            SizedBox(height: tokens.spacing.sm),
+            AppButton(
+              label: l.homeOpenEvening,
+              variant: AppButtonVariant.secondary,
+              onPressed: () => context.push('/journal/evening'),
+            ),
             if (kDebugMode) ...[
               SizedBox(height: tokens.spacing.sm),
               AppButton(

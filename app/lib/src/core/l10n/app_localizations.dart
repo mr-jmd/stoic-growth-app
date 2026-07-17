@@ -663,6 +663,156 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardar'**
   String get dialogSave;
+
+  /// Encabezado de la sección de diario en la home.
+  ///
+  /// In es, this message translates to:
+  /// **'Diario'**
+  String get homeJournalSectionTitle;
+
+  /// No description provided for @homeOpenMorning.
+  ///
+  /// In es, this message translates to:
+  /// **'Reflexión de la mañana'**
+  String get homeOpenMorning;
+
+  /// No description provided for @homeOpenEvening.
+  ///
+  /// In es, this message translates to:
+  /// **'Reflexión de la noche'**
+  String get homeOpenEvening;
+
+  /// Eyebrow de la pantalla matutina.
+  ///
+  /// In es, this message translates to:
+  /// **'REFLEXIÓN DE LA MAÑANA'**
+  String get journalMorningEyebrow;
+
+  /// Prompt matutino (README 10.1). El usuario completa con un chip o una frase corta.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy depende de mí:'**
+  String get journalMorningPrompt;
+
+  /// Frase corta pre-escrita para el prompt matutino (un toque).
+  ///
+  /// In es, this message translates to:
+  /// **'Mi actitud'**
+  String get morningPresetAttitude;
+
+  /// No description provided for @morningPresetEffort.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi esfuerzo'**
+  String get morningPresetEffort;
+
+  /// No description provided for @morningPresetResponse.
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo respondo'**
+  String get morningPresetResponse;
+
+  /// No description provided for @morningPresetFocus.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi enfoque'**
+  String get morningPresetFocus;
+
+  /// Etiqueta del campo opcional de frase propia (3-4 palabras).
+  ///
+  /// In es, this message translates to:
+  /// **'O escríbelo con tus palabras'**
+  String get morningCustomHint;
+
+  /// Eyebrow de la pantalla nocturna.
+  ///
+  /// In es, this message translates to:
+  /// **'REFLEXIÓN DE LA NOCHE'**
+  String get journalEveningEyebrow;
+
+  /// Título de la pantalla nocturna. Neutro, sin lenguaje clínico.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo estuvo tu día?'**
+  String get journalEveningTitle;
+
+  /// Chip nocturno fijo (README 10.1). Multi-select.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy actué con calma'**
+  String get eveningTagCalm;
+
+  /// Chip nocturno fijo (README 10.1). Sin culpa: es un dato, no un juicio.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy reaccioné mal a algo'**
+  String get eveningTagReacted;
+
+  /// Chip nocturno fijo (README 10.1).
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy avancé en lo que importa'**
+  String get eveningTagAdvanced;
+
+  /// Afordance colapsada. Al tocarla aparece el campo de texto opcional — nunca expandido por defecto.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar una nota'**
+  String get eveningAddNote;
+
+  /// Etiqueta del campo de texto libre nocturno, opt-in.
+  ///
+  /// In es, this message translates to:
+  /// **'Si quieres, escribe algo más'**
+  String get eveningNoteHint;
+
+  /// Pregunta del selector de ánimo. Opcional, un toque.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo está tu ánimo?'**
+  String get journalMoodQuestion;
+
+  /// Pregunta del selector de energía. Opcional, un toque.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Y tu energía?'**
+  String get journalEnergyQuestion;
+
+  /// Aclaración de que ánimo/energía no son obligatorios.
+  ///
+  /// In es, this message translates to:
+  /// **'Opcional'**
+  String get journalOptionalHint;
+
+  /// Nivel cualitativo de ánimo/energía (no escala numérica clínica).
+  ///
+  /// In es, this message translates to:
+  /// **'Bajo'**
+  String get moodLevelLow;
+
+  /// No description provided for @moodLevelMedium.
+  ///
+  /// In es, this message translates to:
+  /// **'Medio'**
+  String get moodLevelMedium;
+
+  /// No description provided for @moodLevelHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'Alto'**
+  String get moodLevelHigh;
+
+  /// No description provided for @journalSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get journalSave;
+
+  /// Confirmación breve tras guardar una entrada de diario. Sin exclamaciones.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardado.'**
+  String get journalSaved;
 }
 
 class _AppLocalizationsDelegate

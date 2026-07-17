@@ -304,4 +304,79 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get dialogSave => 'Guardar';
+
+  @override
+  String get homeJournalSectionTitle => 'Diario';
+
+  @override
+  String get homeOpenMorning => 'Reflexión de la mañana';
+
+  @override
+  String get homeOpenEvening => 'Reflexión de la noche';
+
+  @override
+  String get journalMorningEyebrow => 'REFLEXIÓN DE LA MAÑANA';
+
+  @override
+  String get journalMorningPrompt => 'Hoy depende de mí:';
+
+  @override
+  String get morningPresetAttitude => 'Mi actitud';
+
+  @override
+  String get morningPresetEffort => 'Mi esfuerzo';
+
+  @override
+  String get morningPresetResponse => 'Cómo respondo';
+
+  @override
+  String get morningPresetFocus => 'Mi enfoque';
+
+  @override
+  String get morningCustomHint => 'O escríbelo con tus palabras';
+
+  @override
+  String get journalEveningEyebrow => 'REFLEXIÓN DE LA NOCHE';
+
+  @override
+  String get journalEveningTitle => '¿Cómo estuvo tu día?';
+
+  @override
+  String get eveningTagCalm => 'Hoy actué con calma';
+
+  @override
+  String get eveningTagReacted => 'Hoy reaccioné mal a algo';
+
+  @override
+  String get eveningTagAdvanced => 'Hoy avancé en lo que importa';
+
+  @override
+  String get eveningAddNote => 'Agregar una nota';
+
+  @override
+  String get eveningNoteHint => 'Si quieres, escribe algo más';
+
+  @override
+  String get journalMoodQuestion => '¿Cómo está tu ánimo?';
+
+  @override
+  String get journalEnergyQuestion => '¿Y tu energía?';
+
+  @override
+  String get journalOptionalHint => 'Opcional';
+
+  @override
+  String get moodLevelLow => 'Bajo';
+
+  @override
+  String get moodLevelMedium => 'Medio';
+
+  @override
+  String get moodLevelHigh => 'Alto';
+
+  @override
+  String get journalSave => 'Guardar';
+
+  @override
+  String get journalSaved => 'Guardado.';
 }

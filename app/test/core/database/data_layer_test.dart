@@ -188,6 +188,63 @@ void main() {
       expect(entries.first.energyScore, isNull);
       expect(await journal.getTags(entries.first.id), isEmpty);
     });
+
+    test('re-saving the same (day, type) edits in place, never duplicates',
+        () async {
+      // A time-of-day component must not create a second row for the same day.
+      final morning = DateTime(2026, 7, 15, 7, 30);
+      final id1 = await journal.saveMorningEntry(
+        date: morning,
+        phrase: 'Mi enfoque',
+        moodScore: 1,
+      );
+      final id2 = await journal.saveMorningEntry(
+        date: DateTime(2026, 7, 15, 22, 05),
+        phrase: 'Mi actitud',
+        moodScore: 3,
+      );
+
+      expect(id2, id1); // same row upserted
+      final entries =
+          await journal.getEntriesForDay(morning, type: JournalType.morning);
+      expect(entries.length, 1);
+      expect(entries.single.freeText, 'Mi actitud');
+      expect(entries.single.moodScore, 3);
+      // A morning upsert doesn't touch that day's evening entry.
+      await journal.saveEveningEntry(
+          date: morning, tags: [EveningTag.calm]);
+      expect((await journal.getAllEntries()).length, 2);
+    });
+
+    test('re-saving an evening entry replaces its tags, not stacks them',
+        () async {
+      final day = DateTime(2026, 7, 16);
+      await journal.saveEveningEntry(
+        date: day,
+        tags: [EveningTag.calm, EveningTag.reacted],
+      );
+      final id = (await journal.getEntryForDay(day, JournalType.evening))!.id;
+      expect((await journal.getTags(id)).length, 2);
+
+      await journal.saveEveningEntry(date: day, tags: [EveningTag.advanced]);
+
+      final entries =
+          await journal.getEntriesForDay(day, type: JournalType.evening);
+      expect(entries.length, 1);
+      expect(await journal.getTags(entries.single.id), [EveningTag.advanced]);
+    });
+
+    test('entries are recoverable by day and type', () async {
+      final day = DateTime(2026, 7, 17);
+      await journal.saveMorningEntry(date: day, phrase: 'Mi esfuerzo');
+      await journal.saveEveningEntry(date: day, tags: [EveningTag.advanced]);
+
+      final morning = await journal.getEntryForDay(day, JournalType.morning);
+      final evening = await journal.getEntryForDay(day, JournalType.evening);
+      expect(morning!.freeText, 'Mi esfuerzo');
+      expect(evening!.freeText, isNull);
+      expect(await journal.getTags(evening.id), [EveningTag.advanced]);
+    });
   });
 
   group('UserProfileRepository', () {
@@ -202,14 +259,13 @@ void main() {
   });
 
   group('schema & migration', () {
-    test('schemaVersion is 2 and onUpgrade is wired and invocable', () async {
-      expect(db.schemaVersion, 2);
+    test('schemaVersion is 3 and onUpgrade is wired and invocable', () async {
+      expect(db.schemaVersion, 3);
 
-      // Placeholder for future migrations: the onUpgrade handler is wired and
-      // invoking it for the current version is a safe no-op (the v1→v2 branch is
-      // guarded by `from < 2`).
+      // The onUpgrade handler is wired; invoking it for the current version is a
+      // safe no-op (both the v1→v2 and v2→v3 branches are guarded by `from < n`).
       final Migrator migrator = db.createMigrator();
-      await db.migration.onUpgrade(migrator, 2, 2);
+      await db.migration.onUpgrade(migrator, 3, 3);
 
       // The DB is still usable afterwards.
       expect(await habits.countActiveHabits(), 0);

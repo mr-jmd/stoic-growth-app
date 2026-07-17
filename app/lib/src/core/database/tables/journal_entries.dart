@@ -10,6 +10,12 @@ import '../../../shared/journal_enums.dart';
 /// MVP — nullable (always optional) and surfaced in the UI as qualitative chips
 /// (low/medium/high), never a clinical numeric scale (Sprint 5). `freeText` is
 /// opt-in; the low-friction path is chips/voice.
+///
+/// The unique (date, type) index (Sprint 5, schema v3) means at most one morning
+/// and one evening entry per day — reopening the same day edits that row instead
+/// of duplicating (the repository upserts). `date` is always stored at local
+/// midnight so equality on the index holds.
+@TableIndex(name: 'journal_entry_day', columns: {#date, #type}, unique: true)
 class JournalEntries extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get date => dateTime()();

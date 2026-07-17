@@ -296,5 +296,64 @@
   "dialogCancel": "Cancelar",
   "@dialogCancel": { "description": "Acción genérica de cancelar en un diálogo." },
   "dialogSave": "Guardar",
-  "@dialogSave": { "description": "Acción genérica de guardar en un diálogo." }
+  "@dialogSave": { "description": "Acción genérica de guardar en un diálogo." },
+
+  "homeJournalSectionTitle": "Diario",
+  "@homeJournalSectionTitle": { "description": "Encabezado de la sección de diario en la home." },
+  "homeOpenMorning": "Reflexión de la mañana",
+  "@homeOpenMorning": {},
+  "homeOpenEvening": "Reflexión de la noche",
+  "@homeOpenEvening": {},
+
+  "journalMorningEyebrow": "REFLEXIÓN DE LA MAÑANA",
+  "@journalMorningEyebrow": { "description": "Eyebrow de la pantalla matutina." },
+  "journalMorningPrompt": "Hoy depende de mí:",
+  "@journalMorningPrompt": {
+    "description": "Prompt matutino (README 10.1). El usuario completa con un chip o una frase corta."
+  },
+  "morningPresetAttitude": "Mi actitud",
+  "@morningPresetAttitude": { "description": "Frase corta pre-escrita para el prompt matutino (un toque)." },
+  "morningPresetEffort": "Mi esfuerzo",
+  "@morningPresetEffort": {},
+  "morningPresetResponse": "Cómo respondo",
+  "@morningPresetResponse": {},
+  "morningPresetFocus": "Mi enfoque",
+  "@morningPresetFocus": {},
+  "morningCustomHint": "O escríbelo con tus palabras",
+  "@morningCustomHint": { "description": "Etiqueta del campo opcional de frase propia (3-4 palabras)." },
+
+  "journalEveningEyebrow": "REFLEXIÓN DE LA NOCHE",
+  "@journalEveningEyebrow": { "description": "Eyebrow de la pantalla nocturna." },
+  "journalEveningTitle": "¿Cómo estuvo tu día?",
+  "@journalEveningTitle": { "description": "Título de la pantalla nocturna. Neutro, sin lenguaje clínico." },
+  "eveningTagCalm": "Hoy actué con calma",
+  "@eveningTagCalm": { "description": "Chip nocturno fijo (README 10.1). Multi-select." },
+  "eveningTagReacted": "Hoy reaccioné mal a algo",
+  "@eveningTagReacted": { "description": "Chip nocturno fijo (README 10.1). Sin culpa: es un dato, no un juicio." },
+  "eveningTagAdvanced": "Hoy avancé en lo que importa",
+  "@eveningTagAdvanced": { "description": "Chip nocturno fijo (README 10.1)." },
+  "eveningAddNote": "Agregar una nota",
+  "@eveningAddNote": {
+    "description": "Afordance colapsada. Al tocarla aparece el campo de texto opcional — nunca expandido por defecto."
+  },
+  "eveningNoteHint": "Si quieres, escribe algo más",
+  "@eveningNoteHint": { "description": "Etiqueta del campo de texto libre nocturno, opt-in." },
+
+  "journalMoodQuestion": "¿Cómo está tu ánimo?",
+  "@journalMoodQuestion": { "description": "Pregunta del selector de ánimo. Opcional, un toque." },
+  "journalEnergyQuestion": "¿Y tu energía?",
+  "@journalEnergyQuestion": { "description": "Pregunta del selector de energía. Opcional, un toque." },
+  "journalOptionalHint": "Opcional",
+  "@journalOptionalHint": { "description": "Aclaración de que ánimo/energía no son obligatorios." },
+  "moodLevelLow": "Bajo",
+  "@moodLevelLow": { "description": "Nivel cualitativo de ánimo/energía (no escala numérica clínica)." },
+  "moodLevelMedium": "Medio",
+  "@moodLevelMedium": {},
+  "moodLevelHigh": "Alto",
+  "@moodLevelHigh": {},
+
+  "journalSave": "Guardar",
+  "@journalSave": {},
+  "journalSaved": "Guardado.",
+  "@journalSaved": { "description": "Confirmación breve tras guardar una entrada de diario. Sin exclamaciones." }
 }
