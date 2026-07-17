@@ -813,6 +813,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardado.'**
   String get journalSaved;
+
+  /// Salida siempre visible del modo crisis. Nunca atrapar al usuario en un flujo sin escape.
+  ///
+  /// In es, this message translates to:
+  /// **'Estoy bien ahora'**
+  String get crisisExit;
+
+  /// Encabezado de la invitación socrática, ofrecida solo DESPUÉS del alivio. Invitación, no orden.
+  ///
+  /// In es, this message translates to:
+  /// **'Si quieres, considera:'**
+  String get crisisSocraticIntro;
+
+  /// Ofrece otra pregunta de reflexión. Nunca avanza solo; requiere un toque.
+  ///
+  /// In es, this message translates to:
+  /// **'Otra pregunta'**
+  String get crisisAnotherQuestion;
+
+  /// Frase de reencuadre de respaldo si el contenido empaquetado no carga — el flujo de seguridad nunca queda en blanco.
+  ///
+  /// In es, this message translates to:
+  /// **'Respira. Esto también va a pasar.'**
+  String get crisisFallbackLine;
 }
 
 class _AppLocalizationsDelegate

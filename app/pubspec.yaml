@@ -73,6 +73,12 @@ flutter:
   # Enables gen-l10n codegen for the .arb files (see l10n.yaml).
   generate: true
 
+  # Bundled static content — build-time, editable/translatable JSON, kept OUT of
+  # Drift (it's content, not user data). Loaded via rootBundle; never fetched at
+  # runtime (offline invariant). Crisis mode (Sprint 6) reads from here.
+  assets:
+    - assets/content/
+
   # OFL fonts vendored under assets/fonts/ (see DESIGN_BRIEF §1 / §7).
   # NEVER use google_fonts runtime fetch — it breaks the 100%-offline invariant.
   # Both families ship as variable fonts (wght axis); Flutter maps fontWeight

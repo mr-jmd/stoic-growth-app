@@ -1,0 +1,19 @@
+{
+  "_comment": "Crisis-mode static content (README 10.2). 100% offline, no AI. The affirmation is a calm statement, never a question; the socratic prompts appear only AFTER the breathing timer. Editable/translatable without touching Dart.",
+  "affirmation": "Esto que sientes ahora va a pasar. Lo que decidas en los próximos 2 minutos sí depende de ti.",
+  "breathing": {
+    "cycles": 4,
+    "phases": [
+      { "label": "Inhala", "seconds": 4, "scale": 1.0 },
+      { "label": "Sostén", "seconds": 4, "scale": 1.0 },
+      { "label": "Suelta", "seconds": 4, "scale": 0.4 },
+      { "label": "Sostén", "seconds": 4, "scale": 0.4 }
+    ]
+  },
+  "socraticPrompts": [
+    "¿Qué parte de esto depende de ti, y qué parte no?",
+    "¿Quieres que exploremos qué lo activó?",
+    "Si esto ya pasó antes, ¿qué te ayudó entonces?",
+    "¿Qué le dirías a alguien que quieres si estuviera sintiendo esto?"
+  ]
+}

@@ -21,6 +21,12 @@ class HomeScreen extends ConsumerWidget {
     final habits = ref.watch(activeHabitsProvider);
 
     return AppScaffold(
+      // Persistent, always-reachable crisis access (README 10.2) — one tap from
+      // home into the calm grounding flow, never buried in settings.
+      crisisAccess: CrisisAccessButton(
+        label: l.crisisAccessLabel,
+        onPressed: () => context.push('/crisis'),
+      ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
         child: Column(

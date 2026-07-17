@@ -6,6 +6,7 @@ import '../../features/habits/habit_detail_screen.dart';
 import '../../features/habits/habit_form_screen.dart';
 import '../../features/habits/habits_list_screen.dart';
 import '../../features/habits/relapse_form_screen.dart';
+import '../../features/crisis/crisis_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/journal/evening_screen.dart';
 import '../../features/journal/morning_screen.dart';
@@ -75,6 +76,12 @@ GoRouter appRouter(Ref ref) {
         path: '/journal/evening',
         builder: (context, state) => const EveningScreen(),
       ),
+      // Crisis mode: reachable from anywhere and exempt from the onboarding
+      // gate — a person in distress must never be blocked by a setup flow.
+      GoRoute(
+        path: '/crisis',
+        builder: (context, state) => const CrisisScreen(),
+      ),
       // Debug-only design-system reference, exempt from the onboarding gate.
       if (kDebugMode)
         GoRoute(
@@ -85,6 +92,7 @@ GoRouter appRouter(Ref ref) {
     redirect: (context, state) {
       final location = state.matchedLocation;
       if (location == '/gallery') return null; // always reachable in debug
+      if (location == '/crisis') return null; // safety: never gate crisis mode
 
       final completed = readCompleted();
       final atOnboarding = location == '/onboarding';

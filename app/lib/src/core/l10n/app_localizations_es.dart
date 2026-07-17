@@ -379,4 +379,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get journalSaved => 'Guardado.';
+
+  @override
+  String get crisisExit => 'Estoy bien ahora';
+
+  @override
+  String get crisisSocraticIntro => 'Si quieres, considera:';
+
+  @override
+  String get crisisAnotherQuestion => 'Otra pregunta';
+
+  @override
+  String get crisisFallbackLine => 'Respira. Esto también va a pasar.';
 }
