@@ -170,24 +170,14 @@ class _PhraseField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = context.stoic;
-    final scheme = Theme.of(context).colorScheme;
     return TextField(
       controller: controller,
       // Short by design — a phrase, never a paragraph (README 10.1).
       maxLength: 60,
       style: tokens.text.body,
+      // Base look comes from the theme's InputDecorationTheme.
       decoration: InputDecoration(
-        filled: true,
-        fillColor: scheme.surfaceContainer,
         suffixIcon: MicButton(controller: controller, onVoiceUsed: onVoiceUsed),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(tokens.radii.card),
-          borderSide: BorderSide(color: tokens.colors.line),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(tokens.radii.card),
-          borderSide: BorderSide(color: tokens.colors.line),
-        ),
       ),
     );
   }

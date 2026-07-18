@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/database/repositories/habit_repository.dart';
 import '../../core/design_system/design_system.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/virtue.dart';
 import '../../shared/virtue_l10n.dart';
+import '../../shared/virtue_progress_state.dart';
 import 'onboarding_controller.dart';
 import 'onboarding_suggestions.dart';
 
 enum _Step { intro, select, confirm }
 
-/// First-run flow (no login): a brief framing, a 1–3 selection of starter
-/// habits, and a confirmation. The router blocks every other route behind this
-/// until it completes (gate keyed on the persisted onboarding flag, not habit
-/// count).
+/// First-run flow (no login): a brief framing, a free selection of starter
+/// habits (at least one — the "start small" advice is copy, never a block),
+/// and a confirmation. The router blocks every other route behind this until
+/// it completes (gate keyed on the persisted onboarding flag, not habit count).
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -25,8 +25,6 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   _Step _step = _Step.intro;
   final Set<HabitSuggestionKey> _selected = {};
-
-  static const int _max = HabitRepository.maxActiveHabits;
 
   List<HabitSuggestion> get _selectedSuggestions =>
       kHabitSuggestions.where((s) => _selected.contains(s.key)).toList();
@@ -58,11 +56,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _toggle(HabitSuggestionKey key, bool selected) {
     setState(() {
-      if (selected) {
-        if (_selected.length < _max) _selected.add(key);
-      } else {
-        _selected.remove(key);
-      }
+      selected ? _selected.add(key) : _selected.remove(key);
     });
   }
 
@@ -85,19 +79,49 @@ class _IntroStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.stoic;
     final l = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Spacer(),
-        Text(l.onboardingIntroTitle, style: tokens.text.displayGreeting),
-        SizedBox(height: tokens.spacing.lg),
-        Text(l.onboardingIntroBody, style: tokens.text.body),
-        const Spacer(),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: AppButton(label: l.onboardingIntroStart, onPressed: onStart),
+
+    // A quiet editorial entrance: the manifesto fades up once, slowly.
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: tokens.motion.slow,
+      curve: tokens.motion.standard,
+      builder: (context, t, child) => Opacity(
+        opacity: t,
+        child: Transform.translate(
+          offset: Offset(0, (1 - t) * 16),
+          child: child,
         ),
-      ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: tokens.spacing.hero),
+          Text('ANDAMIO', style: tokens.text.eyebrow),
+          const Spacer(),
+          Text(l.onboardingIntroTitle, style: tokens.text.displayHero),
+          SizedBox(height: tokens.spacing.xl),
+          Container(
+            width: 36,
+            height: 2,
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.75),
+          ),
+          SizedBox(height: tokens.spacing.xl),
+          Text(
+            l.onboardingIntroBody,
+            style: tokens.text.body.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              height: 1.6,
+            ),
+          ),
+          const Spacer(flex: 2),
+          AppButton(
+            label: l.onboardingIntroStart,
+            onPressed: onStart,
+            expanded: true,
+          ),
+          SizedBox(height: tokens.spacing.lg),
+        ],
+      ),
     );
   }
 }
@@ -119,7 +143,6 @@ class _SelectStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.stoic;
     final l = AppLocalizations.of(context);
-    final atCap = selected.length >= _OnboardingScreenState._max;
     final canContinue = selected.isNotEmpty;
 
     return Column(
@@ -130,7 +153,7 @@ class _SelectStep extends StatelessWidget {
         Text(l.onboardingSelectSubtitle, style: tokens.text.body),
         SizedBox(height: tokens.spacing.md),
         Text(
-          l.onboardingSelectionCounter(selected.length, _OnboardingScreenState._max),
+          l.onboardingSelectionCounter(selected.length),
           style: tokens.text.eyebrow,
         ),
         SizedBox(height: tokens.spacing.md),
@@ -141,7 +164,6 @@ class _SelectStep extends StatelessWidget {
                 _VirtueGroup(
                   virtue: virtue,
                   selected: selected,
-                  atCap: atCap,
                   onToggle: onToggle,
                 ),
             ],
@@ -170,13 +192,11 @@ class _VirtueGroup extends StatelessWidget {
   const _VirtueGroup({
     required this.virtue,
     required this.selected,
-    required this.atCap,
     required this.onToggle,
   });
 
   final Virtue virtue;
   final Set<HabitSuggestionKey> selected;
-  final bool atCap;
   final void Function(HabitSuggestionKey, bool) onToggle;
 
   @override
@@ -187,12 +207,12 @@ class _VirtueGroup extends StatelessWidget {
         kHabitSuggestions.where((s) => s.virtue == virtue).toList();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: tokens.spacing.lg),
+      padding: EdgeInsets.only(bottom: tokens.spacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(virtue.label(l), style: tokens.text.virtueName),
-          SizedBox(height: tokens.spacing.sm),
+          SectionHeader(eyebrow: virtue.label(l)),
+          SizedBox(height: tokens.spacing.md),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -201,10 +221,7 @@ class _VirtueGroup extends StatelessWidget {
                 SelectableChip(
                   label: s.label(l),
                   selected: selected.contains(s.key),
-                  // Disable unselected chips once the cap is reached.
-                  onSelected: (!selected.contains(s.key) && atCap)
-                      ? null
-                      : (v) => onToggle(s.key, v),
+                  onSelected: (v) => onToggle(s.key, v),
                 ),
             ],
           ),
@@ -240,19 +257,52 @@ class _ConfirmStep extends StatelessWidget {
         Text(l.onboardingConfirmSubtitle, style: tokens.text.body),
         SizedBox(height: tokens.spacing.lg),
         Expanded(
-          child: ListView(
-            children: [
-              for (final s in suggestions)
-                AppCard(
-                  padding: EdgeInsets.all(tokens.spacing.lg),
+          child: ListView.separated(
+            itemCount: suggestions.length,
+            separatorBuilder: (_, _) => SizedBox(height: tokens.spacing.gap),
+            itemBuilder: (context, i) {
+              final s = suggestions[i];
+              // Each chosen habit is a paper card with its virtue's stone
+              // undertone as a left edge.
+              final slabColor = tokens
+                  .virtueSlab(s.virtue, VirtueProgressState.pulida)
+                  .colors
+                  .first;
+              return AppCard(
+                padding: EdgeInsets.zero,
+                child: IntrinsicHeight(
                   child: Row(
                     children: [
-                      Expanded(child: Text(s.label(l), style: tokens.text.body)),
-                      Text(s.virtue.label(l), style: tokens.text.eyebrow),
+                      Container(
+                        width: 4,
+                        decoration: BoxDecoration(
+                          color: slabColor,
+                          borderRadius: BorderRadius.horizontal(
+                            left: Radius.circular(tokens.radii.card),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(tokens.spacing.lg),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(s.label(l), style: tokens.text.bodyStrong),
+                              SizedBox(height: tokens.spacing.xs),
+                              Text(
+                                s.virtue.label(l).toUpperCase(),
+                                style: tokens.text.eyebrowSub,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-            ],
+              );
+            },
           ),
         ),
         Row(

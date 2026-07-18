@@ -1,6 +1,8 @@
 import 'package:app/src/core/database/app_database.dart';
 import 'package:app/src/core/database/repositories/habit_repository.dart';
 import 'package:app/src/core/database/repositories/journal_repository.dart';
+import 'package:app/src/core/database/repositories/onboarding_repository.dart';
+import 'package:app/src/core/database/repositories/tutorial_repository.dart';
 import 'package:app/src/core/database/repositories/user_profile_repository.dart';
 import 'package:app/src/shared/check_in_status.dart';
 import 'package:app/src/shared/journal_enums.dart';
@@ -39,19 +41,65 @@ void main() {
     test('a success check-in appends history and increments the streak', () async {
       final id = await habits.addHabit(label: 'Ducha fría', virtue: Virtue.coraje);
 
-      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
-      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
+      // Two different days — one success per calendar day is the rule.
+      await habits.recordCheckIn(
+          habitId: id,
+          status: CheckInStatus.success,
+          date: DateTime(2026, 7, 16, 8));
+      await habits.recordCheckIn(
+          habitId: id,
+          status: CheckInStatus.success,
+          date: DateTime(2026, 7, 17, 8));
 
       final habit = await habits.getHabit(id);
       expect(habit!.currentStreakCount, 2);
       expect((await habits.getCheckIns(id)).length, 2);
     });
 
+    test('a second success on the same day is an idempotent no-op', () async {
+      final id = await habits.addHabit(label: 'Leer', virtue: Virtue.sabiduria);
+
+      final first = await habits.recordCheckIn(
+          habitId: id,
+          status: CheckInStatus.success,
+          date: DateTime(2026, 7, 17, 8));
+      // Same calendar day, different time — must not insert or increment.
+      final second = await habits.recordCheckIn(
+          habitId: id,
+          status: CheckInStatus.success,
+          date: DateTime(2026, 7, 17, 22));
+
+      expect(second, first);
+      expect((await habits.getCheckIns(id)).length, 1);
+      expect((await habits.getHabit(id))!.currentStreakCount, 1);
+    });
+
+    test('relapses are never limited per day', () async {
+      final id = await habits.addHabit(label: 'Redes', virtue: Virtue.templanza);
+      final day = DateTime(2026, 7, 17, 9);
+
+      await habits.recordCheckIn(
+          habitId: id, status: CheckInStatus.success, date: day);
+      await habits.recordCheckIn(
+          habitId: id,
+          status: CheckInStatus.relapse,
+          date: DateTime(2026, 7, 17, 14));
+      await habits.recordCheckIn(
+          habitId: id,
+          status: CheckInStatus.relapse,
+          date: DateTime(2026, 7, 17, 21));
+
+      // Real life allows several relapses in a day — all are honest history.
+      expect((await habits.getCheckIns(id)).length, 3);
+    });
+
     test('logging a relapse never mutates or deletes prior check-in history',
         () async {
       final id = await habits.addHabit(label: 'Redes', virtue: Virtue.templanza);
-      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
-      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
+      await habits.recordCheckIn(
+          habitId: id, status: CheckInStatus.success, date: DateTime(2026, 7, 15));
+      await habits.recordCheckIn(
+          habitId: id, status: CheckInStatus.success, date: DateTime(2026, 7, 16));
 
       final before = await habits.getCheckIns(id);
       expect(before.length, 2);
@@ -87,8 +135,10 @@ void main() {
     test('logRelapse appends both history rows atomically and resets the streak',
         () async {
       final id = await habits.addHabit(label: 'Redes', virtue: Virtue.templanza);
-      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
-      await habits.recordCheckIn(habitId: id, status: CheckInStatus.success);
+      await habits.recordCheckIn(
+          habitId: id, status: CheckInStatus.success, date: DateTime(2026, 7, 15));
+      await habits.recordCheckIn(
+          habitId: id, status: CheckInStatus.success, date: DateTime(2026, 7, 16));
 
       final before = await habits.getCheckIns(id);
       final beforeIds = before.map((c) => c.id).toList();
@@ -259,16 +309,44 @@ void main() {
   });
 
   group('schema & migration', () {
-    test('schemaVersion is 3 and onUpgrade is wired and invocable', () async {
-      expect(db.schemaVersion, 3);
+    test('schemaVersion is 4 and onUpgrade is wired and invocable', () async {
+      expect(db.schemaVersion, 4);
 
-      // The onUpgrade handler is wired; invoking it for the current version is a
-      // safe no-op (both the v1→v2 and v2→v3 branches are guarded by `from < n`).
+      // The onUpgrade handler is wired; invoking it for the current version is
+      // a safe no-op (every branch is guarded by `from < n`).
       final Migrator migrator = db.createMigrator();
-      await db.migration.onUpgrade(migrator, 3, 3);
+      await db.migration.onUpgrade(migrator, 4, 4);
 
       // The DB is still usable afterwards.
       expect(await habits.countActiveHabits(), 0);
+    });
+
+    test('the v3→v4 upgrade adds the tutorial flag to a v3-shaped DB',
+        () async {
+      // Reconstruct the v3 shape by dropping the v4 column, then migrate.
+      await db.customStatement(
+          'ALTER TABLE app_meta DROP COLUMN tutorial_completed');
+      await db.migration.onUpgrade(db.createMigrator(), 3, 4);
+
+      await db.appMetaDao.setTutorialCompleted(completed: true);
+      expect(await db.appMetaDao.isTutorialCompleted(), isTrue);
+    });
+  });
+
+  group('tutorial flag', () {
+    test('defaults to false on a fresh database', () async {
+      expect(await db.appMetaDao.isTutorialCompleted(), isFalse);
+    });
+
+    test('complete() persists and is independent of onboarding', () async {
+      final tutorial = TutorialRepository(db);
+      await OnboardingRepository(db).complete();
+
+      expect(await tutorial.isCompleted(), isFalse);
+      await tutorial.complete();
+
+      expect(await tutorial.isCompleted(), isTrue);
+      expect(await db.appMetaDao.isOnboardingCompleted(), isTrue);
     });
   });
 }

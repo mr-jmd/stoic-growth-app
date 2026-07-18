@@ -172,6 +172,102 @@ abstract class AppLocalizations {
   /// **'Un momento de calma'**
   String get crisisAccessLabel;
 
+  /// Título del paso del tour sobre el grid de virtudes.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus virtudes'**
+  String get tourStepVirtuesTitle;
+
+  /// Cuerpo del paso de virtudes. Refuerza el progreso como material, no como puntaje.
+  ///
+  /// In es, this message translates to:
+  /// **'Estas cuatro piedras reflejan tu constancia. Cambian de textura con tu práctica, no con números.'**
+  String get tourStepVirtuesBody;
+
+  /// Título del paso del tour sobre la cita diaria.
+  ///
+  /// In es, this message translates to:
+  /// **'Una idea para el día'**
+  String get tourStepQuoteTitle;
+
+  /// Cuerpo del paso de la cita diaria.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada mañana te espera una cita estoica con una pregunta para llevar contigo.'**
+  String get tourStepQuoteBody;
+
+  /// Título del paso del tour en la pestaña Hábitos.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus hábitos'**
+  String get tourStepHabitsTitle;
+
+  /// Cuerpo del paso de hábitos. La recaída se nombra como aprendizaje, nunca como falla.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí viven los hábitos que elegiste. Registra tu día, o anota una recaída como aprendizaje.'**
+  String get tourStepHabitsBody;
+
+  /// Título del paso del tour en la pestaña Diario.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu diario'**
+  String get tourStepJournalTitle;
+
+  /// Cuerpo del paso del diario.
+  ///
+  /// In es, this message translates to:
+  /// **'Dos momentos breves: una intención al empezar el día y un cierre al terminarlo.'**
+  String get tourStepJournalBody;
+
+  /// Título del paso del tour sobre la banda de calma.
+  ///
+  /// In es, this message translates to:
+  /// **'Un momento de calma'**
+  String get tourStepCalmTitle;
+
+  /// Cuerpo del paso de la banda de calma. Informativo y sereno.
+  ///
+  /// In es, this message translates to:
+  /// **'Si el día se pone difícil, este acceso está siempre a un toque, en cualquier pantalla.'**
+  String get tourStepCalmBody;
+
+  /// Título del paso final del tour.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto es todo'**
+  String get tourStepDoneTitle;
+
+  /// Cuerpo del paso final: señala el replay en home. Sin urgencia.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes repetir este recorrido desde el icono en la portada. Empieza cuando quieras.'**
+  String get tourStepDoneBody;
+
+  /// Avanza al siguiente paso del tour.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get tourNext;
+
+  /// Sale del tour en cualquier paso y lo marca como visto.
+  ///
+  /// In es, this message translates to:
+  /// **'Saltar'**
+  String get tourSkip;
+
+  /// Cierra el tour en el último paso.
+  ///
+  /// In es, this message translates to:
+  /// **'Entendido'**
+  String get tourDone;
+
+  /// Tooltip del icono en home que repite el tour guiado.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver el recorrido'**
+  String get tourReplayTooltip;
+
   /// Título del empty-state para 0 hábitos activos (no es el primer uso).
   ///
   /// In es, this message translates to:
@@ -214,17 +310,17 @@ abstract class AppLocalizations {
   /// **'¿Qué quieres trabajar?'**
   String get onboardingSelectTitle;
 
-  /// No description provided for @onboardingSelectSubtitle.
+  /// La sugerencia de empezar con pocos es solo copy — no existe tope de hábitos.
   ///
   /// In es, this message translates to:
-  /// **'Elige de uno a tres. Podrás cambiarlos cuando quieras.'**
+  /// **'Elige al menos uno. Puedes empezar pequeño y cambiarlos cuando quieras.'**
   String get onboardingSelectSubtitle;
 
   /// No description provided for @onboardingSelectionCounter.
   ///
   /// In es, this message translates to:
-  /// **'{count} de {max} elegidos'**
-  String onboardingSelectionCounter(int count, int max);
+  /// **'{count} elegidos'**
+  String onboardingSelectionCounter(int count);
 
   /// No description provided for @onboardingContinue.
   ///
@@ -334,11 +430,35 @@ abstract class AppLocalizations {
   /// **'Agregar hábito'**
   String get habitsAdd;
 
-  /// No description provided for @habitsArchive.
+  /// Tooltip/semántica del botón ⋯ de una tarjeta de hábito (paso 1 del archivado en dos pasos).
+  ///
+  /// In es, this message translates to:
+  /// **'Opciones del hábito'**
+  String get habitsMenuTooltip;
+
+  /// Acción dentro del menú del hábito. Abre el diálogo de confirmación, nunca archiva directo.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivar hábito'**
+  String get habitsMenuArchive;
+
+  /// Título del diálogo de confirmación de archivado.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Archivar \"{label}\"?'**
+  String habitsArchiveConfirmTitle(String label);
+
+  /// Cuerpo del diálogo de confirmación. Calmo, sin tono destructivo — archivar no borra nada.
+  ///
+  /// In es, this message translates to:
+  /// **'Saldrá de tu lista activa. Su historia se conserva y podrás retomarlo cuando quieras.'**
+  String get habitsArchiveConfirmBody;
+
+  /// Acción confirmatoria del diálogo de archivado.
   ///
   /// In es, this message translates to:
   /// **'Archivar'**
-  String get habitsArchive;
+  String get habitsArchiveConfirmAction;
 
   /// Confirmación breve tras archivar.
   ///
@@ -376,12 +496,6 @@ abstract class AppLocalizations {
   /// **'Escribe un nombre para el hábito.'**
   String get habitFormEmptyLabel;
 
-  /// Mensaje al intentar un 4º hábito activo. Claro y no punitivo.
-  ///
-  /// In es, this message translates to:
-  /// **'Ya tienes tres hábitos activos. Archiva uno para agregar otro.'**
-  String get habitsLimitReached;
-
   /// Etiqueta bajo el número de días constantes. Minúscula, sin framing de 'racha' gamificada.
   ///
   /// In es, this message translates to:
@@ -393,6 +507,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Hoy es un buen día para empezar de nuevo.'**
   String get habitDetailStreakZero;
+
+  /// Estado del botón primario cuando el día ya fue registrado (un éxito por día natural). Calmo, informativo, sin bloqueo dramático.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrado hoy'**
+  String get habitDetailRegisteredToday;
 
   /// Acción primaria: marca el día como cumplido (suma un día de constancia).
   ///
@@ -549,6 +669,54 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Reflexión de la noche'**
   String get homeOpenEvening;
+
+  /// Title of the Diario tab root (the journal hub).
+  ///
+  /// In es, this message translates to:
+  /// **'Diario'**
+  String get journalHubTitle;
+
+  /// Eyebrow over the morning panel in the journal hub.
+  ///
+  /// In es, this message translates to:
+  /// **'La mañana'**
+  String get journalHubMorningEyebrow;
+
+  /// Eyebrow over the evening panel in the journal hub.
+  ///
+  /// In es, this message translates to:
+  /// **'La noche'**
+  String get journalHubEveningEyebrow;
+
+  /// Invitation copy on the morning panel when today has no entry yet. Calm, no exclamation.
+  ///
+  /// In es, this message translates to:
+  /// **'Una frase para empezar el día con intención.'**
+  String get journalHubMorningInvite;
+
+  /// Invitation copy on the evening panel when today has no entry yet. Calm, no exclamation.
+  ///
+  /// In es, this message translates to:
+  /// **'Un repaso amable antes de dormir.'**
+  String get journalHubEveningInvite;
+
+  /// Small badge on a journal hub panel when today's entry exists.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardado hoy'**
+  String get journalHubDone;
+
+  /// Quiet call-to-action on a journal hub panel without an entry.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir'**
+  String get journalHubOpen;
+
+  /// Quiet call-to-action on a journal hub panel whose entry already exists (upsert semantics: reopening edits).
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get journalHubEdit;
 
   /// Eyebrow de la pantalla matutina.
   ///

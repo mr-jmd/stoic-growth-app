@@ -48,6 +48,60 @@ class AppLocalizationsEs extends AppLocalizations {
   String get crisisAccessLabel => 'Un momento de calma';
 
   @override
+  String get tourStepVirtuesTitle => 'Tus virtudes';
+
+  @override
+  String get tourStepVirtuesBody =>
+      'Estas cuatro piedras reflejan tu constancia. Cambian de textura con tu práctica, no con números.';
+
+  @override
+  String get tourStepQuoteTitle => 'Una idea para el día';
+
+  @override
+  String get tourStepQuoteBody =>
+      'Cada mañana te espera una cita estoica con una pregunta para llevar contigo.';
+
+  @override
+  String get tourStepHabitsTitle => 'Tus hábitos';
+
+  @override
+  String get tourStepHabitsBody =>
+      'Aquí viven los hábitos que elegiste. Registra tu día, o anota una recaída como aprendizaje.';
+
+  @override
+  String get tourStepJournalTitle => 'Tu diario';
+
+  @override
+  String get tourStepJournalBody =>
+      'Dos momentos breves: una intención al empezar el día y un cierre al terminarlo.';
+
+  @override
+  String get tourStepCalmTitle => 'Un momento de calma';
+
+  @override
+  String get tourStepCalmBody =>
+      'Si el día se pone difícil, este acceso está siempre a un toque, en cualquier pantalla.';
+
+  @override
+  String get tourStepDoneTitle => 'Esto es todo';
+
+  @override
+  String get tourStepDoneBody =>
+      'Puedes repetir este recorrido desde el icono en la portada. Empieza cuando quieras.';
+
+  @override
+  String get tourNext => 'Siguiente';
+
+  @override
+  String get tourSkip => 'Saltar';
+
+  @override
+  String get tourDone => 'Entendido';
+
+  @override
+  String get tourReplayTooltip => 'Ver el recorrido';
+
+  @override
   String get emptyHabitsTitle => 'Aún no hay nada que cuidar aquí';
 
   @override
@@ -72,11 +126,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingSelectSubtitle =>
-      'Elige de uno a tres. Podrás cambiarlos cuando quieras.';
+      'Elige al menos uno. Puedes empezar pequeño y cambiarlos cuando quieras.';
 
   @override
-  String onboardingSelectionCounter(int count, int max) {
-    return '$count de $max elegidos';
+  String onboardingSelectionCounter(int count) {
+    return '$count elegidos';
   }
 
   @override
@@ -135,7 +189,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get habitsAdd => 'Agregar hábito';
 
   @override
-  String get habitsArchive => 'Archivar';
+  String get habitsMenuTooltip => 'Opciones del hábito';
+
+  @override
+  String get habitsMenuArchive => 'Archivar hábito';
+
+  @override
+  String habitsArchiveConfirmTitle(String label) {
+    return '¿Archivar \"$label\"?';
+  }
+
+  @override
+  String get habitsArchiveConfirmBody =>
+      'Saldrá de tu lista activa. Su historia se conserva y podrás retomarlo cuando quieras.';
+
+  @override
+  String get habitsArchiveConfirmAction => 'Archivar';
 
   @override
   String get habitsArchived => 'Hábito archivado';
@@ -156,15 +225,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get habitFormEmptyLabel => 'Escribe un nombre para el hábito.';
 
   @override
-  String get habitsLimitReached =>
-      'Ya tienes tres hábitos activos. Archiva uno para agregar otro.';
-
-  @override
   String get habitDetailStreakLabel => 'días de constancia';
 
   @override
   String get habitDetailStreakZero =>
       'Hoy es un buen día para empezar de nuevo.';
+
+  @override
+  String get habitDetailRegisteredToday => 'Registrado hoy';
 
   @override
   String get habitDetailRegisterToday => 'Registrar hoy';
@@ -246,6 +314,31 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get homeOpenEvening => 'Reflexión de la noche';
+
+  @override
+  String get journalHubTitle => 'Diario';
+
+  @override
+  String get journalHubMorningEyebrow => 'La mañana';
+
+  @override
+  String get journalHubEveningEyebrow => 'La noche';
+
+  @override
+  String get journalHubMorningInvite =>
+      'Una frase para empezar el día con intención.';
+
+  @override
+  String get journalHubEveningInvite => 'Un repaso amable antes de dormir.';
+
+  @override
+  String get journalHubDone => 'Guardado hoy';
+
+  @override
+  String get journalHubOpen => 'Abrir';
+
+  @override
+  String get journalHubEdit => 'Editar';
 
   @override
   String get journalMorningEyebrow => 'REFLEXIÓN DE LA MAÑANA';

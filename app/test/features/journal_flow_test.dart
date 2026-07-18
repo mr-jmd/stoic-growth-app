@@ -72,6 +72,10 @@ void main() {
       expect(find.text(es.eveningAddNote), findsOneWidget);
 
       // Opt in — now the field appears. (It autofocuses, so pump, not settle.)
+      // The editorial type scale can push the row below the 800×600 test
+      // viewport — scroll it into view first.
+      await tester.ensureVisible(find.text(es.eveningAddNote));
+      await tester.pump();
       await tester.tap(find.text(es.eveningAddNote));
       await tester.pump();
       expect(find.byType(TextField), findsOneWidget);

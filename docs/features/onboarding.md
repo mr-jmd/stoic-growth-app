@@ -2,12 +2,12 @@
 
 ## Qué hace
 
-En el primer uso, guía a la persona por un flujo corto de tres pasos para elegir de **uno a tres** hábitos para trabajar. Sin cuenta, sin login, sin presión. Al terminar, entra al dashboard.
+En el primer uso, guía a la persona por un flujo corto de tres pasos para elegir **al menos un** hábito (sin tope) para trabajar. Sin cuenta, sin login, sin presión. Al terminar, entra al dashboard.
 
 ## Flujo
 
 1. **Intro** — framing breve ("Sin cuentas y sin presión…"), un botón "Empezar".
-2. **Selección** — hábitos sugeridos agrupados por virtud, elegidos con chips (multi-select, tope de 3). Copy no clínico (`onboarding_suggestions.dart`). Un contador "N de 3 elegidos".
+2. **Selección** — hábitos sugeridos agrupados por virtud, elegidos con chips (multi-select, libre desde 1, sin tope). Copy no clínico (`onboarding_suggestions.dart`). Un contador "N elegidos".
 3. **Confirmación** — muestra lo elegido; botón "Comenzar" persiste los hábitos y marca el onboarding como completado.
 
 ## Reglas

@@ -2,12 +2,13 @@ import 'package:flutter/widgets.dart';
 
 import 'palette.dart';
 
-/// Elevation treatment (DESIGN_BRIEF §2 "Sombras"). **Per-mode.**
+/// Elevation treatment. **Per-mode.**
 ///
-/// - Light ("mármol"): diffuse, low-contrast, warm-tinted drop shadows.
-/// - Dark ("basalto"): elevation reads mostly from the `surface → surfaceContainer`
-///   luminance step + a hairline [border] + an inner highlight; the drop shadow
-///   is secondary and warm-near-black, never pure black.
+/// - Light ("mármol"): a two-layer warm ambient shadow — a wide soft wash plus
+///   a tight contact line. Paper floating on marble, never a Material drop.
+/// - Dark ("basalto"): shadows nearly off; depth reads from the surface
+///   lightness step (`surface → containerHigh`) + a hairline [border] + an
+///   inner highlight.
 @immutable
 class StoicElevation {
   const StoicElevation({
@@ -20,10 +21,10 @@ class StoicElevation {
   /// Shadows for `AppCard`-level elevation.
   final List<BoxShadow> card;
 
-  /// Shadows for a more raised surface (crisis slab, sheets).
+  /// Shadows for a more raised surface (dialogs, sheets).
   final List<BoxShadow> raised;
 
-  /// Hairline border — null in light (shadow carries it), a 1px `line` in dark.
+  /// Hairline border — subtle in light, load-bearing in dark.
   final Border? border;
 
   /// Top inner-highlight colour applied by components as a 1px inset line.
@@ -34,26 +35,23 @@ class StoicElevation {
 
   factory StoicElevation.light() => StoicElevation(
         card: [
-          _s(shadowWarmLight, 0.04, 1, 2),
-          _s(shadowWarmLight, 0.05, 8, 22),
+          _s(shadowWarmLight, 0.05, 1, 3),
+          _s(shadowWarmLight, 0.08, 8, 24),
         ],
         raised: [
-          _s(shadowWarmLight, 0.05, 1, 2),
-          _s(shadowWarmLight, 0.08, 14, 38),
-          _s(shadowWarmLight, 0.05, 40, 72),
+          _s(shadowWarmLight, 0.06, 2, 4),
+          _s(shadowWarmLight, 0.10, 16, 40),
         ],
-        border: null,
-        innerHighlight: innerHighlightLight.withValues(alpha: 0.35),
+        border: const Border.fromBorderSide(BorderSide(color: lineLight, width: 1)),
+        innerHighlight: innerHighlightLight.withValues(alpha: 0.5),
       );
 
   factory StoicElevation.dark() => StoicElevation(
         card: [
-          _s(shadowWarmDark, 0.50, 1, 2),
-          _s(shadowWarmDark, 0.35, 10, 26),
+          _s(shadowWarmDark, 0.40, 1, 2),
         ],
         raised: [
-          _s(shadowWarmDark, 0.55, 2, 4),
-          _s(shadowWarmDark, 0.40, 18, 44),
+          _s(shadowWarmDark, 0.50, 8, 24),
         ],
         border: const Border.fromBorderSide(BorderSide(color: lineDark, width: 1)),
         innerHighlight: innerHighlightDark.withValues(alpha: 0.05),

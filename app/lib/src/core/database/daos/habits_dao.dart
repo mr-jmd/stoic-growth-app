@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../../shared/check_in_status.dart';
+import '../../../shared/dates.dart';
 import '../app_database.dart';
 import '../tables/habit_check_ins.dart';
 import '../tables/habits.dart';
@@ -78,6 +79,22 @@ class HabitsDao extends DatabaseAccessor<AppDatabase> with _$HabitsDaoMixin {
           ..where((c) => c.habitId.equals(habitId))
           ..orderBy([(c) => OrderingTerm(expression: c.date)]))
         .watch();
+  }
+
+  /// The `success` check-in on the local calendar day of [day], if any (times
+  /// are stored raw; the day window is [local midnight, +1 day)). Backs the
+  /// one-success-per-day rule in the repository.
+  Future<HabitCheckIn?> successCheckInOn(int habitId, DateTime day) {
+    final start = dayOf(day);
+    final end = start.add(const Duration(days: 1));
+    return (select(habitCheckIns)
+          ..where((c) =>
+              c.habitId.equals(habitId) &
+              c.status.equalsValue(CheckInStatus.success) &
+              c.date.isBiggerOrEqualValue(start) &
+              c.date.isSmallerThanValue(end))
+          ..limit(1))
+        .getSingleOrNull();
   }
 
   Future<int> countCheckIns(int habitId, {CheckInStatus? status}) async {

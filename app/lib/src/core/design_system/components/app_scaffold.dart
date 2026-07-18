@@ -2,24 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../tokens/stoic_tokens.dart';
 
-/// Base scaffold: a warm radial `appBg` gradient (never a flat colour),
-/// safe areas, and slots for a bottom bar and a persistent crisis access
-/// (DESIGN_BRIEF §5). Reads the gradient from tokens, so it flips between
-/// "mármol" and "basalto" with the theme, no branch here.
+/// Base scaffold of "Piedra y luz": a soft vertical wash of light (brighter at
+/// the top, like morning light on marble — never a flat colour), safe areas,
+/// and a slot for a bottom bar. Crisis access lives in the shell's [CalmBand],
+/// not here. Reads the wash from tokens, so it flips between marble and basalt
+/// with the theme.
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
     super.key,
     required this.body,
     this.bottomBar,
-    this.crisisAccess,
     this.onBack,
   });
 
   final Widget body;
   final Widget? bottomBar;
-
-  /// Optional persistent crisis affordance, pinned bottom-end above the bar.
-  final Widget? crisisAccess;
 
   /// When set, a back control is shown at the top-start. Pushed screens without
   /// their own back affordance pass this (there's no AppBar) so they're never
@@ -28,7 +25,8 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.stoic.colors;
+    final tokens = context.stoic;
+    final c = tokens.colors;
 
     Widget content = body;
     if (onBack != null) {
@@ -37,13 +35,14 @@ class AppScaffold extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(
-              left: context.stoic.spacing.sm,
-              top: context.stoic.spacing.sm,
+              left: tokens.spacing.sm,
+              top: tokens.spacing.sm,
             ),
             child: IconButton(
               onPressed: onBack,
               icon: const Icon(Icons.arrow_back),
               color: c.faint,
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
             ),
           ),
           Expanded(child: body),
@@ -53,29 +52,16 @@ class AppScaffold extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: const Alignment(0, -0.6),
-          radius: 1.3,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: [c.appBgInner, c.appBgOuter],
         ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         bottomNavigationBar: bottomBar,
-        body: SafeArea(
-          child: crisisAccess == null
-              ? content
-              : Stack(
-                  children: [
-                    Positioned.fill(child: content),
-                    Positioned(
-                      right: context.stoic.spacing.lg,
-                      bottom: context.stoic.spacing.lg,
-                      child: crisisAccess!,
-                    ),
-                  ],
-                ),
-        ),
+        body: SafeArea(child: content),
       ),
     );
   }

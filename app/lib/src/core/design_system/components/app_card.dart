@@ -2,14 +2,31 @@ import 'package:flutter/material.dart';
 
 import '../tokens/stoic_tokens.dart';
 
-/// Elevated surface (DESIGN_BRIEF §5). Light: warm diffuse shadow. Dark: the
-/// `surface → surfaceContainer` luminance step + hairline `line` + a top
-/// inner-highlight carry the separation; the drop shadow is secondary. All of
-/// that comes from the elevation token, so this widget has no `if (isDark)`.
+enum AppCardVariant {
+  /// Raised paper: card surface + hairline + soft warm shadow.
+  paper,
+
+  /// Quiet inset: bone fill, hairline only, no shadow. For secondary tiles.
+  inset,
+}
+
+/// The elevated surface of the system. Light: paper floating on marble (soft
+/// two-layer warm shadow). Dark: the surface luminance step + hairline + inner
+/// highlight carry the separation. All from tokens — no `if (isDark)` here.
 class AppCard extends StatelessWidget {
-  const AppCard({super.key, required this.child, this.padding});
+  const AppCard({
+    super.key,
+    required this.child,
+    this.variant = AppCardVariant.paper,
+    this.onTap,
+    this.padding,
+  });
 
   final Widget child;
+  final AppCardVariant variant;
+
+  /// When set, the whole card is tappable (ink-rippled).
+  final VoidCallback? onTap;
   final EdgeInsetsGeometry? padding;
 
   @override
@@ -17,28 +34,37 @@ class AppCard extends StatelessWidget {
     final tokens = context.stoic;
     final scheme = Theme.of(context).colorScheme;
     final elevation = tokens.elevation;
+    final isPaper = variant == AppCardVariant.paper;
     final radius = BorderRadius.circular(tokens.radii.card);
 
-    return DecoratedBox(
+    final inner = DecoratedBox(
+      // 1px top inner-highlight (marble/basalt sheen).
       decoration: BoxDecoration(
-        color: scheme.surfaceContainer,
+        borderRadius: radius,
+        border: Border(
+          top: BorderSide(color: elevation.innerHighlight, width: 1),
+        ),
+      ),
+      child: Padding(
+        padding: padding ?? EdgeInsets.all(tokens.spacing.xl),
+        child: child,
+      ),
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isPaper ? scheme.surfaceContainer : tokens.colors.bone,
         borderRadius: radius,
         border: elevation.border,
-        boxShadow: elevation.card,
+        boxShadow: isPaper ? elevation.card : null,
       ),
-      child: DecoratedBox(
-        // 1px top inner-highlight (marble/basalt sheen).
-        decoration: BoxDecoration(
-          borderRadius: radius,
-          border: Border(
-            top: BorderSide(color: elevation.innerHighlight, width: 1),
-          ),
-        ),
-        child: Padding(
-          padding: padding ?? EdgeInsets.all(tokens.spacing.xl),
-          child: child,
-        ),
-      ),
+      clipBehavior: onTap == null ? Clip.none : Clip.antiAlias,
+      child: onTap == null
+          ? inner
+          : Material(
+              color: Colors.transparent,
+              child: InkWell(onTap: onTap, borderRadius: radius, child: inner),
+            ),
     );
   }
 }

@@ -29,7 +29,9 @@ class CrisisScreen extends ConsumerWidget {
   }
 }
 
-/// Spacious, calm frame with the always-present exit pinned at the top-end.
+/// Spacious full-bleed calm frame — its own deeper wash (the "charco de
+/// calma"), everything centered, and the always-present exit as a quiet pill
+/// at the bottom, in every state. All colours from tokens, never red.
 class _CrisisScaffold extends StatelessWidget {
   const _CrisisScaffold({required this.child});
 
@@ -38,27 +40,61 @@ class _CrisisScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = context.stoic;
+    final c = tokens.colors;
     final l = AppLocalizations.of(context);
 
-    return AppScaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(28, 12, 28, 28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () => context.pop(),
-                child: Text(
-                  l.crisisExit,
-                  style: tokens.text.chip
-                      .copyWith(color: tokens.colors.crisisStroke),
-                ),
-              ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [c.crisisSurface, c.appBgOuter],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              tokens.spacing.page + 4,
+              tokens.spacing.lg,
+              tokens.spacing.page + 4,
+              tokens.spacing.xl,
             ),
-            Expanded(child: child),
-          ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: child),
+                SizedBox(height: tokens.spacing.lg),
+                // The exit — present in every state, quiet, never urgent.
+                Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(tokens.radii.full),
+                      side: BorderSide(color: c.crisisStroke.withValues(alpha: 0.5)),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      onTap: () => context.pop(),
+                      child: Container(
+                        constraints: const BoxConstraints(minHeight: 48),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: tokens.spacing.xl,
+                        ),
+                        child: Text(
+                          l.crisisExit,
+                          style: tokens.text.chip
+                              .copyWith(color: c.crisisStroke),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

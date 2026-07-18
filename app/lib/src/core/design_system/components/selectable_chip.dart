@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../tokens/stoic_tokens.dart';
 
-/// The workhorse selection primitive (DESIGN_BRIEF §5). Reused for mood/energy,
-/// evening reflection chips, and virtue/habit selection — never reinvented.
+/// The workhorse selection primitive. Reused for mood/energy, evening
+/// reflection chips, and virtue/habit selection — never reinvented.
 ///
-/// Visual is compact (radius 7, ~6–7 × 12 padding) but the real tap target is
-/// ≥48dp so it stays comfortable to hit.
+/// Soft pill (radius from the `chip` token), warm terracotta-tinted paper when
+/// selected with a fine accent stroke; the real tap target is ≥48dp.
 class SelectableChip extends StatelessWidget {
   const SelectableChip({
     super.key,
@@ -41,17 +41,20 @@ class SelectableChip extends StatelessWidget {
             alignment: Alignment.centerLeft,
             widthFactor: 1,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 120),
+              duration: tokens.motion.fast,
+              curve: tokens.motion.standard,
               padding: EdgeInsets.symmetric(
-                horizontal: tokens.spacing.md,
-                vertical: 7,
+                horizontal: tokens.spacing.gap,
+                vertical: 9,
               ),
               decoration: BoxDecoration(
                 color: selected ? c.chipSelectedFill : Colors.transparent,
                 borderRadius: radius,
                 border: Border.all(
-                  color: selected ? Colors.transparent : c.line,
-                  width: 1,
+                  color: selected
+                      ? c.chipSelectedText.withValues(alpha: 0.45)
+                      : c.line,
+                  width: selected ? 1.5 : 1,
                 ),
               ),
               child: Text(

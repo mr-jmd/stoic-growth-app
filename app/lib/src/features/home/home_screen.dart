@@ -8,12 +8,15 @@ import '../../core/l10n/app_localizations.dart';
 import '../../shared/virtue.dart';
 import '../../shared/virtue_progress_state.dart';
 import '../daily_quote/daily_quote.dart';
+import '../tour/tour_controller.dart';
+import '../tour/tour_targets.dart';
 import 'virtue_progress_calculator.dart';
 
-/// The MVP dashboard (Sprint 7). Framed **around the four virtues** — not a
-/// streak-count-first layout (streak numbers live in the habit detail). Shows
-/// today's quote + reflection question, the virtue overview derived from habit
-/// consistency, and calm entries into habits, journal, and (persistent) crisis.
+/// The "Hoy" tab: an editorial front page. The daily quote opens the day as a
+/// full-width hero (no card box), the four virtues follow as material slabs —
+/// never streak-count-first (streak numbers live in the habit detail) — and the
+/// journal's two moments close the page. Crisis access lives in the shell's
+/// persistent calm band, on every tab.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -25,44 +28,62 @@ class HomeScreen extends ConsumerWidget {
     final virtues = VirtueProgressCalculator.fromHabits(
       habits.asData?.value ?? const [],
     );
+    final date = MaterialLocalizations.of(context).formatFullDate(DateTime.now());
 
     return AppScaffold(
-      // Persistent crisis access (README 10.2) — one tap into the grounding flow.
-      crisisAccess: CrisisAccessButton(
-        label: l.crisisAccessLabel,
-        onPressed: () => context.push('/crisis'),
-      ),
       body: ListView(
-        // Bottom padding clears the floating crisis affordance.
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 96),
+        padding: EdgeInsets.fromLTRB(
+          tokens.spacing.page,
+          tokens.spacing.xl,
+          tokens.spacing.page,
+          tokens.spacing.xl,
+        ),
         children: [
-          Text(l.homeTitle, style: tokens.text.displayGreeting),
-          SizedBox(height: tokens.spacing.xl),
-          const _DailyQuoteCard(),
-          SizedBox(height: tokens.spacing.xxl),
-          Text(l.homeVirtuesSectionTitle, style: tokens.text.eyebrow),
-          SizedBox(height: tokens.spacing.md),
-          _VirtueGrid(states: virtues),
-          SizedBox(height: tokens.spacing.xxl),
-          Text(l.homeHabitsSectionTitle, style: tokens.text.eyebrow),
-          SizedBox(height: tokens.spacing.md),
-          AppButton(
-            label: l.homeOpenHabits,
-            onPressed: () => context.push('/habits'),
-          ),
-          SizedBox(height: tokens.spacing.xxl),
-          Text(l.homeJournalSectionTitle, style: tokens.text.eyebrow),
-          SizedBox(height: tokens.spacing.md),
-          AppButton(
-            label: l.homeOpenMorning,
-            variant: AppButtonVariant.secondary,
-            onPressed: () => context.push('/journal/morning'),
+          Row(
+            children: [
+              Expanded(
+                child: Text(date.toUpperCase(), style: tokens.text.eyebrow),
+              ),
+              // Quiet replay of the guided tour.
+              IconButton(
+                onPressed: () =>
+                    ref.read(tourControllerProvider.notifier).start(),
+                tooltip: l.tourReplayTooltip,
+                icon: Icon(Icons.help_outline,
+                    size: 18, color: tokens.colors.faint),
+                constraints:
+                    const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
+            ],
           ),
           SizedBox(height: tokens.spacing.sm),
-          AppButton(
+          KeyedSubtree(key: tourQuoteHeroKey, child: const _DailyQuoteHero()),
+          SizedBox(height: tokens.spacing.xxl),
+          SectionHeader(eyebrow: l.homeVirtuesSectionTitle),
+          SizedBox(height: tokens.spacing.gap),
+          KeyedSubtree(
+            key: tourVirtueGridKey,
+            child: _VirtueGrid(states: virtues),
+          ),
+          SizedBox(height: tokens.spacing.xxl),
+          SectionHeader(
+            eyebrow: l.homeHabitsSectionTitle,
+            trailingLabel: l.homeOpenHabits,
+            onTrailing: () => context.go('/habits'),
+          ),
+          SizedBox(height: tokens.spacing.xxl),
+          SectionHeader(eyebrow: l.homeJournalSectionTitle),
+          SizedBox(height: tokens.spacing.gap),
+          _JournalTile(
+            label: l.homeOpenMorning,
+            icon: Icons.wb_twilight,
+            onTap: () => context.push('/journal/morning'),
+          ),
+          SizedBox(height: tokens.spacing.sm),
+          _JournalTile(
             label: l.homeOpenEvening,
-            variant: AppButtonVariant.secondary,
-            onPressed: () => context.push('/journal/evening'),
+            icon: Icons.nightlight_outlined,
+            onTap: () => context.push('/journal/evening'),
           ),
         ],
       ),
@@ -70,33 +91,24 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// Today's quote + its reflection question. Loads from the bundled asset; while
-/// it resolves (or if it fails) the dashboard simply omits the card — never a
-/// broken or blocking state.
-class _DailyQuoteCard extends ConsumerWidget {
-  const _DailyQuoteCard();
+/// Today's quote + its reflection question as the page's editorial hero. Loads
+/// from the bundled asset; while it resolves (or if it fails) the page simply
+/// omits it — never a broken or blocking state.
+class _DailyQuoteHero extends ConsumerWidget {
+  const _DailyQuoteHero();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tokens = context.stoic;
     final l = AppLocalizations.of(context);
     final quote = ref.watch(dailyQuoteProvider);
 
     return quote.maybeWhen(
       orElse: () => const SizedBox.shrink(),
-      data: (q) => AppCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l.homeQuoteEyebrow, style: tokens.text.eyebrow),
-            SizedBox(height: tokens.spacing.md),
-            Text(q.text, style: tokens.text.quote),
-            SizedBox(height: tokens.spacing.sm),
-            Text(q.author, style: tokens.text.attribution),
-            SizedBox(height: tokens.spacing.lg),
-            Text(q.reflection, style: tokens.text.reflection),
-          ],
-        ),
+      data: (q) => EditorialHero(
+        eyebrow: l.homeQuoteEyebrow,
+        quote: q.text,
+        attribution: q.author,
+        footnote: q.reflection,
       ),
     );
   }
@@ -129,6 +141,41 @@ class _VirtueGrid extends StatelessWidget {
           cell(Virtue.justicia),
         ]),
       ],
+    );
+  }
+}
+
+/// A quiet inset tile into one of the journal's two moments.
+class _JournalTile extends StatelessWidget {
+  const _JournalTile({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.stoic;
+
+    return AppCard(
+      variant: AppCardVariant.inset,
+      onTap: onTap,
+      padding: EdgeInsets.symmetric(
+        horizontal: tokens.spacing.lg,
+        vertical: tokens.spacing.gap,
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: tokens.colors.faint),
+          SizedBox(width: tokens.spacing.md),
+          Expanded(child: Text(label, style: tokens.text.bodyStrong)),
+          Icon(Icons.chevron_right, size: 20, color: tokens.colors.faint),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../shared/dates.dart';
 import '../../../shared/journal_enums.dart';
 import '../app_database.dart';
 import '../daos/journal_dao.dart';
@@ -33,7 +34,7 @@ class JournalRepository {
     int? energyScore,
     List<EveningTag> tags = const [],
   }) {
-    final day = DateTime(date.year, date.month, date.day);
+    final day = dayOf(date);
     return _db.transaction(() async {
       final existing = await _dao.getEntryForDay(day, type);
       final int entryId;

@@ -8,10 +8,8 @@ import '../../core/l10n/app_localizations.dart';
 import '../../shared/virtue.dart';
 import '../../shared/virtue_l10n.dart';
 
-/// Create-habit form: a label plus a virtue. Enforces the 3-active cap with a
-/// clear, non-punitive message (the repository is the real guard; this surfaces
-/// it). Reused by the habits list and reachable during normal use, not just
-/// onboarding.
+/// Create-habit form: a label plus a virtue. No cap on active habits. Reused by
+/// the habits list and reachable during normal use, not just onboarding.
 class HabitFormScreen extends ConsumerStatefulWidget {
   const HabitFormScreen({super.key});
 
@@ -44,29 +42,18 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l.habitFormTitle, style: tokens.text.displayGreeting),
-            SizedBox(height: tokens.spacing.xl),
-            Text(l.habitFormLabelHint, style: tokens.text.eyebrow),
-            SizedBox(height: tokens.spacing.sm),
+            SizedBox(height: tokens.spacing.xxl),
+            Text(l.habitFormLabelHint.toUpperCase(), style: tokens.text.eyebrow),
+            SizedBox(height: tokens.spacing.md),
+            // Styled by the theme's InputDecorationTheme (inset paper, accent focus).
             TextField(
               controller: _labelController,
               maxLength: 80,
               style: tokens.text.body,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: scheme.surfaceContainer,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(tokens.radii.card),
-                  borderSide: BorderSide(color: tokens.colors.line),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(tokens.radii.card),
-                  borderSide: BorderSide(color: tokens.colors.line),
-                ),
-              ),
             ),
             SizedBox(height: tokens.spacing.lg),
-            Text(l.habitFormVirtueLabel, style: tokens.text.eyebrow),
-            SizedBox(height: tokens.spacing.sm),
+            Text(l.habitFormVirtueLabel.toUpperCase(), style: tokens.text.eyebrow),
+            SizedBox(height: tokens.spacing.md),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -81,9 +68,10 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
             ),
             if (_error != null) ...[
               SizedBox(height: tokens.spacing.lg),
+              // A real form error — the one legitimate use of the error colour.
               Text(
                 _error!,
-                style: tokens.text.body.copyWith(color: scheme.onSurfaceVariant),
+                style: tokens.text.body.copyWith(color: scheme.error),
               ),
             ],
             const Spacer(),
@@ -118,16 +106,9 @@ class _HabitFormScreenState extends ConsumerState<HabitFormScreen> {
       _saving = true;
       _error = null;
     });
-    try {
-      await ref
-          .read(habitRepositoryProvider)
-          .createHabit(label: label, virtue: _virtue);
-      if (mounted) context.pop();
-    } on MaxActiveHabitsException {
-      setState(() {
-        _saving = false;
-        _error = l.habitsLimitReached;
-      });
-    }
+    await ref
+        .read(habitRepositoryProvider)
+        .createHabit(label: label, virtue: _virtue);
+    if (mounted) context.pop();
   }
 }

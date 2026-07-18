@@ -6,6 +6,7 @@ Un diario de dos momentos —mañana y noche— diseñado para completarse en se
 
 ## Flujo
 
+- **Hub del diario** (`/journal`, raíz de la pestaña Diario): dos paneles — Mañana y Noche — que muestran si la entrada de hoy existe ("Guardado hoy" + eco de la frase) y abren cada flujo; reabrir siempre edita (upsert).
 - **Reflexión de la mañana** (`/journal/morning`): el prompt "Hoy depende de mí: ___", completable con **un toque** en una frase pre-escrita (o escrita/dictada por la persona, máx. corto). Más ánimo/energía opcional.
 - **Reflexión de la noche** (`/journal/evening`): tres chips fijos pre-escritos (multi-select), ánimo/energía opcional, y una **nota de texto libre colapsada** que solo aparece al tocar "Agregar una nota" — nunca expandida por defecto.
 - **Ánimo y energía:** selector rápido de un toque, cualitativo (bajo / medio / alto), opcional, presente en ambos momentos. El usuario nunca ve una escala numérica clínica.

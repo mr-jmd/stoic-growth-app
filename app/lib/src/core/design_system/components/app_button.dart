@@ -3,53 +3,80 @@ import 'package:flutter/material.dart';
 import '../tokens/stoic_tokens.dart';
 
 enum AppButtonVariant {
-  /// Warm interactive fill (`slate`) — the main forward action.
+  /// Terracotta pill — the single forward action of a screen.
   primary,
 
-  /// Quiet, bordered — "ahora no", dismiss, secondary paths.
+  /// Hairline-bordered quiet pill — "ahora no", dismiss, secondary paths.
   secondary,
+
+  /// Terracotta-tinted paper fill — warm emphasis without full weight.
+  tonal,
+
+  /// Text-only — the quietest affordance.
+  quiet,
 }
 
-/// The one button in the system. No strident colour in any mode; radius from
-/// the `affordance` token; ≥48dp tall (DESIGN_BRIEF §5).
+/// The one button in the system. Full-pill silhouette, one accent, no strident
+/// colour in any mode; ≥48dp tall.
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.variant = AppButtonVariant.primary,
+    this.expanded = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final AppButtonVariant variant;
 
+  /// When true the button stretches to the available width.
+  final bool expanded;
+
   @override
   Widget build(BuildContext context) {
     final tokens = context.stoic;
+    final c = tokens.colors;
     final scheme = Theme.of(context).colorScheme;
-    final isPrimary = variant == AppButtonVariant.primary;
 
-    final radius = BorderRadius.circular(tokens.radii.affordance);
-    final labelStyle = tokens.text.chip.copyWith(
-      fontSize: 14,
-      color: isPrimary ? scheme.onPrimary : scheme.onSurface,
-    );
+    final (Color fill, Color text, BorderSide side) = switch (variant) {
+      AppButtonVariant.primary => (
+          scheme.primary,
+          scheme.onPrimary,
+          BorderSide.none,
+        ),
+      AppButtonVariant.secondary => (
+          Colors.transparent,
+          scheme.onSurface,
+          BorderSide(color: c.line, width: 1),
+        ),
+      AppButtonVariant.tonal => (
+          c.accentSoft,
+          c.onAccentSoft,
+          BorderSide.none,
+        ),
+      AppButtonVariant.quiet => (
+          Colors.transparent,
+          scheme.onSurfaceVariant,
+          BorderSide.none,
+        ),
+    };
+
+    final radius = BorderRadius.circular(tokens.radii.full);
+    final labelStyle =
+        tokens.text.bodyStrong.copyWith(fontSize: 14.5, color: text);
 
     return Material(
-      color: isPrimary ? scheme.primary : Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: radius,
-        side: isPrimary
-            ? BorderSide.none
-            : BorderSide(color: tokens.colors.line, width: 1),
-      ),
+      color: fill,
+      shape: RoundedRectangleBorder(borderRadius: radius, side: side),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,
         child: Container(
-          constraints: const BoxConstraints(minHeight: 48, minWidth: 88),
+          constraints: const BoxConstraints(minHeight: 52, minWidth: 88),
           alignment: Alignment.center,
+          width: expanded ? double.infinity : null,
           padding: EdgeInsets.symmetric(horizontal: tokens.spacing.xl),
           child: Text(label, style: labelStyle),
         ),

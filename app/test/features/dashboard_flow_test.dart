@@ -1,5 +1,4 @@
 import 'package:app/src/core/database/repositories/habit_repository.dart';
-import 'package:app/src/core/database/repositories/onboarding_repository.dart';
 import 'package:app/src/core/design_system/design_system.dart';
 import 'package:app/src/core/l10n/app_localizations.dart';
 import 'package:app/src/features/habits/habit_detail_screen.dart';
@@ -29,7 +28,7 @@ void main() {
     _useTallScreen(tester);
     final db = newTestDatabase();
     addTearDown(db.close);
-    await OnboardingRepository(db).complete();
+    await completeFirstRun(db);
 
     await withNoNetwork(() async {
       await tester.pumpWidget(testApp(db));
@@ -49,6 +48,8 @@ void main() {
     _useTallScreen(tester);
     final db = newTestDatabase();
     addTearDown(db.close);
+    // Keep the journey tour-free (the guided tour has its own test file).
+    await db.appMetaDao.setTutorialCompleted(completed: true);
 
     await withNoNetwork(() async {
       await tester.pumpWidget(testApp(db));
@@ -80,15 +81,18 @@ void main() {
       expect((await HabitRepository(db).getCheckIns(habit.id)).single.status,
           CheckInStatus.success);
 
-      // Back to home (arrow back twice: detail → list → home). The dashboard
-      // reflects the whole loop, all offline (withNoNetwork would have thrown on
-      // any connection attempt). Crisis reachability from home is covered
+      // Back to home: arrow back closes the pushed detail (→ habits tab root),
+      // then the "Hoy" tab in the shell's nav bar returns to the dashboard.
+      // The dashboard reflects the whole loop, all offline (withNoNetwork would
+      // have thrown on any connection attempt). Crisis reachability is covered
       // separately in crisis_flow_test.
       await tester.tap(find.byIcon(Icons.arrow_back));
       await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.tap(find.text(es.navToday));
       await tester.pumpAndSettle();
 
+      // The nav bar's active tab label is the only "Hoy" on the page — the
+      // editorial home carries the date, not a literal heading.
       expect(find.text(es.homeTitle), findsOneWidget);
       expect(find.byType(VirtueIndicator), findsNWidgets(4));
 

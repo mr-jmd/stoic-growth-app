@@ -208,13 +208,13 @@ class _NoteField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = context.stoic;
-    final scheme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l.eveningNoteHint, style: tokens.text.eyebrow),
-        SizedBox(height: tokens.spacing.sm),
+        Text(l.eveningNoteHint.toUpperCase(), style: tokens.text.eyebrow),
+        SizedBox(height: tokens.spacing.md),
+        // Base look comes from the theme's InputDecorationTheme.
         TextField(
           controller: controller,
           autofocus: true,
@@ -222,18 +222,8 @@ class _NoteField extends StatelessWidget {
           maxLines: 5,
           style: tokens.text.body,
           decoration: InputDecoration(
-            filled: true,
-            fillColor: scheme.surfaceContainer,
             suffixIcon:
                 MicButton(controller: controller, onVoiceUsed: onVoiceUsed),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(tokens.radii.card),
-              borderSide: BorderSide(color: tokens.colors.line),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(tokens.radii.card),
-              borderSide: BorderSide(color: tokens.colors.line),
-            ),
           ),
         ),
       ],

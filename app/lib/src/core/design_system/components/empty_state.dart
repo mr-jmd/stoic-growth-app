@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../tokens/stoic_tokens.dart';
 import 'app_button.dart';
 
-/// Warm empty state (DESIGN_BRIEF §5). Used e.g. for "0 active habits" (the
-/// post-archive case, distinct from onboarding). Warm-dark in dark mode — never
-/// cold/void. Copy is calm, no exclamation, no clinical language.
+/// Warm empty state. Used e.g. for "0 active habits" (the post-archive case,
+/// distinct from onboarding). Warm-dark in dark mode — never cold/void. Copy is
+/// calm, no exclamation, no clinical language.
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
@@ -35,7 +35,7 @@ class EmptyState extends StatelessWidget {
           children: [
             Icon(
               icon ?? Icons.spa_outlined,
-              size: 40,
+              size: 36,
               color: tokens.colors.faint,
             ),
             SizedBox(height: tokens.spacing.lg),
@@ -44,7 +44,7 @@ class EmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               style: tokens.text.promptDisplay,
             ),
-            SizedBox(height: tokens.spacing.sm),
+            SizedBox(height: tokens.spacing.md),
             Text(
               message,
               textAlign: TextAlign.center,
@@ -52,7 +52,11 @@ class EmptyState extends StatelessWidget {
             ),
             if (actionLabel != null) ...[
               SizedBox(height: tokens.spacing.xl),
-              AppButton(label: actionLabel!, onPressed: onAction),
+              AppButton(
+                label: actionLabel!,
+                onPressed: onAction,
+                variant: AppButtonVariant.tonal,
+              ),
             ],
           ],
         ),

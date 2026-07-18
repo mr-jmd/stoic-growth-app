@@ -117,6 +117,11 @@ void main() {
     expect(checkIns.single.status, CheckInStatus.success);
     expect((await repo.getHabit(id))!.currentStreakCount, 1);
 
+    // One success per day: the button flips to its calm registered state and
+    // the register action is no longer offered.
+    expect(find.text(es.habitDetailRegisteredToday), findsOneWidget);
+    expect(find.text(es.habitDetailRegisterToday), findsNothing);
+
     await _disposeTree(tester);
   });
 }

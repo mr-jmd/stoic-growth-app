@@ -43,7 +43,7 @@ final class OnboardingControllerProvider
 }
 
 String _$onboardingControllerHash() =>
-    r'03a363f448d2137c1724bbf32e8ecfba03abf536';
+    r'1878822f94a198e696de68fe7cf44909d7a5d239';
 
 /// Drives the end of the onboarding flow: creates the chosen habits, then marks
 /// onboarding complete. Completing the flag flips [onboardingCompletedProvider],

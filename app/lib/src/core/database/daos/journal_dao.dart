@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../../../shared/dates.dart';
 import '../../../shared/journal_enums.dart';
 import '../app_database.dart';
 import '../tables/journal_entries.dart';
@@ -44,7 +45,7 @@ class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
     DateTime day,
     JournalType type,
   ) {
-    final start = DateTime(day.year, day.month, day.day);
+    final start = dayOf(day);
     final end = start.add(const Duration(days: 1));
     return select(journalEntries)
       ..where((e) =>
@@ -61,7 +62,7 @@ class JournalDao extends DatabaseAccessor<AppDatabase> with _$JournalDaoMixin {
     DateTime day, {
     JournalType? type,
   }) {
-    final start = DateTime(day.year, day.month, day.day);
+    final start = dayOf(day);
     final end = start.add(const Duration(days: 1));
     final query = select(journalEntries)
       ..where((e) =>

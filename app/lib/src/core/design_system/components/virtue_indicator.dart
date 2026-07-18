@@ -6,12 +6,12 @@ import '../../../shared/virtue_progress_state.dart';
 import '../../l10n/app_localizations.dart';
 import '../tokens/stoic_tokens.dart';
 
-/// The non-gamified progress element (DESIGN_BRIEF §3 / §5): a stone slab whose
-/// **material** expresses progress — never a number, bar or percentage. The
-/// gradient is chosen by (virtue, state) from tokens and already carries the
-/// light/dark direction; this widget just renders it.
+/// The non-gamified progress element: a stone slab whose **material** expresses
+/// progress — never a number, bar or percentage. The gradient is chosen by
+/// (virtue, state) from tokens and already carries the light/dark direction;
+/// this widget just renders it.
 ///
-/// Fixed geometry (both modes): 104px tall, radius 10, padding 15.
+/// Fixed geometry (both modes): 112px tall, radius from the `tile` token.
 class VirtueIndicator extends StatelessWidget {
   const VirtueIndicator({
     super.key,
@@ -29,8 +29,8 @@ class VirtueIndicator extends StatelessWidget {
     final slab = tokens.virtueSlab(virtue, state);
 
     return Container(
-      height: 104,
-      padding: const EdgeInsets.all(15),
+      height: 112,
+      padding: EdgeInsets.all(tokens.spacing.gap),
       decoration: BoxDecoration(
         gradient: slab.gradient,
         borderRadius: BorderRadius.circular(tokens.radii.tile),
@@ -52,7 +52,7 @@ class VirtueIndicator extends StatelessWidget {
             state.label(l),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: tokens.text.chip.copyWith(
+            style: tokens.text.caption.copyWith(
               color: slab.onColor.withValues(alpha: 0.85),
             ),
           ),

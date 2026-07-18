@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/database/repositories/onboarding_repository.dart';
 import 'core/design_system/components/app_scaffold.dart';
 import 'core/design_system/theme/stoic_theme.dart';
+import 'core/design_system/tokens/stoic_tokens.dart';
 import 'core/l10n/app_localizations.dart';
 import 'core/routing/app_router.dart';
 
@@ -41,7 +42,7 @@ class StoicApp extends ConsumerWidget {
         themeMode: ThemeMode.system,
         localizationsDelegates: _localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const AppScaffold(body: SizedBox.expand()),
+        home: const AppScaffold(body: _Splash()),
       );
     }
 
@@ -54,6 +55,29 @@ class StoicApp extends ConsumerWidget {
       localizationsDelegates: _localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
+    );
+  }
+}
+
+/// The startup splash: the wordmark fading in over the warm wash while the
+/// onboarding flag loads. Calm and brief — never a spinner.
+class _Splash extends StatelessWidget {
+  const _Splash();
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = context.stoic;
+    return Center(
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: 1),
+        duration: tokens.motion.slow,
+        curve: tokens.motion.standard,
+        builder: (context, t, child) => Opacity(opacity: t, child: child),
+        child: Text(
+          AppLocalizations.of(context).appTitle,
+          style: tokens.text.displayHero,
+        ),
+      ),
     );
   }
 }

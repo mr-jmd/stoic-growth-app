@@ -2,6 +2,8 @@
 
 Registro histórico de la implementación del MVP (Fase 1), construido en 8 sprints (0→7) más el dictado por voz. **Todo el MVP está terminado y verificado.**
 
+> **Post-MVP (julio 2026):** sobre este MVP se construyó el rediseño visual completo **"Piedra y luz"** (nueva identidad, shell de pestañas, hub de diario) y un paquete de reglas de negocio: un éxito por día natural, **eliminación del tope de 3 hábitos** (decisión de producto — supera el "1-3" de este plan), archivado en dos pasos y el tour guiado (esquema v4). El detalle vive en `ARCHITECTURE.md` y `features/`; este documento queda como registro del build original.
+
 - Arquitectura técnica: [`ARCHITECTURE.md`](ARCHITECTURE.md).
 - Detalle de cada funcionalidad: [`features/`](features/).
 - Visión de producto: [`../README.md`](../README.md).

@@ -9,7 +9,7 @@ En el detalle de un hábito, la persona ve su constancia (días seguidos), puede
 Detalle del hábito (`/habits/:id`):
 
 - **Contador de constancia** editable directamente: botones −/+ y tocar el número para poner un valor arbitrario. La edición es tan visible como registrar; no está escondida en un menú.
-- **"Registrar hoy":** agrega un check-in de éxito e incrementa la constancia.
+- **"Registrar hoy":** agrega un check-in de éxito e incrementa la constancia. **Solo un éxito por día natural**: registrado el día, el botón pasa a "Registrado hoy" (deshabilitado, tono calmo) y volver a llamar `recordCheckIn` es un no-op idempotente (devuelve el id existente). Las recaídas **no** se limitan por día.
 - **"Registrar una recaída"** (`/habits/:id/relapse`): un formulario corto con contexto / detonante / aprendizaje, **todos opcionales**, enmarcado en aprendizaje ("¿qué pasó, y qué aprendes de esto?").
 - **Historial:** lista append-only de check-ins (éxitos y recaídas), para que "sin culpa" sea demostrable — las recaídas pasadas quedan visibles como dato, no ocultas ni borradas.
 
@@ -18,6 +18,7 @@ Detalle del hábito (`/habits/:id`):
 - El **historial es append-only**: `HabitCheckIns` y `RelapseEvents` **nunca** se borran ni mutan por un reset.
 - **`logRelapse` es atómico**: inserta el check-in de recaída + su evento de aprendizaje + resetea la constancia a 0, todo en una transacción, para que nunca se observe a medias.
 - El reset a 0 es solo un **valor por defecto inmediatamente re-editable**, nunca un reset bloqueado.
+- **Un éxito por día natural** es un guard de repositorio (dentro de la transacción de `recordCheckIn`, vía `HabitsDao.successCheckInOn` + `shared/dates.dart`) — silencioso, sin excepción. La edición manual del contador queda fuera de la regla (el número es de la persona).
 - **Sin culpa, sin gamificación:** sin lenguaje de "rompiste tu racha", sin signos de exclamación. Una recaída es un estado "en reposo", re-construible.
 - La constancia editada persiste tras reiniciar la app.
 

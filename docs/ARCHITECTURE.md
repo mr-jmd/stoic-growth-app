@@ -2,7 +2,7 @@
 
 Este documento describe la arquitectura **en uso** del proyecto de software. Es la referencia técnica del MVP ya construido. La visión de producto vive en `README.md`; el detalle funcional de cada pantalla, en `docs/features/`.
 
-> **Nota:** el sistema visual (colores, tipografía, componentes) se va a **replantear desde cero**. Este documento no fija reglas de diseño; solo describe la estructura técnica.
+> **Nota:** el sistema visual vigente es **"Piedra y luz"** (rediseño completo, julio 2026): mármol luminoso / basalto cálido, tinta cálida, un solo acento terracota, tipografía editorial (Fraunces + Instrument Sans, OFL vendorizadas). Navegación por pestañas (`StatefulShellRoute`: Hoy / Hábitos / Diario) con banda de calma persistente hacia `/crisis`. Los valores viven en la capa de tokens (`design_system/tokens/`, con `palette.dart` como único archivo con literales de color).
 
 ## Stack
 
@@ -35,13 +35,13 @@ lib/src/
 │   │   ├── tables/          # una tabla por archivo
 │   │   ├── daos/            # un DAO por clúster de tablas
 │   │   └── repositories/    # lógica de datos, expuesta por provider @riverpod
-│   ├── design_system/       # tema + componentes (INTERIM — se va a replantear)
+│   ├── design_system/       # "Piedra y luz": tokens + tema + componentes
 │   ├── l10n/                # app_es.arb + AppLocalizations generado
-│   └── routing/             # app_router.dart (GoRouter + gate de onboarding)
+│   └── routing/             # app_router.dart (shell de pestañas + gate) y app_shell.dart
 ├── features/                # una carpeta por funcionalidad (UI + controladores)
 │   ├── onboarding/
 │   ├── habits/
-│   ├── journal/  (+ speech/)
+│   ├── journal/  (+ speech/; journal_hub_screen.dart es la raíz de la pestaña Diario)
 │   ├── crisis/
 │   ├── daily_quote/
 │   └── home/
@@ -50,18 +50,21 @@ lib/src/
 
 ## Capa de datos (Drift)
 
-- **6 tablas** (`core/database/tables/`): `UserProfiles` (sin campos de auth), `Habits`, `JournalEntries` (índice único `(date, type)`), `JournalEntryTags` (join), `HabitCheckIns` (log **append-only** de check-ins — el verdadero "registro de racha"), `RelapseEvents` (evento de recaída como aprendizaje). Más `AppMeta` (flag de onboarding).
+- **6 tablas** (`core/database/tables/`): `UserProfiles` (sin campos de auth), `Habits`, `JournalEntries` (índice único `(date, type)`), `JournalEntryTags` (join), `HabitCheckIns` (log **append-only** de check-ins — el verdadero "registro de racha"), `RelapseEvents` (evento de recaída como aprendizaje). Más `AppMeta` (flags de onboarding y del tour guiado).
 - **Enums de dominio** en `shared/`, guardados como `textEnum`: `Virtue`, `JournalType`, `JournalInputMethod`, `EveningTag`, `CheckInStatus`, `QualitativeLevel`.
 - **DAOs** por clúster (`@DriftAccessor`), no monolíticos.
 - **Repositorios** (`core/database/repositories/`) exponen la lógica vía provider `@riverpod` sobre `appDatabaseProvider`. Sin interfaces abstractas: hay una sola implementación y los tests inyectan una BD en memoria (`AppDatabase.forTesting(NativeDatabase.memory())`). *La única excepción es el seam de voz `Dictation`, que sí es una interfaz porque el plugin nativo no corre en tests headless.*
 - **Escrituras compuestas van en una transacción** (`db.transaction`): recaída = check-in + evento + reset de racha; guardar entrada de diario = entrada + tags (con upsert por día). Los logs append-only nunca se borran ni mutan por un reset.
-- **Migraciones:** `schemaVersion` 3. `onUpgrade` construye incrementalmente (v1 solo AppMeta → v2 esquema MVP → v3 índice único de diario). `beforeOpen` activa `PRAGMA foreign_keys = ON`.
+- **Un éxito por día natural** (`HabitRepository.recordCheckIn`): un segundo `success` el mismo día local es un no-op idempotente (devuelve el id existente). Las recaídas nunca se limitan; la edición manual del contador sigue libre. El helper de día compartido vive en `shared/dates.dart` (`dayOf`/`isSameLocalDay` — también lo usan el upsert del diario y la cita diaria).
+- **Sin tope de hábitos activos** — "empezar pequeño" es copy de onboarding, no una regla (decisión 2026-07).
+- **Migraciones:** `schemaVersion` 4. `onUpgrade` construye incrementalmente (v1 solo AppMeta → v2 esquema MVP → v3 índice único de diario → v4 flag `tutorialCompleted` en AppMeta). `beforeOpen` activa `PRAGMA foreign_keys = ON`.
 
 ## Estado y navegación
 
 - Providers `@riverpod` (o manuales cuando el tipo de retorno viene del `part` generado por Drift, p. ej. streams de entidades Drift).
+- **Shell de pestañas:** `StatefulShellRoute.indexedStack` con tres ramas (Hoy `/`, Hábitos `/habits`, Diario `/journal`), envueltas por `AppShell` (banda de calma + barra de navegación). Las rutas de detalle/formularios/entradas de diario y `/crisis` usan `parentNavigatorKey` (root), así que se presentan a pantalla completa sobre el shell y el estado de cada pestaña se conserva debajo. El **tour guiado** (`features/tour/`, ver `features/tour.md`) se monta como capa sobre el shell completo y se auto-arranca una vez tras el onboarding.
 - **Gate de onboarding:** el redirect del router y su `refreshListenable` leen el **mismo** provider del flag persistido (`onboardingCompletedProvider`), nunca el conteo de hábitos. `StoicApp` muestra un splash hasta que el flag carga, para que el redirect nunca lea un valor sin resolver.
-- **Crisis siempre alcanzable:** la ruta `/crisis` está exenta del gate — nadie en crisis queda bloqueado por el setup.
+- **Crisis siempre alcanzable:** la ruta `/crisis` está exenta del gate y la banda de calma del shell la abre con un tap desde cualquier pestaña — nadie en crisis queda bloqueado por el setup.
 
 ## Contenido estático empaquetado
 

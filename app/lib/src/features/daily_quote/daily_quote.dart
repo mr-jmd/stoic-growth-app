@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../shared/dates.dart';
+
 /// Where the bundled quotes live (declared in pubspec `assets:`).
 const String kQuotesAsset = 'assets/content/quotes.json';
 
@@ -32,7 +34,7 @@ class DailyQuote {
 /// quote shows all day and advances by one each calendar day. Pure (no clock,
 /// no Drift table) — the date is passed in, which makes it trivially testable.
 DailyQuote pickQuoteForDate(List<DailyQuote> quotes, DateTime date) {
-  final day = DateTime(date.year, date.month, date.day);
+  final day = dayOf(date);
   // Dart's `%` returns a non-negative result for a positive divisor.
   final index = day.difference(DateTime(2020, 1, 1)).inDays % quotes.length;
   return quotes[index];

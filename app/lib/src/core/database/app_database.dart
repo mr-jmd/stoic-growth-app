@@ -44,8 +44,9 @@ class AppDatabase extends _$AppDatabase {
 
   // v1 (Sprint 0): AppMeta only. v2 (Sprint 2): the full MVP schema.
   // v3 (Sprint 5): unique (date, type) index on journal_entries.
+  // v4 (2026-07): tutorialCompleted flag on AppMeta (guided tour).
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -70,6 +71,10 @@ class AppDatabase extends _$AppDatabase {
             'CREATE UNIQUE INDEX IF NOT EXISTS journal_entry_day '
             'ON journal_entries (date, "type")',
           );
+        }
+        // v3 → v4: guided-tour flag on the single-row meta table.
+        if (from < 4) {
+          await m.addColumn(appMeta, appMeta.tutorialCompleted);
         }
       },
       beforeOpen: (details) async {

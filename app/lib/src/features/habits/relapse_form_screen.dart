@@ -48,12 +48,31 @@ class _RelapseFormScreenState extends ConsumerState<RelapseFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l.relapseFormTitle, style: tokens.text.displayGreeting),
-              SizedBox(height: tokens.spacing.md),
-              Text(
-                l.relapseFormSubtitle,
-                style: tokens.text.body.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+              // A calm resting-sand band frames the moment — the reposo
+              // material, never red, never an alarm.
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(tokens.spacing.xl),
+                decoration: BoxDecoration(
+                  gradient: tokens.reposo.gradient,
+                  borderRadius: BorderRadius.circular(tokens.radii.card),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.relapseFormTitle,
+                      style: tokens.text.promptDisplay
+                          .copyWith(color: tokens.reposo.onColor),
+                    ),
+                    SizedBox(height: tokens.spacing.md),
+                    Text(
+                      l.relapseFormSubtitle,
+                      style: tokens.text.body.copyWith(
+                        color: tokens.reposo.onColor.withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: tokens.spacing.xl),
@@ -122,30 +141,18 @@ class _Field extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = context.stoic;
-    final scheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: tokens.text.eyebrow),
-        SizedBox(height: tokens.spacing.sm),
+        Text(label.toUpperCase(), style: tokens.text.eyebrow),
+        SizedBox(height: tokens.spacing.md),
+        // Styled by the theme's InputDecorationTheme (inset paper, accent focus).
         TextField(
           controller: controller,
           minLines: 2,
           maxLines: 4,
           style: tokens.text.body,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: scheme.surfaceContainer,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(tokens.radii.card),
-              borderSide: BorderSide(color: tokens.colors.line),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(tokens.radii.card),
-              borderSide: BorderSide(color: tokens.colors.line),
-            ),
-          ),
         ),
       ],
     );

@@ -36,4 +36,29 @@ class AppMetaDao extends DatabaseAccessor<AppDatabase> with _$AppMetaDaoMixin {
       ),
     );
   }
+
+  // ── Guided-tour flag (v4) — same single-row pattern ───────────────────────
+
+  Stream<bool> watchTutorialCompleted() {
+    return (select(appMeta)..where((m) => m.id.equals(_rowId)))
+        .watchSingleOrNull()
+        .map((row) => row?.tutorialCompleted ?? false);
+  }
+
+  Future<bool> isTutorialCompleted() async {
+    final row = await (select(appMeta)..where((m) => m.id.equals(_rowId)))
+        .getSingleOrNull();
+    return row?.tutorialCompleted ?? false;
+  }
+
+  /// Careful: `insertOnConflictUpdate` writes every column it's given — only
+  /// pass the tutorial flag so a set here never clobbers onboarding state.
+  Future<void> setTutorialCompleted({required bool completed}) {
+    return into(appMeta).insertOnConflictUpdate(
+      AppMetaCompanion(
+        id: const Value(_rowId),
+        tutorialCompleted: Value(completed),
+      ),
+    );
+  }
 }

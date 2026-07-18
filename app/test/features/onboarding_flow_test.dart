@@ -5,6 +5,7 @@ import 'package:app/src/features/onboarding/onboarding_screen.dart';
 import 'package:app/src/shared/virtue.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import '../support/no_network_http_overrides.dart';
 import '../support/test_app.dart';
@@ -32,6 +33,8 @@ void main() {
       (tester) async {
     final db = newTestDatabase();
     addTearDown(db.close);
+    // Keep this a pure onboarding test (the guided tour has its own tests).
+    await db.appMetaDao.setTutorialCompleted(completed: true);
 
     await withNoNetwork(() async {
       await tester.pumpWidget(testApp(db));
@@ -41,7 +44,15 @@ void main() {
       await tester.tap(find.text(es.onboardingIntroStart));
       await tester.pumpAndSettle();
 
-      // Pick one starter habit, then continue.
+      // Pick one starter habit, then continue. (The editorial type scale can
+      // leave the chip unbuilt below the 800×600 test viewport — the selection
+      // list is lazy, so scroll until it exists.)
+      await tester.scrollUntilVisible(
+        find.text(es.suggestionRead),
+        120,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text(es.suggestionRead));
       await tester.pumpAndSettle();
       await tester.tap(find.text(es.onboardingContinue));
@@ -64,7 +75,7 @@ void main() {
     });
   });
 
-  testWidgets('the habit form blocks a 4th active habit with a clear message',
+  testWidgets('a 4th active habit can be created — there is no cap',
       (tester) async {
     final db = newTestDatabase();
     addTearDown(db.close);
@@ -73,8 +84,19 @@ void main() {
     await repo.createHabit(label: 'Dos', virtue: Virtue.coraje);
     await repo.createHabit(label: 'Tres', virtue: Virtue.sabiduria);
 
-    await tester.pumpWidget(wrapScreen(const HabitFormScreen(), db: db));
-    await tester.pump();
+    // The form pops on success, so it needs a real router with a page beneath.
+    final router = GoRouter(
+      routes: [
+        GoRoute(path: '/', builder: (_, _) => const Scaffold()),
+        GoRoute(
+            path: '/habits/new', builder: (_, _) => const HabitFormScreen()),
+      ],
+    );
+    await tester.pumpWidget(wrapRouter(router, db: db));
+    router.push('/habits/new');
+    // Let the push transition finish (the form field has no autofocus, so
+    // there's no cursor timer yet and settle is safe).
+    await tester.pumpAndSettle();
 
     // A focused TextField runs a periodic cursor timer, so pump explicitly
     // rather than pumpAndSettle (which would wait for that timer forever).
@@ -84,9 +106,10 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text(es.habitsLimitReached), findsOneWidget);
-    // No 4th habit was created.
-    expect((await repo.getAllHabits()).length, 3);
+    // The 4th habit saved without any limit message.
+    final all = await repo.getAllHabits();
+    expect(all.length, 4);
+    expect(all.map((h) => h.label), contains('Cuatro'));
 
     await _disposeTree(tester);
   });

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:app/src/core/database/repositories/onboarding_repository.dart';
 import 'package:app/src/core/design_system/theme/stoic_theme.dart';
 import 'package:app/src/core/l10n/app_localizations.dart';
 import 'package:app/src/features/crisis/crisis_content.dart';
@@ -108,7 +107,7 @@ void main() {
   testWidgets('crisis mode is reachable in one tap from home', (tester) async {
     final db = newTestDatabase();
     addTearDown(db.close);
-    await OnboardingRepository(db).complete();
+    await completeFirstRun(db);
 
     await withNoNetwork(() async {
       await tester.pumpWidget(testApp(db));

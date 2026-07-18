@@ -84,19 +84,19 @@ flutter:
   assets:
     - assets/content/
 
-  # OFL fonts vendored under assets/fonts/ (see DESIGN_BRIEF §1 / §7).
+  # OFL fonts vendored under assets/fonts/ ("Piedra y luz" system).
   # NEVER use google_fonts runtime fetch — it breaks the 100%-offline invariant.
-  # Both families ship as variable fonts (wght axis); Flutter maps fontWeight
-  # onto the axis, and the design tokens also set FontVariation('wght', …).
+  # Both families ship as variable fonts; the design tokens set FontVariation
+  # axes explicitly (Fraunces: wght/opsz/SOFT/WONK; Instrument Sans: wght/wdth).
   fonts:
-    - family: Cormorant Garamond
+    - family: Fraunces
       fonts:
-        - asset: assets/fonts/CormorantGaramond-Regular.ttf
-        - asset: assets/fonts/CormorantGaramond-Italic.ttf
+        - asset: "assets/fonts/Fraunces[SOFT,WONK,opsz,wght].ttf"
+        - asset: "assets/fonts/Fraunces-Italic[SOFT,WONK,opsz,wght].ttf"
           style: italic
-    - family: Source Sans 3
+    - family: Instrument Sans
       fonts:
-        - asset: assets/fonts/SourceSans3-Regular.ttf
+        - asset: "assets/fonts/InstrumentSans[wdth,wght].ttf"
 
   # To add assets to your application, add an assets section, like this:
   # assets:

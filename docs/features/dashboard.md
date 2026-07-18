@@ -6,12 +6,13 @@ La pantalla de inicio del MVP, enmarcada **alrededor de las cuatro virtudes** (n
 
 ## Flujo
 
-Home (`/`), scrollable:
+Home es la pestaña **Hoy** (`/`) del shell de pestañas (Hoy / Hábitos / Diario), scrollable:
 
-- **Cita del día** + pregunta de reflexión emparejada.
+- **Fecha del día** como eyebrow, con el icono `?` de repetir el tour guiado.
+- **Cita del día** + pregunta de reflexión, como hero editorial a ancho completo.
 - **Las cuatro virtudes** como cuadrícula 2×2, cada una mostrando un estado de progreso derivado.
-- **Accesos:** ver hábitos, reflexión de la mañana / de la noche.
-- **Acceso persistente a crisis** ("Un momento de calma"), a un toque.
+- **Accesos:** enlace a hábitos y tiles de reflexión de la mañana / de la noche.
+- **Acceso persistente a crisis** ("Un momento de calma"): la **banda de calma del shell**, visible en todas las pestañas, a un toque.
 
 ## Reglas
 

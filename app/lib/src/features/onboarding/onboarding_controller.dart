@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/database/repositories/habit_repository.dart';
@@ -25,18 +24,11 @@ class OnboardingController extends _$OnboardingController {
     state = await AsyncValue.guard(() async {
       final habits = ref.read(habitRepositoryProvider);
       for (var i = 0; i < suggestions.length; i++) {
-        try {
-          await habits.createHabit(
-            label: label(suggestions[i]),
-            virtue: suggestions[i].virtue,
-            sortOrder: i,
-          );
-        } on MaxActiveHabitsException {
-          // Already at the active cap (e.g. habits left over from a previous
-          // run) — stop creating more, but never fail onboarding over it.
-          debugPrint('Onboarding hit the active-habit cap; skipping the rest.');
-          break;
-        }
+        await habits.createHabit(
+          label: label(suggestions[i]),
+          virtue: suggestions[i].virtue,
+          sortOrder: i,
+        );
       }
       // Always mark onboarding complete so the gate lets the user through.
       await ref.read(onboardingRepositoryProvider).complete();

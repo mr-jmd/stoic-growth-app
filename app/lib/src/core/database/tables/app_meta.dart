@@ -8,5 +8,10 @@ class AppMeta extends Table {
   IntColumn get id => integer().autoIncrement()();
   BoolColumn get onboardingCompleted =>
       boolean().withDefault(const Constant(false))();
+
+  /// Whether the guided tour has been seen (completed or skipped). Persisted so
+  /// it auto-runs exactly once after onboarding; replayable from home. (v4)
+  BoolColumn get tutorialCompleted =>
+      boolean().withDefault(const Constant(false))();
   IntColumn get schemaVersion => integer().withDefault(const Constant(1))();
 }

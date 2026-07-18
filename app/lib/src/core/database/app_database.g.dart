@@ -35,6 +35,21 @@ class $AppMetaTable extends AppMeta with TableInfo<$AppMetaTable, AppMetaData> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _tutorialCompletedMeta = const VerificationMeta(
+    'tutorialCompleted',
+  );
+  @override
+  late final GeneratedColumn<bool> tutorialCompleted = GeneratedColumn<bool>(
+    'tutorial_completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("tutorial_completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _schemaVersionMeta = const VerificationMeta(
     'schemaVersion',
   );
@@ -51,6 +66,7 @@ class $AppMetaTable extends AppMeta with TableInfo<$AppMetaTable, AppMetaData> {
   List<GeneratedColumn> get $columns => [
     id,
     onboardingCompleted,
+    tutorialCompleted,
     schemaVersion,
   ];
   @override
@@ -74,6 +90,15 @@ class $AppMetaTable extends AppMeta with TableInfo<$AppMetaTable, AppMetaData> {
         onboardingCompleted.isAcceptableOrUnknown(
           data['onboarding_completed']!,
           _onboardingCompletedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('tutorial_completed')) {
+      context.handle(
+        _tutorialCompletedMeta,
+        tutorialCompleted.isAcceptableOrUnknown(
+          data['tutorial_completed']!,
+          _tutorialCompletedMeta,
         ),
       );
     }
@@ -103,6 +128,10 @@ class $AppMetaTable extends AppMeta with TableInfo<$AppMetaTable, AppMetaData> {
         DriftSqlType.bool,
         data['${effectivePrefix}onboarding_completed'],
       )!,
+      tutorialCompleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}tutorial_completed'],
+      )!,
       schemaVersion: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}schema_version'],
@@ -119,10 +148,15 @@ class $AppMetaTable extends AppMeta with TableInfo<$AppMetaTable, AppMetaData> {
 class AppMetaData extends DataClass implements Insertable<AppMetaData> {
   final int id;
   final bool onboardingCompleted;
+
+  /// Whether the guided tour has been seen (completed or skipped). Persisted so
+  /// it auto-runs exactly once after onboarding; replayable from home. (v4)
+  final bool tutorialCompleted;
   final int schemaVersion;
   const AppMetaData({
     required this.id,
     required this.onboardingCompleted,
+    required this.tutorialCompleted,
     required this.schemaVersion,
   });
   @override
@@ -130,6 +164,7 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['onboarding_completed'] = Variable<bool>(onboardingCompleted);
+    map['tutorial_completed'] = Variable<bool>(tutorialCompleted);
     map['schema_version'] = Variable<int>(schemaVersion);
     return map;
   }
@@ -138,6 +173,7 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
     return AppMetaCompanion(
       id: Value(id),
       onboardingCompleted: Value(onboardingCompleted),
+      tutorialCompleted: Value(tutorialCompleted),
       schemaVersion: Value(schemaVersion),
     );
   }
@@ -152,6 +188,7 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
       onboardingCompleted: serializer.fromJson<bool>(
         json['onboardingCompleted'],
       ),
+      tutorialCompleted: serializer.fromJson<bool>(json['tutorialCompleted']),
       schemaVersion: serializer.fromJson<int>(json['schemaVersion']),
     );
   }
@@ -161,6 +198,7 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'onboardingCompleted': serializer.toJson<bool>(onboardingCompleted),
+      'tutorialCompleted': serializer.toJson<bool>(tutorialCompleted),
       'schemaVersion': serializer.toJson<int>(schemaVersion),
     };
   }
@@ -168,10 +206,12 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
   AppMetaData copyWith({
     int? id,
     bool? onboardingCompleted,
+    bool? tutorialCompleted,
     int? schemaVersion,
   }) => AppMetaData(
     id: id ?? this.id,
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+    tutorialCompleted: tutorialCompleted ?? this.tutorialCompleted,
     schemaVersion: schemaVersion ?? this.schemaVersion,
   );
   AppMetaData copyWithCompanion(AppMetaCompanion data) {
@@ -180,6 +220,9 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
       onboardingCompleted: data.onboardingCompleted.present
           ? data.onboardingCompleted.value
           : this.onboardingCompleted,
+      tutorialCompleted: data.tutorialCompleted.present
+          ? data.tutorialCompleted.value
+          : this.tutorialCompleted,
       schemaVersion: data.schemaVersion.present
           ? data.schemaVersion.value
           : this.schemaVersion,
@@ -191,45 +234,53 @@ class AppMetaData extends DataClass implements Insertable<AppMetaData> {
     return (StringBuffer('AppMetaData(')
           ..write('id: $id, ')
           ..write('onboardingCompleted: $onboardingCompleted, ')
+          ..write('tutorialCompleted: $tutorialCompleted, ')
           ..write('schemaVersion: $schemaVersion')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, onboardingCompleted, schemaVersion);
+  int get hashCode =>
+      Object.hash(id, onboardingCompleted, tutorialCompleted, schemaVersion);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AppMetaData &&
           other.id == this.id &&
           other.onboardingCompleted == this.onboardingCompleted &&
+          other.tutorialCompleted == this.tutorialCompleted &&
           other.schemaVersion == this.schemaVersion);
 }
 
 class AppMetaCompanion extends UpdateCompanion<AppMetaData> {
   final Value<int> id;
   final Value<bool> onboardingCompleted;
+  final Value<bool> tutorialCompleted;
   final Value<int> schemaVersion;
   const AppMetaCompanion({
     this.id = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
+    this.tutorialCompleted = const Value.absent(),
     this.schemaVersion = const Value.absent(),
   });
   AppMetaCompanion.insert({
     this.id = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
+    this.tutorialCompleted = const Value.absent(),
     this.schemaVersion = const Value.absent(),
   });
   static Insertable<AppMetaData> custom({
     Expression<int>? id,
     Expression<bool>? onboardingCompleted,
+    Expression<bool>? tutorialCompleted,
     Expression<int>? schemaVersion,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (onboardingCompleted != null)
         'onboarding_completed': onboardingCompleted,
+      if (tutorialCompleted != null) 'tutorial_completed': tutorialCompleted,
       if (schemaVersion != null) 'schema_version': schemaVersion,
     });
   }
@@ -237,11 +288,13 @@ class AppMetaCompanion extends UpdateCompanion<AppMetaData> {
   AppMetaCompanion copyWith({
     Value<int>? id,
     Value<bool>? onboardingCompleted,
+    Value<bool>? tutorialCompleted,
     Value<int>? schemaVersion,
   }) {
     return AppMetaCompanion(
       id: id ?? this.id,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+      tutorialCompleted: tutorialCompleted ?? this.tutorialCompleted,
       schemaVersion: schemaVersion ?? this.schemaVersion,
     );
   }
@@ -255,6 +308,9 @@ class AppMetaCompanion extends UpdateCompanion<AppMetaData> {
     if (onboardingCompleted.present) {
       map['onboarding_completed'] = Variable<bool>(onboardingCompleted.value);
     }
+    if (tutorialCompleted.present) {
+      map['tutorial_completed'] = Variable<bool>(tutorialCompleted.value);
+    }
     if (schemaVersion.present) {
       map['schema_version'] = Variable<int>(schemaVersion.value);
     }
@@ -266,6 +322,7 @@ class AppMetaCompanion extends UpdateCompanion<AppMetaData> {
     return (StringBuffer('AppMetaCompanion(')
           ..write('id: $id, ')
           ..write('onboardingCompleted: $onboardingCompleted, ')
+          ..write('tutorialCompleted: $tutorialCompleted, ')
           ..write('schemaVersion: $schemaVersion')
           ..write(')'))
         .toString();
@@ -2705,12 +2762,14 @@ typedef $$AppMetaTableCreateCompanionBuilder =
     AppMetaCompanion Function({
       Value<int> id,
       Value<bool> onboardingCompleted,
+      Value<bool> tutorialCompleted,
       Value<int> schemaVersion,
     });
 typedef $$AppMetaTableUpdateCompanionBuilder =
     AppMetaCompanion Function({
       Value<int> id,
       Value<bool> onboardingCompleted,
+      Value<bool> tutorialCompleted,
       Value<int> schemaVersion,
     });
 
@@ -2730,6 +2789,11 @@ class $$AppMetaTableFilterComposer
 
   ColumnFilters<bool> get onboardingCompleted => $composableBuilder(
     column: $table.onboardingCompleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get tutorialCompleted => $composableBuilder(
+    column: $table.tutorialCompleted,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2758,6 +2822,11 @@ class $$AppMetaTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get tutorialCompleted => $composableBuilder(
+    column: $table.tutorialCompleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get schemaVersion => $composableBuilder(
     column: $table.schemaVersion,
     builder: (column) => ColumnOrderings(column),
@@ -2778,6 +2847,11 @@ class $$AppMetaTableAnnotationComposer
 
   GeneratedColumn<bool> get onboardingCompleted => $composableBuilder(
     column: $table.onboardingCompleted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get tutorialCompleted => $composableBuilder(
+    column: $table.tutorialCompleted,
     builder: (column) => column,
   );
 
@@ -2820,20 +2894,24 @@ class $$AppMetaTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<bool> onboardingCompleted = const Value.absent(),
+                Value<bool> tutorialCompleted = const Value.absent(),
                 Value<int> schemaVersion = const Value.absent(),
               }) => AppMetaCompanion(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
+                tutorialCompleted: tutorialCompleted,
                 schemaVersion: schemaVersion,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<bool> onboardingCompleted = const Value.absent(),
+                Value<bool> tutorialCompleted = const Value.absent(),
                 Value<int> schemaVersion = const Value.absent(),
               }) => AppMetaCompanion.insert(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
+                tutorialCompleted: tutorialCompleted,
                 schemaVersion: schemaVersion,
               ),
           withReferenceMapper: (p0) => p0

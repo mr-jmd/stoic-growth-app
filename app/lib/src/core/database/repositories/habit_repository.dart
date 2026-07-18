@@ -10,14 +10,6 @@ import '../database_provider.dart';
 
 part 'habit_repository.g.dart';
 
-/// Thrown when creating a habit would exceed [HabitRepository.maxActiveHabits].
-/// Carries the limit so the UI can show a clear, non-punitive message. Archived
-/// habits don't count toward the cap.
-class MaxActiveHabitsException implements Exception {
-  const MaxActiveHabitsException(this.limit);
-  final int limit;
-}
-
 /// Concrete repository over [HabitsDao] — no abstract interface (single impl;
 /// tests override [appDatabaseProvider] with an in-memory DB instead, per
 /// SPRINT_PLAN). Foundational CRUD lives here; Sprint 4 adds the transactional
@@ -28,11 +20,7 @@ class HabitRepository {
   final AppDatabase _db;
   HabitsDao get _dao => _db.habitsDao;
 
-  /// The MVP cap on simultaneously active habits (README Fase 1: "1-3"). A UI/
-  /// repository constraint, not a schema one.
-  static const int maxActiveHabits = 3;
-
-  /// Raw insert with no cap check — foundation used by [createHabit] and tests.
+  /// Raw insert — foundation used by [createHabit] and tests.
   Future<int> addHabit({
     required String label,
     required Virtue virtue,
@@ -45,23 +33,14 @@ class HabitRepository {
     ));
   }
 
-  /// Creates a habit, enforcing the active-habit cap. Throws
-  /// [MaxActiveHabitsException] if [maxActiveHabits] active habits already
-  /// exist. The check + insert run in one transaction so concurrent creates
-  /// can't slip past the cap.
+  /// Creates a habit. There is no cap on active habits — starting small is a
+  /// recommendation carried by onboarding copy, never a block.
   Future<int> createHabit({
     required String label,
     required Virtue virtue,
     int sortOrder = 0,
-  }) {
-    return _db.transaction(() async {
-      final active = await _dao.countActiveHabits();
-      if (active >= maxActiveHabits) {
-        throw const MaxActiveHabitsException(maxActiveHabits);
-      }
-      return addHabit(label: label, virtue: virtue, sortOrder: sortOrder);
-    });
-  }
+  }) =>
+      addHabit(label: label, virtue: virtue, sortOrder: sortOrder);
 
   Stream<List<Habit>> watchActiveHabits() => _dao.watchActiveHabits();
   Future<List<Habit>> getAllHabits() => _dao.getAllHabits();
@@ -81,6 +60,12 @@ class HabitRepository {
   /// `success` increments the count, a `relapse` resets it to 0 (as an
   /// immediately re-editable default, never a locked reset). The history row is
   /// append-only. Returns the new check-in id.
+  ///
+  /// **At most one `success` per local calendar day**: recording a second
+  /// success the same day is an idempotent no-op that returns the existing
+  /// row's id — no new history row, no extra increment. Relapses are never
+  /// limited (real life allows several in a day), and the manual streak edit
+  /// stays unrestricted (the number is the user's).
   Future<int> recordCheckIn({
     required int habitId,
     required CheckInStatus status,
@@ -92,9 +77,14 @@ class HabitRepository {
       if (habit == null) {
         throw StateError('Habit $habitId does not exist');
       }
+      final when = date ?? DateTime.now();
+      if (status == CheckInStatus.success) {
+        final existing = await _dao.successCheckInOn(habitId, when);
+        if (existing != null) return existing.id;
+      }
       final checkInId = await _dao.insertCheckIn(HabitCheckInsCompanion.insert(
         habitId: habitId,
-        date: date ?? DateTime.now(),
+        date: when,
         status: status,
         note: Value(note),
       ));

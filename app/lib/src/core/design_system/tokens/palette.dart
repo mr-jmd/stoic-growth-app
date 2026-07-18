@@ -1,132 +1,154 @@
 import 'package:flutter/painting.dart';
 
-/// Raw colour literals for the "mármol pulido" (light) / "basalto pulido" (dark)
-/// system. **This is the only file in the app allowed to contain `Color(0x…)`
-/// literals** (DESIGN_BRIEF §7 verification greps enforce this). Every value
-/// here is a (light, dark) pair from DESIGN_BRIEF §2–§3; feature/shared code
-/// reads resolved roles from `ColorScheme` / `StoicTokens`, never these.
+/// Raw colour literals for the "Piedra y luz" system — luminous warm marble
+/// (light) / warm basalt (dark), near-black warm ink, and **one** accent:
+/// terracotta. **This is the only file in the app allowed to contain
+/// `Color(0x…)` literals** (verification greps enforce this). Every value is a
+/// (light, dark) pair; feature/shared code reads resolved roles from
+/// `ColorScheme` / `StoicTokens`, never these.
 ///
-/// Hard rule: dark is warm dark stone — never neutral black/grey
-/// (`#000`, `#121212`). The earth undertone is preserved on every surface.
+/// Hard rules:
+/// - Dark is warm stone — never neutral black/grey (`#000`, `#121212`).
+/// - The palette is near-monochrome: the four virtues are undertone shifts of
+///   stone, not four competing hues. Terracotta is the only true accent.
+/// - `error` is a muted oxide reserved for real form errors — never relapse,
+///   never crisis.
 
 // Seed for ColorScheme.fromSeed in both modes (corrected by hand afterwards).
-const Color seed = Color(0xFFD7CEBB);
+const Color seed = Color(0xFFB4552D);
 
-// ── §2.1 Text ────────────────────────────────────────────────────────────────
-const Color inkLight = Color(0xFF2C2822);
-const Color inkDark = Color(0xFFEDE6D8);
-const Color softLight = Color(0xFF6B6355);
-const Color softDark = Color(0xFFB7AD9C);
-const Color faintLight = Color(0xFF9A8F7C);
-const Color faintDark = Color(0xFF968C79);
-const Color labelWarmLight = Color(0xFF8A7F6C);
-const Color labelWarmDark = Color(0xFF9A8F7C);
-const Color attributionLight = Color(0xFF8A7F6C);
-const Color attributionDark = Color(0xFF9C927E);
-const Color eyebrowSubLight = Color(0xFFA99D88);
-const Color eyebrowSubDark = Color(0xFF928873);
-const Color navInactiveLight = Color(0xFFA99D88);
-const Color navInactiveDark = Color(0xFF7C7360);
+// ── Text ─────────────────────────────────────────────────────────────────────
+const Color inkLight = Color(0xFF1B1713);
+const Color inkDark = Color(0xFFF1EAE0);
+const Color softLight = Color(0xFF5A534B);
+const Color softDark = Color(0xFFC6BBAD);
+const Color faintLight = Color(0xFF90867A);
+const Color faintDark = Color(0xFF8E8478);
+const Color labelWarmLight = Color(0xFF7A7063);
+const Color labelWarmDark = Color(0xFF9A9084);
+const Color attributionLight = Color(0xFF857B6E);
+const Color attributionDark = Color(0xFF9C9184);
+const Color eyebrowSubLight = Color(0xFFA39A8D);
+const Color eyebrowSubDark = Color(0xFF857B6E);
+const Color navInactiveLight = Color(0xFFA39A8D);
+const Color navInactiveDark = Color(0xFF7E7466);
 
-// ── §2.2 Surfaces ────────────────────────────────────────────────────────────
-const Color ivoryLight = Color(0xFFF3EDE1);
-const Color ivoryDark = Color(0xFF1E1A16);
-const Color cardLight = Color(0xFFFAF6EE);
-const Color cardDark = Color(0xFF26221D);
-const Color boneLight = Color(0xFFEAE1D1);
-const Color boneDark = Color(0xFF2E2822);
-const Color containerHighLight = cardLight; // light uses `card`
-const Color containerHighDark = Color(0xFF322C25);
+// ── Surfaces ─────────────────────────────────────────────────────────────────
+// `ivory` is the page/scaffold surface; `card` the raised paper; `bone` the
+// inset fill (text fields, quiet tiles); `containerHigh` the brightest lift.
+const Color ivoryLight = Color(0xFFFAF7F1);
+const Color ivoryDark = Color(0xFF1A1512);
+const Color cardLight = Color(0xFFFDFBF7);
+const Color cardDark = Color(0xFF221C16);
+const Color boneLight = Color(0xFFF1EBDF);
+const Color boneDark = Color(0xFF1D1813);
+const Color containerHighLight = Color(0xFFFFFEFA);
+const Color containerHighDark = Color(0xFF2A231C);
 
-// `line` (outline / dividers) is ink/paper at 8% opacity in each mode.
-const Color lineLight = Color(0x142C2822); // #2C2822 @ ~8%
-const Color lineDark = Color(0x14EDE6D8); // #EDE6D8 @ ~8%
+// `line` (outline / dividers) is ink/paper at 10% opacity in each mode.
+const Color lineLight = Color(0x1A1B1713);
+const Color lineDark = Color(0x1AF1EAE0);
 
-// `appBg` radial gradient stops (AppScaffold background — never a flat colour).
-const Color appBgLightInner = Color(0xFFDED5C3);
-const Color appBgLightOuter = Color(0xFFD0C7B3);
-const Color appBgDarkInner = Color(0xFF1F1B17);
-const Color appBgDarkOuter = Color(0xFF17140F);
+// `appBg` wash stops (AppScaffold background — a soft vertical wash of light,
+// brighter at the top, never a flat colour).
+const Color appBgLightInner = Color(0xFFFAF7F1);
+const Color appBgLightOuter = Color(0xFFEFE9DE);
+const Color appBgDarkInner = Color(0xFF1A1512);
+const Color appBgDarkOuter = Color(0xFF120E0A);
 
-// ── §2.3 Interactive / state ─────────────────────────────────────────────────
-const Color slateLight = Color(0xFF5B6B78);
-const Color slateDark = Color(0xFF8FA2B0);
-const Color slatePressedLight = Color(0xFF3F4A54);
-const Color slatePressedDark = Color(0xFFA9BBC7);
-// `error` is muted clay — ONLY for real input errors, never relapse/crisis.
-const Color errorLight = Color(0xFF9C5A44);
-const Color errorDark = Color(0xFFC77E63);
+// ── Interactive / state ──────────────────────────────────────────────────────
+// Terracotta — the single accent of the system.
+const Color accentLight = Color(0xFFB4552D);
+const Color accentDark = Color(0xFFDC8257);
+const Color accentPressedLight = Color(0xFF96431F);
+const Color accentPressedDark = Color(0xFFE89A74);
+const Color onAccentLight = Color(0xFFFDF4EC);
+const Color onAccentDark = Color(0xFF2A130A);
+const Color accentSoftFillLight = Color(0xFFF4E3D8);
+const Color accentSoftFillDark = Color(0xFF3A2419);
+const Color accentSoftTextLight = Color(0xFF8A3F1D);
+const Color accentSoftTextDark = Color(0xFFE9A47F);
 
-// Bottom-nav active + surface tints (§5).
-const Color navActiveLight = slatePressedLight;
-const Color navActiveDark = slatePressedDark;
-const Color navSurfaceLight = Color(0xFFEFE8DB);
-const Color navSurfaceDark = Color(0xFF201C18);
+// `error` is muted oxide — ONLY for real input errors, never relapse/crisis.
+const Color errorLight = Color(0xFF8E3B2F);
+const Color errorDark = Color(0xFFD08370);
 
-// Crisis access slab (§5) — "charco de calma", never alarm.
-const Color crisisSurfaceLight = Color(0xFFEFE8DB);
-const Color crisisSurfaceDark = Color(0xFF242A2E);
-const Color crisisStrokeLight = Color(0xFF7F8B96);
-const Color crisisStrokeDark = Color(0xFF8FA2B0);
+// Bottom-nav active + surface tints.
+const Color navActiveLight = inkLight;
+const Color navActiveDark = inkDark;
+const Color navSurfaceLight = Color(0xFFF6F1E8);
+const Color navSurfaceDark = Color(0xFF1E1813);
 
-// SelectableChip selected fill/text (§5).
-const Color chipSelectedFillLight = Color(0xFFEEF1F0);
-const Color chipSelectedFillDark = Color(0xFF28322E);
-const Color chipSelectedTextLight = Color(0xFF4F5F57);
-const Color chipSelectedTextDark = Color(0xFFAEC3B8);
+// Calm/crisis access band — "charco de calma", never alarm.
+const Color crisisSurfaceLight = Color(0xFFF2EDE4);
+const Color crisisSurfaceDark = Color(0xFF241E18);
+const Color crisisStrokeLight = Color(0xFF7A746C);
+const Color crisisStrokeDark = Color(0xFF948C82);
 
-// Habit row check (§5).
-const Color habitCheckFillLight = Color(0xFF7B7D52);
-const Color habitCheckFillDark = Color(0xFF8D8F5F);
-const Color habitCheckGlyphLight = Color(0xFFFFFEF8); // ivory glyph
-const Color habitCheckGlyphDark = inkDark;
+// SelectableChip selected fill/text — warm terracotta-tinted paper.
+const Color chipSelectedFillLight = Color(0xFFEFE1D6);
+const Color chipSelectedFillDark = Color(0xFF38271C);
+const Color chipSelectedTextLight = Color(0xFF7C3D1E);
+const Color chipSelectedTextDark = Color(0xFFE8A57E);
 
-// ── §3.1 Virtue "pulida" (full/active) gradients, 158° ───────────────────────
-// [start, end, onColor]
-const List<Color> templanzaHighLight = [Color(0xFF7F8B96), Color(0xFF5F6D79)];
-const List<Color> templanzaHighDark = [Color(0xFF78848F), Color(0xFF586572)];
-const List<Color> corajeHighLight = [Color(0xFFB07A5F), Color(0xFF8A5540)];
-const List<Color> corajeHighDark = [Color(0xFFA67256), Color(0xFF854F3B)];
-const List<Color> sabiduriaHighLight = [Color(0xFFA0A27C), Color(0xFF83855C)];
-const List<Color> sabiduriaHighDark = [Color(0xFF9A9C77), Color(0xFF7E8058)];
-const List<Color> justiciaHighLight = [Color(0xFFB89A5E), Color(0xFF9A824F)];
-const List<Color> justiciaHighDark = [Color(0xFFB4965A), Color(0xFF96804C)];
+// Habit check dot — the accent, full strength.
+const Color habitCheckFillLight = accentLight;
+const Color habitCheckFillDark = accentDark;
+const Color habitCheckGlyphLight = onAccentLight;
+const Color habitCheckGlyphDark = onAccentDark;
 
-const Color onSlabWarm = Color(0xFFF2EFE8); // Templanza/Coraje/Justicia
-const Color onSlabOlive = Color(0xFFF4F1E6); // Sabiduría
+// ── Virtue "pulida" (polished stone) gradients ───────────────────────────────
+// Near-monochrome: each virtue is a subtle undertone of deep stone. [start, end]
+// plus a per-virtue contrast-safe onColor.
+const List<Color> templanzaHighLight = [Color(0xFF66625D), Color(0xFF4A4640)];
+const List<Color> templanzaHighDark = [Color(0xFF6D6963), Color(0xFF504C46)];
+const Color templanzaHighOnLight = Color(0xFFF3F0EA);
+const Color templanzaHighOnDark = Color(0xFFF0EDE7);
 
-// ── §3.2 "sin desbastar" (low) ───────────────────────────────────────────────
-// Dark values are given explicitly in the brief. Light values: the brief gives
-// Justicia explicitly and says each other virtue uses its own analogous pale
-// tint — encoded here (design-system-internal, the correct home for such hex).
-const List<Color> templanzaLowLight = [Color(0xFFE4E7EA), Color(0xFFD3D9DE)];
-const Color templanzaLowTextLight = Color(0xFF5F6D79);
-const List<Color> templanzaLowDark = [Color(0xFF33383D), Color(0xFF2A2E33)];
-const Color templanzaLowTextDark = Color(0xFF8A97A2);
+const List<Color> corajeHighLight = [Color(0xFFA05A38), Color(0xFF7E4426)];
+const List<Color> corajeHighDark = [Color(0xFFA5663F), Color(0xFF83492B)];
+const Color corajeHighOnLight = Color(0xFFF9EFE6);
+const Color corajeHighOnDark = Color(0xFFF9EFE7);
 
-const List<Color> corajeLowLight = [Color(0xFFECDDD3), Color(0xFFE0CBBB)];
-const Color corajeLowTextLight = Color(0xFF8A5540);
-const List<Color> corajeLowDark = [Color(0xFF3A322D), Color(0xFF2F2823)];
-const Color corajeLowTextDark = Color(0xFFA9765F);
+const List<Color> sabiduriaHighLight = [Color(0xFF6F6C50), Color(0xFF545138)];
+const List<Color> sabiduriaHighDark = [Color(0xFF75725A), Color(0xFF57543E)];
+const Color sabiduriaHighOnLight = Color(0xFFF3F2E7);
+const Color sabiduriaHighOnDark = Color(0xFFF2F1E5);
 
-const List<Color> sabiduriaLowLight = [Color(0xFFE9E9D8), Color(0xFFDBDBC2)];
-const Color sabiduriaLowTextLight = Color(0xFF83855C);
-const List<Color> sabiduriaLowDark = [Color(0xFF34362C), Color(0xFF2B2C24)];
-const Color sabiduriaLowTextDark = Color(0xFF9D9E7B);
+const List<Color> justiciaHighLight = [Color(0xFF8B743F), Color(0xFF6C592D)];
+const List<Color> justiciaHighDark = [Color(0xFF92794A), Color(0xFF715E33)];
+const Color justiciaHighOnLight = Color(0xFFF7F1E2);
+const Color justiciaHighOnDark = Color(0xFFF6F0E1);
 
-const List<Color> justiciaLowLight = [Color(0xFFEDE4D2), Color(0xFFE2D5BE)];
-const Color justiciaLowTextLight = Color(0xFF9A824F);
-const List<Color> justiciaLowDark = [Color(0xFF38311F), Color(0xFF2E281A)];
-const Color justiciaLowTextDark = Color(0xFFB89A5E);
+// ── Virtue "sin desbastar" (pale unhewn marble) ──────────────────────────────
+const List<Color> templanzaLowLight = [Color(0xFFEAE8E4), Color(0xFFDDDAD4)];
+const Color templanzaLowTextLight = Color(0xFF5F5B55);
+const List<Color> templanzaLowDark = [Color(0xFF2B2723), Color(0xFF221F1B)];
+const Color templanzaLowTextDark = Color(0xFFA29B92);
 
-// ── §3.2 "en reposo" (relapse) — virtue-independent ──────────────────────────
-const List<Color> reposoLight = [Color(0xFFECDCCD), Color(0xFFDDC7B6)];
-const Color reposoTextLight = Color(0xFF8A6A56);
-const List<Color> reposoDark = [Color(0xFF332B24), Color(0xFF28211B)];
-const Color reposoTextDark = Color(0xFFC0A488);
+const List<Color> corajeLowLight = [Color(0xFFF0E2D8), Color(0xFFE5D0C2)];
+const Color corajeLowTextLight = Color(0xFF8A4E30);
+const List<Color> corajeLowDark = [Color(0xFF332822), Color(0xFF281F1A)];
+const Color corajeLowTextDark = Color(0xFFC08663);
 
-// ── Shadows / elevation tints (§2 "Sombras") ─────────────────────────────────
-const Color shadowWarmLight = Color(0xFF3C301E); // rgba(60,48,30,·)
-const Color shadowWarmDark = Color(0xFF080603); // warm near-black, never pure
+const List<Color> sabiduriaLowLight = [Color(0xFFECEBE0), Color(0xFFDFDDCC)];
+const Color sabiduriaLowTextLight = Color(0xFF66634A);
+const List<Color> sabiduriaLowDark = [Color(0xFF2C2B22), Color(0xFF23221B)];
+const Color sabiduriaLowTextDark = Color(0xFFA5A183);
+
+const List<Color> justiciaLowLight = [Color(0xFFF0EADB), Color(0xFFE4DAC5)];
+const Color justiciaLowTextLight = Color(0xFF75613A);
+const List<Color> justiciaLowDark = [Color(0xFF312A1D), Color(0xFF262117)];
+const Color justiciaLowTextDark = Color(0xFFBC9C61);
+
+// ── "En reposo" (relapse) — warm resting sand, virtue-independent ────────────
+const List<Color> reposoLight = [Color(0xFFEADFCF), Color(0xFFDBCCB7)];
+const Color reposoTextLight = Color(0xFF7C6850);
+const List<Color> reposoDark = [Color(0xFF2C251C), Color(0xFF221C15)];
+const Color reposoTextDark = Color(0xFFCBB393);
+
+// ── Shadows / elevation tints ────────────────────────────────────────────────
+const Color shadowWarmLight = Color(0xFF40321F);
+const Color shadowWarmDark = Color(0xFF0A0703); // warm near-black, never pure
 const Color innerHighlightLight = Color(0xFFFFFFFF);
 const Color innerHighlightDark = Color(0xFFFFFFFF);

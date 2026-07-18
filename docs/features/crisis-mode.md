@@ -2,7 +2,7 @@
 
 ## Qué hace
 
-Un flujo de crisis 100% estático, sin IA y sin red, donde el **alivio inmediato siempre precede a cualquier pregunta**. Alcanzable en un toque desde cualquier parte; con una salida "Estoy bien ahora" siempre visible.
+Un flujo de crisis 100% estático, sin IA y sin red, donde el **alivio inmediato siempre precede a cualquier pregunta**. Alcanzable en un toque desde cualquier pestaña (la **banda de calma** persistente del shell); con una salida "Estoy bien ahora" siempre visible.
 
 ## Flujo
 

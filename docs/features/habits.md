@@ -1,18 +1,19 @@
-# Hábitos — configuración y tope de 3 activos
+# Hábitos — configuración, registro diario y archivado
 
 ## Qué hace
 
-Permite ver, agregar y archivar los hábitos activos que la persona trabaja. Cada hábito pertenece a una de las cuatro virtudes. Hay un tope de **3 hábitos activos** a la vez (los archivados no cuentan).
+Permite ver, agregar y archivar los hábitos activos que la persona trabaja. Cada hábito pertenece a una de las cuatro virtudes. **No hay tope de hábitos activos** — la recomendación de empezar con pocos es solo copy de onboarding, nunca un bloqueo (decisión 2026-07).
 
 ## Flujo
 
 - **Lista** (`/habits`): tarjetas de los hábitos activos (nombre + virtud), con acceso a agregar y archivar. Con 0 hábitos activos tras el onboarding, muestra un empty-state cálido (distinto de re-onboardear). Tocar una tarjeta abre el detalle del hábito.
-- **Crear** (`/habits/new`): un nombre + una virtud. Si ya hay 3 activos, muestra un mensaje claro y no punitivo y no crea el cuarto.
+- **Crear** (`/habits/new`): un nombre + una virtud. Sin límite de cantidad.
 - **Archivar:** quita el hábito de la lista activa sin borrar su historial.
 
 ## Reglas
 
-- El tope de 3 activos es una restricción de **repositorio/UI**, no del esquema. Se valida dentro de una transacción (`createHabit`), así dos creaciones concurrentes no lo saltan; lanza `MaxActiveHabitsException` (que lleva el límite para el mensaje).
+- **Un registro de éxito por día natural** (`recordCheckIn`): un segundo éxito el mismo día es un no-op idempotente dentro de la transacción (devuelve el id existente). Las recaídas nunca se limitan y la edición manual del contador sigue libre. El botón muestra "Registrado hoy" (deshabilitado) cuando el día ya está registrado.
+- **Archivar exige dos pasos deliberados**: menú ⋯ de la tarjeta → "Archivar hábito" → diálogo de confirmación. Tocar la tarjeta nunca archiva; archivar no borra historia.
 - Archivar **nunca borra historial** (check-ins ni recaídas).
 - Las cuatro virtudes (`Templanza`, `Coraje`, `Sabiduría`, `Justicia`) son un enum fijo, no configurable por el usuario.
 

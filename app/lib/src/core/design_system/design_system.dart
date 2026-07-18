@@ -20,13 +20,16 @@
 /// - neutral black/grey in dark mode — it is warm dark stone throughout.
 library;
 
-export 'components/app_bottom_nav.dart';
 export 'components/app_button.dart';
 export 'components/app_card.dart';
+export 'components/app_nav_bar.dart';
 export 'components/app_scaffold.dart';
-export 'components/crisis_access_button.dart';
+export 'components/calm_band.dart';
+export 'components/editorial_hero.dart';
 export 'components/empty_state.dart';
+export 'components/section_header.dart';
 export 'components/selectable_chip.dart';
+export 'components/stepper_control.dart';
 export 'components/virtue_indicator.dart';
 export 'theme/stoic_theme.dart';
 export 'tokens/stoic_tokens.dart';

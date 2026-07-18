@@ -58,6 +58,71 @@
     "description": "Etiqueta del acceso persistente a modo de crisis. Tono calmo, nunca de alarma."
   },
 
+  "tourStepVirtuesTitle": "Tus virtudes",
+  "@tourStepVirtuesTitle": {
+    "description": "Título del paso del tour sobre el grid de virtudes."
+  },
+  "tourStepVirtuesBody": "Estas cuatro piedras reflejan tu constancia. Cambian de textura con tu práctica, no con números.",
+  "@tourStepVirtuesBody": {
+    "description": "Cuerpo del paso de virtudes. Refuerza el progreso como material, no como puntaje."
+  },
+  "tourStepQuoteTitle": "Una idea para el día",
+  "@tourStepQuoteTitle": {
+    "description": "Título del paso del tour sobre la cita diaria."
+  },
+  "tourStepQuoteBody": "Cada mañana te espera una cita estoica con una pregunta para llevar contigo.",
+  "@tourStepQuoteBody": {
+    "description": "Cuerpo del paso de la cita diaria."
+  },
+  "tourStepHabitsTitle": "Tus hábitos",
+  "@tourStepHabitsTitle": {
+    "description": "Título del paso del tour en la pestaña Hábitos."
+  },
+  "tourStepHabitsBody": "Aquí viven los hábitos que elegiste. Registra tu día, o anota una recaída como aprendizaje.",
+  "@tourStepHabitsBody": {
+    "description": "Cuerpo del paso de hábitos. La recaída se nombra como aprendizaje, nunca como falla."
+  },
+  "tourStepJournalTitle": "Tu diario",
+  "@tourStepJournalTitle": {
+    "description": "Título del paso del tour en la pestaña Diario."
+  },
+  "tourStepJournalBody": "Dos momentos breves: una intención al empezar el día y un cierre al terminarlo.",
+  "@tourStepJournalBody": {
+    "description": "Cuerpo del paso del diario."
+  },
+  "tourStepCalmTitle": "Un momento de calma",
+  "@tourStepCalmTitle": {
+    "description": "Título del paso del tour sobre la banda de calma."
+  },
+  "tourStepCalmBody": "Si el día se pone difícil, este acceso está siempre a un toque, en cualquier pantalla.",
+  "@tourStepCalmBody": {
+    "description": "Cuerpo del paso de la banda de calma. Informativo y sereno."
+  },
+  "tourStepDoneTitle": "Esto es todo",
+  "@tourStepDoneTitle": {
+    "description": "Título del paso final del tour."
+  },
+  "tourStepDoneBody": "Puedes repetir este recorrido desde el icono en la portada. Empieza cuando quieras.",
+  "@tourStepDoneBody": {
+    "description": "Cuerpo del paso final: señala el replay en home. Sin urgencia."
+  },
+  "tourNext": "Siguiente",
+  "@tourNext": {
+    "description": "Avanza al siguiente paso del tour."
+  },
+  "tourSkip": "Saltar",
+  "@tourSkip": {
+    "description": "Sale del tour en cualquier paso y lo marca como visto."
+  },
+  "tourDone": "Entendido",
+  "@tourDone": {
+    "description": "Cierra el tour en el último paso."
+  },
+  "tourReplayTooltip": "Ver el recorrido",
+  "@tourReplayTooltip": {
+    "description": "Tooltip del icono en home que repite el tour guiado."
+  },
+
   "emptyHabitsTitle": "Aún no hay nada que cuidar aquí",
   "@emptyHabitsTitle": {
     "description": "Título del empty-state para 0 hábitos activos (no es el primer uso)."
@@ -84,13 +149,14 @@
   "@onboardingSelectTitle": {
     "description": "Título del selector de hábitos. Framing neutro, sin lenguaje clínico."
   },
-  "onboardingSelectSubtitle": "Elige de uno a tres. Podrás cambiarlos cuando quieras.",
-  "@onboardingSelectSubtitle": {},
-  "onboardingSelectionCounter": "{count} de {max} elegidos",
+  "onboardingSelectSubtitle": "Elige al menos uno. Puedes empezar pequeño y cambiarlos cuando quieras.",
+  "@onboardingSelectSubtitle": {
+    "description": "La sugerencia de empezar con pocos es solo copy — no existe tope de hábitos."
+  },
+  "onboardingSelectionCounter": "{count} elegidos",
   "@onboardingSelectionCounter": {
     "placeholders": {
-      "count": { "type": "int" },
-      "max": { "type": "int" }
+      "count": { "type": "int" }
     }
   },
   "onboardingContinue": "Continuar",
@@ -133,8 +199,29 @@
   "@habitsTitle": {},
   "habitsAdd": "Agregar hábito",
   "@habitsAdd": {},
-  "habitsArchive": "Archivar",
-  "@habitsArchive": {},
+  "habitsMenuTooltip": "Opciones del hábito",
+  "@habitsMenuTooltip": {
+    "description": "Tooltip/semántica del botón ⋯ de una tarjeta de hábito (paso 1 del archivado en dos pasos)."
+  },
+  "habitsMenuArchive": "Archivar hábito",
+  "@habitsMenuArchive": {
+    "description": "Acción dentro del menú del hábito. Abre el diálogo de confirmación, nunca archiva directo."
+  },
+  "habitsArchiveConfirmTitle": "¿Archivar \"{label}\"?",
+  "@habitsArchiveConfirmTitle": {
+    "description": "Título del diálogo de confirmación de archivado.",
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+  "habitsArchiveConfirmBody": "Saldrá de tu lista activa. Su historia se conserva y podrás retomarlo cuando quieras.",
+  "@habitsArchiveConfirmBody": {
+    "description": "Cuerpo del diálogo de confirmación. Calmo, sin tono destructivo — archivar no borra nada."
+  },
+  "habitsArchiveConfirmAction": "Archivar",
+  "@habitsArchiveConfirmAction": {
+    "description": "Acción confirmatoria del diálogo de archivado."
+  },
   "habitsArchived": "Hábito archivado",
   "@habitsArchived": { "description": "Confirmación breve tras archivar." },
 
@@ -148,9 +235,6 @@
   "@habitFormSave": {},
   "habitFormEmptyLabel": "Escribe un nombre para el hábito.",
   "@habitFormEmptyLabel": { "description": "Validación no punitiva de label vacío." },
-  "habitsLimitReached": "Ya tienes tres hábitos activos. Archiva uno para agregar otro.",
-  "@habitsLimitReached": { "description": "Mensaje al intentar un 4º hábito activo. Claro y no punitivo." },
-
   "habitDetailStreakLabel": "días de constancia",
   "@habitDetailStreakLabel": {
     "description": "Etiqueta bajo el número de días constantes. Minúscula, sin framing de 'racha' gamificada."
@@ -158,6 +242,10 @@
   "habitDetailStreakZero": "Hoy es un buen día para empezar de nuevo.",
   "@habitDetailStreakZero": {
     "description": "Texto cuando la constancia está en 0. Cálido, re-construible, nunca 'rompiste tu racha'."
+  },
+  "habitDetailRegisteredToday": "Registrado hoy",
+  "@habitDetailRegisteredToday": {
+    "description": "Estado del botón primario cuando el día ya fue registrado (un éxito por día natural). Calmo, informativo, sin bloqueo dramático."
   },
   "habitDetailRegisterToday": "Registrar hoy",
   "@habitDetailRegisterToday": {
@@ -242,6 +330,39 @@
   "@homeOpenMorning": {},
   "homeOpenEvening": "Reflexión de la noche",
   "@homeOpenEvening": {},
+
+  "journalHubTitle": "Diario",
+  "@journalHubTitle": {
+    "description": "Title of the Diario tab root (the journal hub)."
+  },
+  "journalHubMorningEyebrow": "La mañana",
+  "@journalHubMorningEyebrow": {
+    "description": "Eyebrow over the morning panel in the journal hub."
+  },
+  "journalHubEveningEyebrow": "La noche",
+  "@journalHubEveningEyebrow": {
+    "description": "Eyebrow over the evening panel in the journal hub."
+  },
+  "journalHubMorningInvite": "Una frase para empezar el día con intención.",
+  "@journalHubMorningInvite": {
+    "description": "Invitation copy on the morning panel when today has no entry yet. Calm, no exclamation."
+  },
+  "journalHubEveningInvite": "Un repaso amable antes de dormir.",
+  "@journalHubEveningInvite": {
+    "description": "Invitation copy on the evening panel when today has no entry yet. Calm, no exclamation."
+  },
+  "journalHubDone": "Guardado hoy",
+  "@journalHubDone": {
+    "description": "Small badge on a journal hub panel when today's entry exists."
+  },
+  "journalHubOpen": "Abrir",
+  "@journalHubOpen": {
+    "description": "Quiet call-to-action on a journal hub panel without an entry."
+  },
+  "journalHubEdit": "Editar",
+  "@journalHubEdit": {
+    "description": "Quiet call-to-action on a journal hub panel whose entry already exists (upsert semantics: reopening edits)."
+  },
 
   "journalMorningEyebrow": "REFLEXIÓN DE LA MAÑANA",
   "@journalMorningEyebrow": { "description": "Eyebrow de la pantalla matutina." },

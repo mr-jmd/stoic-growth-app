@@ -17,6 +17,8 @@ class StoicColors {
     required this.navActive,
     required this.navInactive,
     required this.navSurface,
+    required this.accentSoft,
+    required this.onAccentSoft,
     required this.bone,
     required this.containerHigh,
     required this.appBgInner,
@@ -37,6 +39,10 @@ class StoicColors {
   final Color navActive;
   final Color navInactive;
   final Color navSurface;
+
+  /// Terracotta-tinted paper fill + its readable text (tonal buttons, accents).
+  final Color accentSoft;
+  final Color onAccentSoft;
   final Color bone;
   final Color containerHigh;
   final Color appBgInner;
@@ -57,6 +63,8 @@ class StoicColors {
     navActive: navActiveLight,
     navInactive: navInactiveLight,
     navSurface: navSurfaceLight,
+    accentSoft: accentSoftFillLight,
+    onAccentSoft: accentSoftTextLight,
     bone: boneLight,
     containerHigh: containerHighLight,
     appBgInner: appBgLightInner,
@@ -78,6 +86,8 @@ class StoicColors {
     navActive: navActiveDark,
     navInactive: navInactiveDark,
     navSurface: navSurfaceDark,
+    accentSoft: accentSoftFillDark,
+    onAccentSoft: accentSoftTextDark,
     bone: boneDark,
     containerHigh: containerHighDark,
     appBgInner: appBgDarkInner,
@@ -101,6 +111,8 @@ class StoicColors {
       navActive: c(a.navActive, b.navActive),
       navInactive: c(a.navInactive, b.navInactive),
       navSurface: c(a.navSurface, b.navSurface),
+      accentSoft: c(a.accentSoft, b.accentSoft),
+      onAccentSoft: c(a.onAccentSoft, b.onAccentSoft),
       bone: c(a.bone, b.bone),
       containerHigh: c(a.containerHigh, b.containerHigh),
       appBgInner: c(a.appBgInner, b.appBgInner),

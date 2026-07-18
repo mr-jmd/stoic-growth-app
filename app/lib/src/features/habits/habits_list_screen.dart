@@ -7,6 +7,7 @@ import '../../core/database/repositories/habit_repository.dart';
 import '../../core/design_system/design_system.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/virtue_l10n.dart';
+import '../tour/tour_targets.dart';
 
 /// Lists the active habits with add/archive access. When there are none *after*
 /// onboarding (the user archived everything), it shows the warm empty state —
@@ -20,8 +21,8 @@ class HabitsListScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final habits = ref.watch(activeHabitsProvider);
 
+    // Tab root — the shell's nav bar is the way out, no back affordance.
     return AppScaffold(
-      onBack: () => context.pop(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
         child: Column(
@@ -49,9 +50,12 @@ class HabitsListScreen extends ConsumerWidget {
               ),
             ),
             SizedBox(height: tokens.spacing.sm),
-            AppButton(
-              label: l.habitsAdd,
-              onPressed: () => context.push('/habits/new'),
+            KeyedSubtree(
+              key: tourHabitsAddKey,
+              child: AppButton(
+                label: l.habitsAdd,
+                onPressed: () => context.push('/habits/new'),
+              ),
             ),
             SizedBox(height: tokens.spacing.sm),
           ],
@@ -72,35 +76,119 @@ class _HabitRow extends ConsumerWidget {
     final l = AppLocalizations.of(context);
 
     return AppCard(
+      onTap: () => context.push('/habits/${habit.id}'),
       padding: EdgeInsets.symmetric(
         horizontal: tokens.spacing.lg,
-        vertical: tokens.spacing.md,
+        vertical: tokens.spacing.gap,
       ),
       child: Row(
         children: [
-          Expanded(
-            child: InkWell(
-              onTap: () => context.push('/habits/${habit.id}'),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(habit.label, style: tokens.text.body),
-                  SizedBox(height: tokens.spacing.xs),
-                  Text(habit.virtue.label(l), style: tokens.text.eyebrow),
-                ],
-              ),
+          // The habit-check dot — the accent at full strength.
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: tokens.colors.habitCheckFill,
             ),
           ),
-          TextButton(
-            onPressed: () => _archive(context, ref),
-            child: Text(
-              l.habitsArchive,
-              style: tokens.text.chip.copyWith(color: tokens.colors.faint),
+          SizedBox(width: tokens.spacing.gap),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(habit.label, style: tokens.text.bodyStrong),
+                SizedBox(height: tokens.spacing.xs),
+                Text(
+                  habit.virtue.label(l).toUpperCase(),
+                  style: tokens.text.eyebrowSub,
+                ),
+              ],
             ),
+          ),
+          // Archiving is deliberately two steps away (menu → confirm) so it
+          // can't happen by a stray tap.
+          IconButton(
+            onPressed: () => _showMenu(context, ref),
+            tooltip: l.habitsMenuTooltip,
+            icon: Icon(Icons.more_horiz, size: 20, color: tokens.colors.faint),
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _showMenu(BuildContext context, WidgetRef ref) async {
+    final tokens = context.stoic;
+    final l = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+
+    final archive = await showModalBottomSheet<bool>(
+      context: context,
+      backgroundColor: scheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(tokens.radii.sheet)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: tokens.spacing.md),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  tokens.spacing.xl,
+                  tokens.spacing.md,
+                  tokens.spacing.xl,
+                  tokens.spacing.sm,
+                ),
+                child: Text(
+                  habit.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: tokens.text.eyebrowSub,
+                ),
+              ),
+              InkWell(
+                onTap: () => Navigator.of(sheetContext).pop(true),
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 52),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: tokens.spacing.xl),
+                  alignment: Alignment.centerLeft,
+                  child: Text(l.habitsMenuArchive,
+                      style: tokens.text.bodyStrong),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (archive != true || !context.mounted) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l.habitsArchiveConfirmTitle(habit.label)),
+        content: Text(l.habitsArchiveConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l.dialogCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l.habitsArchiveConfirmAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await _archive(context, ref);
   }
 
   Future<void> _archive(BuildContext context, WidgetRef ref) async {

@@ -7,6 +7,7 @@ import '../../core/database/repositories/habit_repository.dart';
 import '../../core/design_system/design_system.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/check_in_status.dart';
+import '../../shared/dates.dart';
 import '../../shared/virtue_l10n.dart';
 
 /// Habit detail: the live consistency count (directly editable), the two
@@ -27,6 +28,19 @@ class HabitDetailScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final habit = ref.watch(habitByIdProvider(habitId));
 
+    // One success per calendar day: once today is registered the button turns
+    // into a calm "Registrado hoy" state. The repository guard is the real
+    // invariant; this is the honest UI for it.
+    final now = DateTime.now();
+    final registeredToday = ref
+            .watch(habitCheckInsProvider(habitId))
+            .asData
+            ?.value
+            .any((c) =>
+                c.status == CheckInStatus.success &&
+                isSameLocalDay(c.date, now)) ??
+        false;
+
     return AppScaffold(
       onBack: () => context.pop(),
       body: habit.when(
@@ -39,15 +53,19 @@ class HabitDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Text(h.virtue.label(l).toUpperCase(), style: tokens.text.eyebrow),
+                SizedBox(height: tokens.spacing.sm),
                 Text(h.label, style: tokens.text.displayGreeting),
-                SizedBox(height: tokens.spacing.xs),
-                Text(h.virtue.label(l), style: tokens.text.eyebrow),
                 SizedBox(height: tokens.spacing.xl),
                 _StreakCard(habit: h),
                 SizedBox(height: tokens.spacing.lg),
                 AppButton(
-                  label: l.habitDetailRegisterToday,
-                  onPressed: () => _registerToday(context, ref),
+                  label: registeredToday
+                      ? l.habitDetailRegisteredToday
+                      : l.habitDetailRegisterToday,
+                  onPressed: registeredToday
+                      ? null
+                      : () => _registerToday(context, ref),
                 ),
                 SizedBox(height: tokens.spacing.sm),
                 AppButton(
@@ -56,8 +74,8 @@ class HabitDetailScreen extends ConsumerWidget {
                   onPressed: () => context.push('/habits/$habitId/relapse'),
                 ),
                 SizedBox(height: tokens.spacing.xxl),
-                Text(l.habitDetailHistoryTitle, style: tokens.text.eyebrow),
-                SizedBox(height: tokens.spacing.md),
+                SectionHeader(eyebrow: l.habitDetailHistoryTitle),
+                SizedBox(height: tokens.spacing.gap),
                 Expanded(child: _History(habitId: habitId)),
               ],
             ),
@@ -95,44 +113,15 @@ class _StreakCard extends ConsumerWidget {
     return AppCard(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _StepperButton(
-                icon: Icons.remove,
-                tooltip: l.habitDetailDecrement,
-                // Never below zero — a reset floors here, it doesn't go negative.
-                onPressed:
-                    count > 0 ? () => _set(ref, count - 1) : null,
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () => _editDialog(context, ref),
-                  borderRadius: BorderRadius.circular(tokens.radii.card),
-                  child: Column(
-                    children: [
-                      Text(
-                        '$count',
-                        style: tokens.text.displayGreeting.copyWith(
-                          fontSize: 52,
-                          height: 1.1,
-                        ),
-                      ),
-                      Text(
-                        l.habitDetailStreakLabel,
-                        style: tokens.text.eyebrow,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              _StepperButton(
-                icon: Icons.add,
-                tooltip: l.habitDetailIncrement,
-                onPressed: () => _set(ref, count + 1),
-              ),
-            ],
+          StepperControl(
+            count: count,
+            // Never below zero — a reset floors here, it doesn't go negative.
+            onDecrement: count > 0 ? () => _set(ref, count - 1) : null,
+            onIncrement: () => _set(ref, count + 1),
+            decrementTooltip: l.habitDetailDecrement,
+            incrementTooltip: l.habitDetailIncrement,
+            onTapCount: () => _editDialog(context, ref),
+            caption: l.habitDetailStreakLabel,
           ),
           if (count == 0) ...[
             SizedBox(height: tokens.spacing.md),
@@ -191,37 +180,6 @@ class _StreakCard extends ConsumerWidget {
   }
 }
 
-class _StepperButton extends StatelessWidget {
-  const _StepperButton({
-    required this.icon,
-    required this.tooltip,
-    required this.onPressed,
-  });
-
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final tokens = context.stoic;
-    final scheme = Theme.of(context).colorScheme;
-    return IconButton(
-      onPressed: onPressed,
-      tooltip: tooltip,
-      icon: Icon(icon),
-      color: scheme.onSurfaceVariant,
-      style: IconButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(tokens.radii.chip),
-          side: BorderSide(color: tokens.colors.line),
-        ),
-        minimumSize: const Size(48, 48),
-      ),
-    );
-  }
-}
-
 /// Append-only check-in history, newest first. Successes and relapses are both
 /// shown as neutral facts — a relapse row is "en reposo", never red or "failed".
 class _History extends ConsumerWidget {
@@ -273,24 +231,45 @@ class _HistoryRow extends StatelessWidget {
         : l.habitDetailHistoryRelapse;
     final date = MaterialLocalizations.of(context).formatMediumDate(checkIn.date);
 
-    return Row(
-      children: [
-        // A small warm dot: success uses the habit-check fill, a relapse the
-        // resting-stone tone — neither is red.
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSuccess
-                ? tokens.colors.habitCheckFill
-                : tokens.reposo.onColor.withValues(alpha: 0.5),
+    // An editorial timeline row: the dot hangs on a hairline left rule.
+    // Success uses the habit-check fill, a relapse the resting-stone tone —
+    // neither is red.
+    return IntrinsicHeight(
+      child: Row(
+        children: [
+          SizedBox(
+            width: 20,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned.fill(
+                  child: Align(
+                    child: Container(width: 1, color: tokens.colors.line),
+                  ),
+                ),
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSuccess
+                        ? tokens.colors.habitCheckFill
+                        : tokens.reposo.onColor.withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(width: tokens.spacing.md),
-        Expanded(child: Text(label, style: tokens.text.body)),
-        Text(date, style: tokens.text.eyebrow),
-      ],
+          SizedBox(width: tokens.spacing.md),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: tokens.spacing.xs),
+              child: Text(label, style: tokens.text.body),
+            ),
+          ),
+          Text(date, style: tokens.text.caption),
+        ],
+      ),
     );
   }
 }

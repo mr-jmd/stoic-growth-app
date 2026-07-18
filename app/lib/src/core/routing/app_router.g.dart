@@ -10,6 +10,12 @@ part of 'app_router.dart';
 // ignore_for_file: type=lint, type=warning
 /// Single top-level GoRouter, consumed once in StoicApp.
 ///
+/// Structure: a [StatefulShellRoute] with three branches (Hoy `/`, Hábitos
+/// `/habits`, Diario `/journal`) wrapped by [AppShell] (tab bar + calm band).
+/// Detail/form/entry flows and `/crisis` are pushed on the **root** navigator
+/// (`parentNavigatorKey`), so they present full-screen over the shell while
+/// tab state is preserved underneath.
+///
 /// Onboarding gate: the redirect keys off the **persisted onboarding flag**
 /// ([onboardingCompletedProvider]), never the habit count — so a user who
 /// archives every habit lands on an empty state, not back in onboarding.
@@ -26,6 +32,12 @@ final appRouterProvider = AppRouterProvider._();
 
 /// Single top-level GoRouter, consumed once in StoicApp.
 ///
+/// Structure: a [StatefulShellRoute] with three branches (Hoy `/`, Hábitos
+/// `/habits`, Diario `/journal`) wrapped by [AppShell] (tab bar + calm band).
+/// Detail/form/entry flows and `/crisis` are pushed on the **root** navigator
+/// (`parentNavigatorKey`), so they present full-screen over the shell while
+/// tab state is preserved underneath.
+///
 /// Onboarding gate: the redirect keys off the **persisted onboarding flag**
 /// ([onboardingCompletedProvider]), never the habit count — so a user who
 /// archives every habit lands on an empty state, not back in onboarding.
@@ -41,6 +53,12 @@ final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
   /// Single top-level GoRouter, consumed once in StoicApp.
+  ///
+  /// Structure: a [StatefulShellRoute] with three branches (Hoy `/`, Hábitos
+  /// `/habits`, Diario `/journal`) wrapped by [AppShell] (tab bar + calm band).
+  /// Detail/form/entry flows and `/crisis` are pushed on the **root** navigator
+  /// (`parentNavigatorKey`), so they present full-screen over the shell while
+  /// tab state is preserved underneath.
   ///
   /// Onboarding gate: the redirect keys off the **persisted onboarding flag**
   /// ([onboardingCompletedProvider]), never the habit count — so a user who
@@ -85,4 +103,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'e65fae9fd13ebdf849618f2fa74930959afc9f8d';
+String _$appRouterHash() => r'd9b380b141634c55ba35ae8908fd4dcbc3919710';
